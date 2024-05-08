@@ -2,8 +2,7 @@
 RunAway 프로젝트 
 
 ## 유니티 버전 
-<img width="1000" alt="스크린샷 2024-05-02 132251" src="https://github.com/bamin0502/Gyeongil-RunAway/assets/100828741/13f609c1-9b74-4da4-8bfc-8e40aa4651c0">
-
+<img width="1000" src="https://github.com/bamin0502/Run_Away/assets/100828741/8bb1cdd8-d84c-4b84-a915-5f751b158837">
 
 <img width="1000" alt="스크린샷 2024-05-02 132319" src="https://github.com/bamin0502/Gyeongil-RunAway/assets/100828741/3c95298d-c5a9-407e-89f2-2a22d9573007">
 <img width="1000" alt="스크린샷 2024-05-02 132334" src="https://github.com/bamin0502/Gyeongil-RunAway/assets/100828741/85bad484-eeb2-43d0-a662-d36c372880a2">
