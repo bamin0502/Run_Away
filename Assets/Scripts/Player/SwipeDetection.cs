@@ -109,7 +109,7 @@ public class SwipeDetection : MonoBehaviour
                 if (direction.y > 0)
                 {
                     // 위로 스와이프
-                    dir = new Vector3(0, 5, 0); // x, y, z
+                    dir = new Vector3(0, 2, 0); // x, y, z
                 }
                 else
                 {
