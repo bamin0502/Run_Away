@@ -50,7 +50,10 @@ public class SwipeDetection : MonoBehaviour
     private void DetectSwipe()
     {
         float distance = Vector2.Distance(startPosition, endPosition);
-        if (distance >= minSwipeDistance && (endTime - startTime) < 0.5f)
+        Debug.Log($"Distance: {distance}");
+        if (distance < minSwipeDistance) return;
+        
+        if(distance >= minSwipeDistance)
         {
             Vector2 direction = (endPosition - startPosition).normalized;
             UpdateMovement(direction);
@@ -59,9 +62,10 @@ public class SwipeDetection : MonoBehaviour
 
     private void UpdateMovement(Vector2 direction)
     {
-        float horizontalDot = Vector2.Dot(Vector2.right, direction);
-        float verticalDot = Vector2.Dot(Vector2.up, direction);
+        var horizontalDot = Vector2.Dot(Vector2.right, direction);
+        var verticalDot = Vector2.Dot(Vector2.up, direction);
 
+        Debug.Log($"Horizontal Dot: {horizontalDot}, Vertical Dot: {verticalDot}");
         if (Mathf.Abs(horizontalDot) > directionThreshold)
         {
             moveAmount.x += (horizontalDot > 0 ? 1 : -1) * 5;  // 오른쪽 또는 왼쪽으로 5단위 이동
