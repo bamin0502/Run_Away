@@ -2,23 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class BatteryManager : MonoBehaviour
+public class BatteryManager : Singleton<BatteryManager>
 {
-    public static BatteryManager Instance;
-
-    void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     void Start()
     {
         StartCoroutine(CheckBatteryStatus());
