@@ -42,12 +42,13 @@ public class InputManager : Singleton<InputManager>
     
     private void EndTouchPrimary(InputAction.CallbackContext context)
     {
-        OnEndTouch?.Invoke(Utils.ScreenToWorld(mainCamera,playerControls.Touch.PrimaryPosition.ReadValue<Vector2>()), (float)context.time);
+        OnEndTouch?.Invoke(PrimaryPosition(),(float)context.time);
     }
 
     private void StartTouchPrimary(InputAction.CallbackContext context)
     {
-        OnStartTouch?.Invoke(Utils.ScreenToWorld(mainCamera,playerControls.Touch.PrimaryPosition.ReadValue<Vector2>()), (float)context.startTime);
+        OnStartTouch?.Invoke(PrimaryPosition(),(float)context.startTime);
+        
     }
     
     public Vector2 PrimaryPosition()
