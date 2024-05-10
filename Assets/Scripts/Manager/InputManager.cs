@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,8 +34,6 @@ public class InputManager : Singleton<InputManager>
         playerControls.Touch.PrimaryContact.started += StartTouchPrimary;
         playerControls.Touch.PrimaryContact.canceled += EndTouchPrimary;
     }
-
-
     
     private void EndTouchPrimary(InputAction.CallbackContext context)
     {
@@ -50,8 +45,8 @@ public class InputManager : Singleton<InputManager>
         OnStartTouch?.Invoke(PrimaryPosition(),(float)context.startTime);
         
     }
-    
-    public Vector2 PrimaryPosition()
+
+    private Vector2 PrimaryPosition()
     {
         return Utils.ScreenToWorld(mainCamera,playerControls.Touch.PrimaryPosition.ReadValue<Vector2>());
     }

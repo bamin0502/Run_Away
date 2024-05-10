@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using UnityEngine;
-
 
 [RequireComponent(typeof(Rigidbody))]
 public class SwipeDetection : MonoBehaviour
@@ -23,22 +20,17 @@ public class SwipeDetection : MonoBehaviour
         private Vector2 endPos;
         private float endTime;
         [Header("Swipe Movement"),Tooltip("Swipe Move Speed")]
-        public float swipeMove = 3.8f;
         public float jumpForce = 3f;
-        
+        private float[] lanes=new float[] {-3.8f,0,3.8f};
+        private int currentLaneIndex = 1;
         
         private Rigidbody rb;
         private Vector3 direction = Vector3.zero;
         private Vector2 pendingMovement;
         
-        
         private float minSwipeDistancePixels;
         private float minSwipeDistanceInch = 0.25f;
-
-        private Vector3 dir=Vector3.zero;
         
-        private float[] lanes=new float[] {-3.8f,0,3.8f};
-        private int currentLaneIndex = 1;
         private void Awake()
         {
             inputManager = GetComponent<InputManager>();
