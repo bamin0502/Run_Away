@@ -27,7 +27,6 @@ public class Tile : MonoBehaviour
     
     void Start()
     {
-        
         nextTilePosition = startPoint;
         for (int i = 0; i < numberOfTiles; i++)
         {
@@ -39,7 +38,7 @@ public class Tile : MonoBehaviour
     {
         moveSpeed = gameManager.stageSpeed;
         MoveTiles();
-        if (tiles[0].position.z < playerTransform.position.z - 50) // Assuming 50 is a distance at which the tile is out of view
+        if (tiles[0].position.z < playerTransform.position.z - 50)
         {
             ReuseTile();
         }
@@ -56,8 +55,8 @@ public class Tile : MonoBehaviour
     private void SpawnTile(bool spawnObstacles)
     {
         var newTile = Instantiate(tilePrefab, nextTilePosition, Quaternion.identity, transform);
-        var endPoint = newTile.Find("End Point");
-        nextTilePosition = endPoint.position;
+        var tileEndPoint = newTile.GetComponent<TileEndPoint>();
+        nextTilePosition = tileEndPoint.endPoint.position;
         tiles.Add(newTile);
 
         if (spawnObstacles)
@@ -85,8 +84,9 @@ public class Tile : MonoBehaviour
     {
         var tile = tiles[0];
         tiles.RemoveAt(0);
-        var endPoint = tiles[^1].Find("End Point");
-        tile.position = endPoint.position;
+        var endPoint = tiles[^1].GetComponent<TileEndPoint>().endPoint.position;
+        tile.position = endPoint;
         tiles.Add(tile);
     }
 }
+
