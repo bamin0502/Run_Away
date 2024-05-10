@@ -13,31 +13,32 @@ public class SwipeDetection : MonoBehaviour
         
         [Header("Ground Check"),Tooltip("Ground Check Position")]
         [SerializeField] private Transform groundCheck;
-        
         [SerializeField] private float groundDistance = 0.5f;
+        [SerializeField] private bool isGrounded;
         
+        [Header("Swipe Detection"),Tooltip("Start Position of Swipe")]
         private Vector2 startPos;
         private float startTime;
-
+        [Tooltip("End Position of Swipe"),Header("Swipe Detection")]
         private Vector2 endPos;
         private float endTime;
-        
-        private Rigidbody rb;
-        private Vector3 direction = Vector3.zero;
-        
+        [Header("Swipe Movement"),Tooltip("Swipe Move Speed")]
         public float swipeMove = 3.8f;
         public float jumpForce = 3f;
         
         
+        private Rigidbody rb;
+        private Vector3 direction = Vector3.zero;
+        private Vector2 pendingMovement;
+        
+        
         private float minSwipeDistancePixels;
-        public float minSwipeDistanceInch = 0.25f;
+        private float minSwipeDistanceInch = 0.25f;
 
         private Vector3 dir=Vector3.zero;
         
-        [SerializeField]
-        private bool isGrounded;
-        
-        
+        private float[] lanes=new float[] {-3.8f,0,3.8f};
+        private int currentLaneIndex = 1;
         private void Awake()
         {
             inputManager = GetComponent<InputManager>();
@@ -68,12 +69,22 @@ public class SwipeDetection : MonoBehaviour
             {
                 isGrounded = true;
             }
+            
         }
         private void OnCollisionExit(Collision other)
         {
             if (groundCheck.CompareTag("Ground"))
             {
                 isGrounded = false;
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (pendingMovement != Vector2.zero)
+            {
+                UpdateMovement(pendingMovement);
+                pendingMovement = Vector2.zero;
             }
         }
 
@@ -93,12 +104,7 @@ public class SwipeDetection : MonoBehaviour
             Debug.Log("End");
             DetectSwipe();
         }
-
-        private void Update()
-        {
-            
-        }
-
+        
         private void DetectSwipe()
         {
             var swipeVector = endPos - startPos;
@@ -106,28 +112,29 @@ public class SwipeDetection : MonoBehaviour
             if (distance >= minDistance)
             {
                 swipeVector.Normalize();
-                UpdateMovement(swipeVector);
+                pendingMovement = swipeVector;
             }
         }
 
-        private void UpdateMovement(Vector2 direction)
+        private void UpdateMovement(Vector2 swipeDir)
         {
-            var horizontal = direction.x;
-            var vertical = direction.y;
+            Debug.Log($"Attempting to move in direction: {swipeDir}");
+            var horizontal = swipeDir.x;
+            var vertical = swipeDir.y;
 
             if (Mathf.Abs(horizontal) > Mathf.Abs(vertical)) {
                 if (horizontal > dirThreshold) {
-                    rb.MovePosition(rb.position + Vector3.right * swipeMove);
+                    currentLaneIndex = Mathf.Clamp(currentLaneIndex + 1, 0, lanes.Length - 1);
                 } else if (horizontal < -dirThreshold) {
-                    rb.MovePosition(rb.position + Vector3.left * swipeMove);
+                    currentLaneIndex = Mathf.Clamp(currentLaneIndex - 1, 0, lanes.Length - 1);
                 }
+                Vector3 newPos = rb.position;
+                newPos.x = lanes[currentLaneIndex];
+                rb.MovePosition(newPos);
+                Debug.Log($"New Position: {newPos}");
             } else {
                 if (vertical > dirThreshold && isGrounded) {
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
-                }
-                else
-                {
-                    rb.MovePosition(rb.position +new Vector3(0,0.5f,0));
                 }
             }
         }

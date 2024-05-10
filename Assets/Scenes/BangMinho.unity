@@ -209,7 +209,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 41886609}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.16109279, y: 0.000000029413075, z: -0.000000004800938, w: 0.9869393}
+  m_LocalRotation: {x: 0.16109279, y: 0.000000029413076, z: -0.0000000048009383, w: 0.98693925}
   m_LocalPosition: {x: 0, y: 13.5, z: -12.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -531,7 +531,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929700431}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.16109279, y: 0.000000029413075, z: -0.000000004800938, w: 0.9869393}
+  m_LocalRotation: {x: 0.16109279, y: 0.000000029413076, z: -0.0000000048009383, w: 0.98693925}
   m_LocalPosition: {x: 0, y: 13.5, z: -12.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -603,14 +603,11 @@ MonoBehaviour:
   minDistance: 0.2
   dirThreshold: 0.9
   groundCheck: {fileID: 0}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
   groundDistance: 0.5
-  swipeMove: 5
-  jumpForce: 5
+  isGrounded: 1
+  swipeMove: 3.8
+  jumpForce: 3
   minSwipeDistanceInch: 0.25
-  isGrounded: 0
 --- !u!65 &1391546830
 BoxCollider:
   m_ObjectHideFlags: 0
