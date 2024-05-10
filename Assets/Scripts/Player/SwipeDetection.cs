@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -141,6 +140,7 @@ public class SwipeDetection : MonoBehaviour
                 if (vertical > dirThreshold && isGrounded) {
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
                 }
+                
             }
         }
     }
