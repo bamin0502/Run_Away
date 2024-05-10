@@ -140,7 +140,18 @@ public class SwipeDetection : MonoBehaviour
                 if (vertical > dirThreshold && isGrounded) {
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
                 }
-                
+                else if(!isGrounded && vertical < dirThreshold)
+                {
+                    Debug.Log("Not Grounded");
+                    ImmediateGround();
+                }
             }
+        }
+
+        private void ImmediateGround()
+        {
+            var position = rb.position;
+            Vector3 groundPosition= new Vector3(position.x,0,position.z);
+            rb.MovePosition(groundPosition);
         }
     }
