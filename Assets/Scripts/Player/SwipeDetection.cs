@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -40,7 +41,19 @@ public class SwipeDetection : MonoBehaviour
         private void Start()
         {
             minSwipeDistancePixels = minSwipeDistanceInch * Screen.dpi;
-            groundCheck=GameObject.FindGameObjectWithTag("Ground").transform;
+        }
+
+        private void Update()
+        {
+            if (!groundCheck)
+            {
+                groundCheck=GameObject.FindGameObjectWithTag("Ground").transform;
+                if (!groundCheck)
+                {
+                    Debug.LogWarning("Ground Check Not Found");
+                    return;
+                }
+            }
         }
 
         private void OnEnable()
@@ -57,7 +70,7 @@ public class SwipeDetection : MonoBehaviour
 
         private void OnCollisionEnter(Collision other)
         {
-            if (groundCheck.CompareTag("Ground"))
+            if (groundCheck !=null && groundCheck.CompareTag("Ground"))
             {
                 isGrounded = true;
             }
@@ -65,7 +78,7 @@ public class SwipeDetection : MonoBehaviour
         }
         private void OnCollisionExit(Collision other)
         {
-            if (groundCheck.CompareTag("Ground"))
+            if (groundCheck!=null && groundCheck.CompareTag("Ground"))
             {
                 isGrounded = false;
             }
