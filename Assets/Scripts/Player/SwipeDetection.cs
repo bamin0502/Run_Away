@@ -16,9 +16,11 @@ public class SwipeDetection : MonoBehaviour
         [Header("Swipe Detection"),Tooltip("Start Position of Swipe")]
         private Vector2 startPos;
         private float startTime;
+        
         [Tooltip("End Position of Swipe"),Header("Swipe Detection")]
         private Vector2 endPos;
         private float endTime;
+        
         [Header("Swipe Movement"),Tooltip("Swipe Move Speed")]
         public float jumpForce = 3f;
         private float[] lanes=new float[] {-3.8f,0,3.8f};
@@ -30,7 +32,7 @@ public class SwipeDetection : MonoBehaviour
         
         private float minSwipeDistancePixels;
         private float minSwipeDistanceInch = 0.25f;
-        
+        public Defines.SwipeDirection swipeDirection; 
         private void Awake()
         {
             inputManager = GetComponent<InputManager>();
@@ -89,6 +91,7 @@ public class SwipeDetection : MonoBehaviour
             {
                 UpdateMovement(pendingMovement);
                 pendingMovement = Vector2.zero;
+                
             }
         }
 
@@ -128,22 +131,35 @@ public class SwipeDetection : MonoBehaviour
 
             if (Mathf.Abs(horizontal) > Mathf.Abs(vertical)) {
                 if (horizontal > dirThreshold) {
+                    swipeDirection = Defines.SwipeDirection.RIGHT;
                     currentLaneIndex = Mathf.Clamp(currentLaneIndex + 1, 0, lanes.Length - 1);
                 } else if (horizontal < -dirThreshold) {
+                    swipeDirection = Defines.SwipeDirection.LEFT;
                     currentLaneIndex = Mathf.Clamp(currentLaneIndex - 1, 0, lanes.Length - 1);
                 }
-                Vector3 newPos = rb.position;
+                var newPos = rb.position;
                 newPos.x = lanes[currentLaneIndex];
                 rb.MovePosition(newPos);
                 Debug.Log($"New Position: {newPos}");
             } else {
                 if (vertical > dirThreshold && isGrounded) {
+                    swipeDirection = Defines.SwipeDirection.UP;
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
                 }
                 else if(!isGrounded && vertical < dirThreshold)
                 {
                     Debug.Log("Not Grounded");
+                    swipeDirection = Defines.SwipeDirection.DOWN;
                     ImmediateGround();
+                }
+                else if(vertical< dirThreshold && isGrounded)
+                {
+                    Debug.Log("Grounded");
+                    swipeDirection = Defines.SwipeDirection.DOWN;
+                }
+                else
+                {
+                    swipeDirection = Defines.SwipeDirection.NONE;
                 }
             }
         }
@@ -153,5 +169,6 @@ public class SwipeDetection : MonoBehaviour
             var position = rb.position;
             Vector3 groundPosition= new Vector3(position.x,0,position.z);
             rb.MovePosition(groundPosition);
+            isGrounded = true;
         }
     }
