@@ -38,7 +38,7 @@ public class Tile : MonoBehaviour
     {
         moveSpeed = gameManager.stageSpeed;
         MoveTiles();
-        if (tiles[0].position.z < playerTransform.position.z - 50)
+        if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
         {
             ReuseTile();
         }
@@ -54,8 +54,32 @@ public class Tile : MonoBehaviour
 
     private void SpawnTile(bool spawnObstacles)
     {
+        if (tilePrefab == null)
+        {
+            Debug.LogWarning("Tile prefab is not assigned.");
+            return;
+        }
+
         var newTile = Instantiate(tilePrefab, nextTilePosition, Quaternion.identity, transform);
+        if (newTile == null)
+        {
+            Debug.LogWarning("Failed to instantiate tile prefab.");
+            return;
+        }
+
         var tileEndPoint = newTile.GetComponent<TileEndPoint>();
+        if (tileEndPoint == null)
+        {
+            Debug.LogWarning("TileEndPoint component is missing on the tile prefab.");
+            return;
+        }
+    
+        if (tileEndPoint.endPoint == null)
+        {
+            Debug.LogWarning("EndPoint is not assigned in TileEndPoint component.");
+            return;
+        }
+
         nextTilePosition = tileEndPoint.endPoint.position;
         tiles.Add(newTile);
 
