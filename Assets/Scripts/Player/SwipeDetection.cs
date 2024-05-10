@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+
 
 [RequireComponent(typeof(Rigidbody))]
 public class SwipeDetection : MonoBehaviour
@@ -10,6 +10,11 @@ public class SwipeDetection : MonoBehaviour
 
         [SerializeField] private float minDistance = 0.2f;
         [SerializeField, Range(0f, 1f)] private float dirThreshold = 0.7f;
+        
+        [Header("Ground Check"),Tooltip("Ground Check Position")]
+        [SerializeField] private Transform groundCheck;
+        
+        [SerializeField] private float groundDistance = 0.5f;
         
         private Vector2 startPos;
         private float startTime;
@@ -20,14 +25,17 @@ public class SwipeDetection : MonoBehaviour
         private Rigidbody rb;
         private Vector3 direction = Vector3.zero;
         
-        public float swipeMove = 5f;
-        public float jumpForce = 5f;
-        public float groundDistance = 0.5f;
+        public float swipeMove = 3.8f;
+        public float jumpForce = 3f;
+        
         
         private float minSwipeDistancePixels;
         public float minSwipeDistanceInch = 0.25f;
 
         private Vector3 dir=Vector3.zero;
+        
+        [SerializeField]
+        private bool isGrounded;
         
         
         private void Awake()
@@ -39,6 +47,7 @@ public class SwipeDetection : MonoBehaviour
         private void Start()
         {
             minSwipeDistancePixels = minSwipeDistanceInch * Screen.dpi;
+            groundCheck=GameObject.FindGameObjectWithTag("Ground").transform;
         }
 
         private void OnEnable()
@@ -53,13 +62,22 @@ public class SwipeDetection : MonoBehaviour
             inputManager.OnEndTouch -= SwipeEnd;
         }
 
-        private void FixedUpdate()
+        private void OnCollisionEnter(Collision other)
         {
-            
+            if (groundCheck.CompareTag("Ground"))
+            {
+                isGrounded = true;
+            }
+        }
+        private void OnCollisionExit(Collision other)
+        {
+            if (groundCheck.CompareTag("Ground"))
+            {
+                isGrounded = false;
+            }
         }
 
-        #region Input Methods
-        public void SwipeStart(Vector2 pos, float time)
+        private void SwipeStart(Vector2 pos, float time)
         {
             Debug.Log("Start");
             startPos = pos;
@@ -68,18 +86,23 @@ public class SwipeDetection : MonoBehaviour
             // TODO : Check Second Touch
             
         }
-        
-        public void SwipeEnd(Vector2 pos, float time)
+
+        private void SwipeEnd(Vector2 pos, float time)
         {
             endPos = pos;
             Debug.Log("End");
             DetectSwipe();
         }
 
+        private void Update()
+        {
+            
+        }
+
         private void DetectSwipe()
         {
-            Vector2 swipeVector = endPos - startPos;
-            float distance = swipeVector.magnitude;
+            var swipeVector = endPos - startPos;
+            var distance = Mathf.Clamp(swipeVector.magnitude, 0f, minSwipeDistancePixels);
             if (distance >= minDistance)
             {
                 swipeVector.Normalize();
@@ -89,41 +112,23 @@ public class SwipeDetection : MonoBehaviour
 
         private void UpdateMovement(Vector2 direction)
         {
-            if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-            {
-                // Horizontal movement
-                if (direction.x > 0)
-                {
-                    // 오른쪽으로 스와이프
-                    dir = new Vector3(5, 0.5f, 0); // x, y, z
-                }
-                else
-                {
-                    // 왼쪽으로 스와이프
-                    dir = new Vector3(-5, 0.5f, 0); // x, y, z
-                }
-            }
-            else
-            {
-                // Vertical movement
-                if (direction.y > 0)
-                {
-                    // 위로 스와이프
-                    dir = new Vector3(0, 2, 0); // x, y, z
-                }
-                else
-                {
-                    // 아래로 스와이프
-                    dir = new Vector3(0, 0.5f, 0); // x, y, z
-                }
-            }
-            
-            rb.MovePosition(rb.position+dir);
-        }
-        
-        #endregion
-        
-        
-        
+            var horizontal = direction.x;
+            var vertical = direction.y;
 
+            if (Mathf.Abs(horizontal) > Mathf.Abs(vertical)) {
+                if (horizontal > dirThreshold) {
+                    rb.MovePosition(rb.position + Vector3.right * swipeMove);
+                } else if (horizontal < -dirThreshold) {
+                    rb.MovePosition(rb.position + Vector3.left * swipeMove);
+                }
+            } else {
+                if (vertical > dirThreshold && isGrounded) {
+                    rb.MovePosition(rb.position + Vector3.up * jumpForce);
+                }
+                else
+                {
+                    rb.MovePosition(rb.position +new Vector3(0,0.5f,0));
+                }
+            }
+        }
     }
