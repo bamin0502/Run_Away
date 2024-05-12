@@ -15,15 +15,14 @@ public static class DataManager
             tables.Add(id,tables[id]);
         }
         
-       
-        
     }
     
     public static StringTable GetStringTable()
     {
         return Get<StringTable>("StringTable");
     }
-    public static T Get<T> (string id) where T : DataTable
+
+    private static T Get<T> (string id) where T : DataTable
     {
         if(!tables.TryGetValue(id, out var table))
         {
