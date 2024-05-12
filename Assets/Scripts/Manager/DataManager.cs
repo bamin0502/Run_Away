@@ -1,22 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour
+public static class DataManager
 {
-    void Awake()
+    private static Dictionary<string, DataTable> tables = new Dictionary<string, DataTable>();
+
+    public static void LoadTable<T>(string path) where T : DataTable, new()
     {
-        
+        var table = new T();
+        table.Load(path);
+        tables.Add(typeof(T).Name, table);
     }
 
-    void Start()
+    public static T GetTable<T>() where T : DataTable
     {
-        
-    }
-
-
-    void Update()
-    {
-        
+        return tables[typeof(T).Name] as T;
     }
 }
+
