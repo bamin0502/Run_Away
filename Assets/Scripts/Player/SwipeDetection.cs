@@ -11,7 +11,7 @@ public class SwipeDetection : MonoBehaviour
         [Header("Ground Check"),Tooltip("Ground Check Position")]
         [SerializeField] private Transform groundCheck;
         [SerializeField] private float groundDistance = 0.5f;
-        [SerializeField] private bool isGrounded;
+        public bool isGrounded;
         
         [Header("Swipe Detection"),Tooltip("Start Position of Swipe")]
         private Vector2 startPos;
@@ -74,6 +74,7 @@ public class SwipeDetection : MonoBehaviour
             if (groundCheck !=null && groundCheck.CompareTag("Ground"))
             {
                 isGrounded = true;
+                
             }
             
         }
@@ -82,6 +83,7 @@ public class SwipeDetection : MonoBehaviour
             if (groundCheck!=null && groundCheck.CompareTag("Ground"))
             {
                 isGrounded = false;
+                
             }
         }
 
@@ -91,8 +93,9 @@ public class SwipeDetection : MonoBehaviour
             {
                 UpdateMovement(pendingMovement);
                 pendingMovement = Vector2.zero;
-                
             }
+            
+            
         }
 
         private void SwipeStart(Vector2 pos, float time)
@@ -143,8 +146,8 @@ public class SwipeDetection : MonoBehaviour
                 Debug.Log($"New Position: {newPos}");
             } else {
                 if (vertical > dirThreshold && isGrounded) {
-                    swipeDirection = Defines.SwipeDirection.UP;
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
+                    swipeDirection = Defines.SwipeDirection.UP;
                 }
                 else if(!isGrounded && vertical < dirThreshold)
                 {
@@ -159,8 +162,9 @@ public class SwipeDetection : MonoBehaviour
                 }
                 else
                 {
-                    swipeDirection = Defines.SwipeDirection.NONE;
+                    swipeDirection = Defines.SwipeDirection.UP;
                 }
+                
             }
         }
 

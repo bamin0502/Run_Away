@@ -866,7 +866,7 @@ MonoBehaviour:
   dirThreshold: 0.7
   groundCheck: {fileID: 0}
   groundDistance: 0.5
-  isGrounded: 0
+  isGrounded: 1
   jumpForce: 3
   swipeDirection: 0
 --- !u!54 &919132148573840447
