@@ -93,13 +93,11 @@ public class Tile : MonoBehaviour
     {
         foreach (Transform child in tile)
         {
-            if (child.CompareTag("ObstacleSpawnPoint"))
+            if (child.CompareTag("ObstacleSpawnPoint") && Random.Range(0, 2) == 0 && obstaclePrefabs.Length > 0)
             {
-                if (obstaclePrefabs.Length > 0)
-                {
-                    var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
-                    Instantiate(obstaclePrefab, child.position, Quaternion.identity, child);
-                }
+                // 50% 확률로 장애물 생성 (나중에 수정 예정)
+                var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
+                Instantiate(obstaclePrefab, child.position, Quaternion.identity, child);
             }
         }
     }
