@@ -23,12 +23,32 @@ public class PlayerAni : MonoBehaviour
 
     private void Update()
     {
-        var isRunning = swipeDetection.swipeDirection == Defines.SwipeDirection.RUN;
-        var isJumping = swipeDetection.swipeDirection == Defines.SwipeDirection.JUMP;
-        var isSliding = swipeDetection.swipeDirection == Defines.SwipeDirection.SLIDE;
+        if (GameManager.Instance.isGameover) return;
+        
+        if (swipeDetection.isGrounded)
+        {
+            ani.SetBool(IsRun, true);
+            ani.SetBool(IsJump, false);
+        }
+        else
+        {
+            ani.SetBool(IsRun, false);
+            ani.SetBool(IsJump, true);
+        }
+        
+        if(swipeDetection.swipeDirection == Defines.SwipeDirection.DEAD)
+        {
+            ani.SetTrigger(IsDead);
+            ani.SetBool(IsRun, false);
+            ani.SetBool(IsJump, false);
+        }
+        
+        if(swipeDetection.swipeDirection == Defines.SwipeDirection.SLIDE)
+        {
+            ani.SetTrigger(IsSlide);
+        }
+        
+    
 
-        ani.SetBool(IsRun, isRunning);
-        ani.SetBool(IsJump, isJumping);
-        ani.SetBool(IsSlide, isSliding);
     }
 }

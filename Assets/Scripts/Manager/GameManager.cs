@@ -1,17 +1,34 @@
 using UnityEngine;
+using TMPro;
 
 public class GameManager : Singleton<GameManager>
 {
     public float stageSpeed = 5f;
     public bool isGameover = false;
+    
+    public float distanceTravelled = 0;
+    public float speedIncreaseMilestone = 10;
+    public float speedMultiplier = 1.1f;
+    
+    public TextMeshProUGUI distanceText;
     void Start()
     {
         
     }
 
-
-    void Update()
+    private void Update()
     {
+        if (!isGameover)
+        {
+            distanceTravelled += stageSpeed * Time.deltaTime;
+            
+            if (distanceTravelled > speedIncreaseMilestone)
+            {
+                stageSpeed *= speedMultiplier;
+                speedIncreaseMilestone *= speedMultiplier;
+            }
+            distanceText.text = "Distance: " + distanceTravelled.ToString("F2") + " meters";
+        }
         
     }
 

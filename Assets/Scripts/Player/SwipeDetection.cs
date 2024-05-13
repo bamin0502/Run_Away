@@ -37,6 +37,8 @@ public class SwipeDetection : MonoBehaviour
         
         public Defines.SwipeDirection swipeDirection;
         
+        [SerializeField] private float slideDuration = 1.0f;
+        private float slideTimer;
         private void Awake()
         {
             inputManager = GetComponent<InputManager>();
@@ -50,9 +52,19 @@ public class SwipeDetection : MonoBehaviour
 
         private void Update()
         {
+            
             if (!groundCheck)
             {
                 groundCheck=GameObject.FindGameObjectWithTag("Ground").transform;
+            }
+            
+            if(swipeDirection == Defines.SwipeDirection.SLIDE)
+            {
+                slideTimer -= Time.deltaTime;
+                if (slideTimer <= 0)
+                {
+                    swipeDirection = Defines.SwipeDirection.RUN;
+                }
             }
         }
 
@@ -76,7 +88,7 @@ public class SwipeDetection : MonoBehaviour
                 
             }
             
-            if(gameObject.CompareTag("Obstacle"))
+            if(other.gameObject.CompareTag("Obstacle"))
             {
                 Debug.Log("Obstacle Hit");
                 Die();
@@ -85,8 +97,9 @@ public class SwipeDetection : MonoBehaviour
 
         private void Die()
         {
-
-            GameManager.Instance.GameOver();
+            //GameManager.Instance.GameOver();
+            swipeDirection = Defines.SwipeDirection.DEAD;
+            GameManager.Instance.isGameover = true;
         }
 
         private void OnCollisionExit(Collision other)
@@ -121,7 +134,6 @@ public class SwipeDetection : MonoBehaviour
         
         private void DetectSwipe()
         {
-            Debug.Log("Detecting Swipe");
             var swipeVector = endPos - startPos;
             var distance = Mathf.Clamp(swipeVector.magnitude, 0f, minSwipeDistancePixels);
             if (distance >= minDistance)
@@ -133,9 +145,10 @@ public class SwipeDetection : MonoBehaviour
 
         private void UpdateMovement(Vector2 swipeDir)
         {
+            if(GameManager.Instance.isGameover) return;
             var horizontal = swipeDir.x;
             var vertical = swipeDir.y;
-            Debug.Log("Horizontal : " + horizontal + " Vertical : " + vertical);
+            
             if (Mathf.Abs(horizontal) > Mathf.Abs(vertical)) {
                 if (horizontal > dirThreshold) {
                     currentLaneIndex = Mathf.Clamp(currentLaneIndex + 1, 0, lanes.Length - 1);
@@ -154,11 +167,15 @@ public class SwipeDetection : MonoBehaviour
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
                     swipeDirection = Defines.SwipeDirection.JUMP;
                 }
-                else
+                else if(vertical < -dirThreshold)
                 {
                     swipeDirection = Defines.SwipeDirection.SLIDE;
+                    slideTimer = slideDuration;
                 }
-                
+                else
+                {
+                    swipeDirection = Defines.SwipeDirection.RUN;
+                }
             }
         }
 

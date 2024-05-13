@@ -39,6 +39,7 @@ public class Tile : MonoBehaviour
         if (!gameManager.isGameover)
         {
             moveSpeed = gameManager.stageSpeed;
+            Debug.Log(moveSpeed);
             MoveTiles();
             if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
             {
