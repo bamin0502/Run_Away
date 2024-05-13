@@ -28,7 +28,7 @@ public class Tile : MonoBehaviour
     void Start()
     {
         nextTilePosition = startPoint;
-        for (int i = 0; i < numberOfTiles; i++)
+        for (var i = 0; i < numberOfTiles; i++)
         {
             SpawnTile(i >= noObstaclesInitially);
         }
@@ -36,12 +36,16 @@ public class Tile : MonoBehaviour
 
     void Update()
     {
-        moveSpeed = gameManager.stageSpeed;
-        MoveTiles();
-        if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
+        if (!gameManager.isGameover)
         {
-            ReuseTile();
+            moveSpeed = gameManager.stageSpeed;
+            MoveTiles();
+            if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
+            {
+                ReuseTile();
+            }
         }
+        
     }
 
     private void MoveTiles()
@@ -91,13 +95,30 @@ public class Tile : MonoBehaviour
 
     private void SpawnObstacles(Transform tile)
     {
+        // 모든 자식 스폰 포인트를 리스트에 추가
+        var spawnPoints = new List<Transform>();
         foreach (Transform child in tile)
         {
-            if (child.CompareTag("ObstacleSpawnPoint") && Random.Range(0, 2) == 0 && obstaclePrefabs.Length > 0)
+            if (child.CompareTag("ObstacleSpawnPoint"))
             {
-                // 50% 확률로 장애물 생성 (나중에 수정 예정)
-                var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
-                Instantiate(obstaclePrefab, child.position, Quaternion.identity, child);
+                spawnPoints.Add(child);
+            }
+        }
+
+        // 장애물을 생성하지 않을 포인트를 무작위로 선택
+        var emptyIndex = Random.Range(0, spawnPoints.Count);
+
+        // 선택된 포인트를 제외한 나머지 포인트에 장애물 생성
+        for (var i = 0; i < spawnPoints.Count; i++)
+        {
+            if (i != emptyIndex && obstaclePrefabs.Length > 0) // 비워둘 인덱스가 아니면
+            {
+                var spawnPoint = spawnPoints[i];
+                if (Random.Range(0, 2) == 0) // 50% 확률로 장애물 생성
+                {
+                    var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
+                    Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity, spawnPoint);
+                }
             }
         }
     }

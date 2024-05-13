@@ -33,6 +33,8 @@ public class SwipeDetection : MonoBehaviour
         private float minSwipeDistancePixels;
         private float minSwipeDistanceInch = 0.25f;
         public Defines.SwipeDirection swipeDirection; 
+        
+        
         private void Awake()
         {
             inputManager = GetComponent<InputManager>();
@@ -49,11 +51,6 @@ public class SwipeDetection : MonoBehaviour
             if (!groundCheck)
             {
                 groundCheck=GameObject.FindGameObjectWithTag("Ground").transform;
-                if (!groundCheck)
-                {
-                    Debug.LogWarning("Ground Check Not Found");
-                    return;
-                }
             }
         }
 
@@ -77,7 +74,19 @@ public class SwipeDetection : MonoBehaviour
                 
             }
             
+            if(gameObject.CompareTag("Obstacle"))
+            {
+                Debug.Log("Obstacle Hit");
+                Die();
+            }
         }
+
+        private void Die()
+        {
+            swipeDirection = Defines.SwipeDirection.ERROR;
+            GameManager.Instance.GameOver();
+        }
+
         private void OnCollisionExit(Collision other)
         {
             if (groundCheck!=null && groundCheck.CompareTag("Ground"))
@@ -94,8 +103,6 @@ public class SwipeDetection : MonoBehaviour
                 UpdateMovement(pendingMovement);
                 pendingMovement = Vector2.zero;
             }
-            
-            
         }
 
         private void SwipeStart(Vector2 pos, float time)

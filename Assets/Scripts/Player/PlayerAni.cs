@@ -27,27 +27,24 @@ public class PlayerAni : MonoBehaviour
             switch (swipeDetection.swipeDirection)
             {
                 case Defines.SwipeDirection.UP:
-                    ani.SetBool(IsJump, true);
+                    ani.Play(IsJump);
                     break;
                 case Defines.SwipeDirection.DOWN:
-                    ani.SetBool(IsSlide, true);
+                    ani.Play(IsSlide);
                     break;
                 case Defines.SwipeDirection.LEFT:
                 case Defines.SwipeDirection.RIGHT:
                     ani.SetBool(IsRun, true);
-                    ani.SetBool(IsJump, false);
-                    ani.SetBool(IsSlide, false);
                     break;
                 case Defines.SwipeDirection.ERROR:
                     ani.SetTrigger(IsDead);
                     break;
                 case Defines.SwipeDirection.NONE:
                     ani.SetBool(IsRun, true);
-                    ani.SetBool(IsJump, false);
-                    ani.SetBool(IsSlide, false);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    ani.SetBool(IsRun, true);
+                    break;
             }
         }
         
