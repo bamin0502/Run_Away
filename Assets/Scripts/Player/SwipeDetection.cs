@@ -139,25 +139,24 @@ public class SwipeDetection : MonoBehaviour
             if (Mathf.Abs(horizontal) > Mathf.Abs(vertical)) {
                 if (horizontal > dirThreshold) {
                     currentLaneIndex = Mathf.Clamp(currentLaneIndex + 1, 0, lanes.Length - 1);
-                    swipeDirection = Defines.SwipeDirection.RIGHT;
+                    swipeDirection = Defines.SwipeDirection.RUN;
                     
                 } else if (horizontal < -dirThreshold) {
                     currentLaneIndex = Mathf.Clamp(currentLaneIndex - 1, 0, lanes.Length - 1);
-                    swipeDirection = Defines.SwipeDirection.LEFT;
+                    swipeDirection = Defines.SwipeDirection.RUN;
                     
                 }
                 var newPos = rb.position;
                 newPos.x = lanes[currentLaneIndex];
                 rb.MovePosition(newPos);
-                
             } else {
                 if (vertical > dirThreshold && isGrounded) {
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
-                    swipeDirection = Defines.SwipeDirection.UP;
+                    swipeDirection = Defines.SwipeDirection.JUMP;
                 }
-                else if(vertical < -dirThreshold && !isGrounded)
+                else
                 {
-                    swipeDirection = Defines.SwipeDirection.DOWN;
+                    swipeDirection = Defines.SwipeDirection.SLIDE;
                 }
                 
             }
