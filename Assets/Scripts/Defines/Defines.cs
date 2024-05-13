@@ -5,9 +5,9 @@ public static class Defines
     {
         ERROR=-1,
         RUN=0,
-        JUMP=0<<1,
-        SLIDE=0<<2,
-        DEAD=0<<3
+        JUMP=1,
+        SLIDE=2,
+        DEAD=3
     }
 }
 

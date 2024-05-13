@@ -52,7 +52,6 @@ public class SwipeDetection : MonoBehaviour
 
         private void Update()
         {
-            
             if (!groundCheck)
             {
                 groundCheck=GameObject.FindGameObjectWithTag("Ground").transform;
@@ -82,7 +81,7 @@ public class SwipeDetection : MonoBehaviour
 
         private void OnCollisionEnter(Collision other)
         {
-            if (groundCheck !=null && groundCheck.CompareTag("Ground"))
+            if (!GameManager.Instance.isGameover && groundCheck !=null && groundCheck.CompareTag("Ground"))
             {
                 isGrounded = true;
                 
@@ -97,9 +96,9 @@ public class SwipeDetection : MonoBehaviour
 
         private void Die()
         {
-            //GameManager.Instance.GameOver();
+            GameManager.Instance.GameOver();
             swipeDirection = Defines.SwipeDirection.DEAD;
-            GameManager.Instance.isGameover = true;
+            
         }
 
         private void OnCollisionExit(Collision other)
@@ -167,12 +166,20 @@ public class SwipeDetection : MonoBehaviour
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
                     swipeDirection = Defines.SwipeDirection.JUMP;
                 }
-                else if(vertical < -dirThreshold)
+                else if (vertical < -dirThreshold)
                 {
-                    swipeDirection = Defines.SwipeDirection.SLIDE;
-                    slideTimer = slideDuration;
+                    if (swipeDirection == Defines.SwipeDirection.JUMP)
+                    {
+                        swipeDirection = Defines.SwipeDirection.SLIDE;
+                        slideTimer = slideDuration;
+                    }
+                    else if (isGrounded)
+                    {
+                        swipeDirection = Defines.SwipeDirection.SLIDE;
+                        slideTimer = slideDuration;
+                    }
                 }
-                else
+                else if (isGrounded)
                 {
                     swipeDirection = Defines.SwipeDirection.RUN;
                 }

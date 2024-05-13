@@ -4,7 +4,7 @@ using TMPro;
 public class GameManager : Singleton<GameManager>
 {
     public float stageSpeed = 5f;
-    public bool isGameover = false;
+    public bool isGameover;
     
     public float distanceTravelled = 0;
     public float speedIncreaseMilestone = 10;

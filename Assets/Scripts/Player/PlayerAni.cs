@@ -15,6 +15,8 @@ public class PlayerAni : MonoBehaviour
     private static readonly int IsJump = Animator.StringToHash("isJump");
     private static readonly int IsSlide = Animator.StringToHash("isSlide");
 
+    private bool deathTrigger;
+    
     private void Awake()
     {
         ani = GetComponent<Animator>();
@@ -23,32 +25,28 @@ public class PlayerAni : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.isGameover) return;
-        
-        if (swipeDetection.isGrounded)
-        {
-            ani.SetBool(IsRun, true);
-            ani.SetBool(IsJump, false);
-        }
-        else
-        {
-            ani.SetBool(IsRun, false);
-            ani.SetBool(IsJump, true);
-        }
-        
-        if(swipeDetection.swipeDirection == Defines.SwipeDirection.DEAD)
+        if (GameManager.Instance.isGameover && !deathTrigger)    
         {
             ani.SetTrigger(IsDead);
             ani.SetBool(IsRun, false);
             ani.SetBool(IsJump, false);
+            ani.SetBool(IsSlide, false);
+            deathTrigger = true;
+            return;
         }
+        if(deathTrigger) return;
         
-        if(swipeDetection.swipeDirection == Defines.SwipeDirection.SLIDE)
+        if (swipeDetection.isGrounded)
         {
-            ani.SetTrigger(IsSlide);
+            ani.SetBool(IsJump, false);
+            ani.SetBool(IsRun, true);
         }
+        else
+        {
+            ani.SetBool(IsJump, true);
+            ani.SetBool(IsRun, false);
+        }
+        ani.SetBool(IsSlide, swipeDetection.swipeDirection == Defines.SwipeDirection.SLIDE);
         
-    
-
     }
 }
