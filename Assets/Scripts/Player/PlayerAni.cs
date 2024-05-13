@@ -22,31 +22,32 @@ public class PlayerAni : MonoBehaviour
 
     void Update()
     {
-        if (swipeDetection.isGrounded)
-        {
-            switch (swipeDetection.swipeDirection)
-            {
-                case Defines.SwipeDirection.UP:
-                    ani.Play(IsJump);
-                    break;
-                case Defines.SwipeDirection.DOWN:
-                    ani.Play(IsSlide);
-                    break;
-                case Defines.SwipeDirection.LEFT:
-                case Defines.SwipeDirection.RIGHT:
-                    ani.SetBool(IsRun, true);
-                    break;
-                case Defines.SwipeDirection.ERROR:
-                    ani.SetTrigger(IsDead);
-                    break;
-                case Defines.SwipeDirection.NONE:
-                    ani.SetBool(IsRun, true);
-                    break;
-                default:
-                    ani.SetBool(IsRun, true);
-                    break;
-            }
+        switch (swipeDetection.swipeDirection) {
+            case Defines.SwipeDirection.UP:
+                ani.SetBool(IsJump, true);
+                ani.SetBool(IsRun, false);
+                ani.SetBool(IsSlide, false);
+                break;
+            case Defines.SwipeDirection.DOWN:
+                ani.SetBool(IsSlide, true);
+                ani.SetBool(IsJump, false);
+                ani.SetBool(IsRun, false);
+                break;
+            case Defines.SwipeDirection.LEFT:
+            case Defines.SwipeDirection.RIGHT:
+            case Defines.SwipeDirection.NONE:
+                ani.SetBool(IsRun, true);
+                ani.SetBool(IsJump, false);
+                ani.SetBool(IsSlide, false);
+                break;
+            case Defines.SwipeDirection.ERROR:
+                ani.SetTrigger(IsDead);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-        
+
+
+        // swipeDetection.swipeDirection = Defines.SwipeDirection.NONE;
     }
 }

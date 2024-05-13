@@ -23,7 +23,9 @@ public class SwipeDetection : MonoBehaviour
         
         [Header("Swipe Movement"),Tooltip("Swipe Move Speed")]
         public float jumpForce = 3f;
+        [SerializeField]
         private float[] lanes=new float[] {-3.8f,0,3.8f};
+        [SerializeField]
         private int currentLaneIndex = 1;
         
         private Rigidbody rb;
@@ -32,8 +34,8 @@ public class SwipeDetection : MonoBehaviour
         
         private float minSwipeDistancePixels;
         private float minSwipeDistanceInch = 0.25f;
-        public Defines.SwipeDirection swipeDirection; 
         
+        public Defines.SwipeDirection swipeDirection;
         
         private void Awake()
         {
@@ -83,7 +85,7 @@ public class SwipeDetection : MonoBehaviour
 
         private void Die()
         {
-            swipeDirection = Defines.SwipeDirection.ERROR;
+
             GameManager.Instance.GameOver();
         }
 
@@ -92,7 +94,6 @@ public class SwipeDetection : MonoBehaviour
             if (groundCheck!=null && groundCheck.CompareTag("Ground"))
             {
                 isGrounded = false;
-                
             }
         }
 
@@ -109,10 +110,6 @@ public class SwipeDetection : MonoBehaviour
         {
             Debug.Log("Start");
             startPos = pos;
-            
-            
-            // TODO : Check Second Touch
-            
         }
 
         private void SwipeEnd(Vector2 pos, float time)
@@ -124,6 +121,7 @@ public class SwipeDetection : MonoBehaviour
         
         private void DetectSwipe()
         {
+            Debug.Log("Detecting Swipe");
             var swipeVector = endPos - startPos;
             var distance = Mathf.Clamp(swipeVector.magnitude, 0f, minSwipeDistancePixels);
             if (distance >= minDistance)
@@ -135,41 +133,31 @@ public class SwipeDetection : MonoBehaviour
 
         private void UpdateMovement(Vector2 swipeDir)
         {
-            Debug.Log($"Attempting to move in direction: {swipeDir}");
             var horizontal = swipeDir.x;
             var vertical = swipeDir.y;
-
+            Debug.Log("Horizontal : " + horizontal + " Vertical : " + vertical);
             if (Mathf.Abs(horizontal) > Mathf.Abs(vertical)) {
                 if (horizontal > dirThreshold) {
-                    swipeDirection = Defines.SwipeDirection.RIGHT;
                     currentLaneIndex = Mathf.Clamp(currentLaneIndex + 1, 0, lanes.Length - 1);
+                    swipeDirection = Defines.SwipeDirection.RIGHT;
+                    
                 } else if (horizontal < -dirThreshold) {
-                    swipeDirection = Defines.SwipeDirection.LEFT;
                     currentLaneIndex = Mathf.Clamp(currentLaneIndex - 1, 0, lanes.Length - 1);
+                    swipeDirection = Defines.SwipeDirection.LEFT;
+                    
                 }
                 var newPos = rb.position;
                 newPos.x = lanes[currentLaneIndex];
                 rb.MovePosition(newPos);
-                Debug.Log($"New Position: {newPos}");
+                
             } else {
                 if (vertical > dirThreshold && isGrounded) {
                     rb.MovePosition(rb.position + Vector3.up * jumpForce);
                     swipeDirection = Defines.SwipeDirection.UP;
                 }
-                else if(!isGrounded && vertical < dirThreshold)
+                else if(vertical < -dirThreshold && !isGrounded)
                 {
-                    Debug.Log("Not Grounded");
                     swipeDirection = Defines.SwipeDirection.DOWN;
-                    ImmediateGround();
-                }
-                else if(vertical< dirThreshold && isGrounded)
-                {
-                    Debug.Log("Grounded");
-                    swipeDirection = Defines.SwipeDirection.DOWN;
-                }
-                else
-                {
-                    swipeDirection = Defines.SwipeDirection.UP;
                 }
                 
             }
@@ -178,7 +166,7 @@ public class SwipeDetection : MonoBehaviour
         private void ImmediateGround()
         {
             var position = rb.position;
-            Vector3 groundPosition= new Vector3(position.x,0,position.z);
+            var groundPosition= new Vector3(position.x,0,position.z);
             rb.MovePosition(groundPosition);
             isGrounded = true;
         }
