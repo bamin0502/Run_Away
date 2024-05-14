@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2434350100270066881}
   - component: {fileID: 444866585003841547}
   - component: {fileID: 5781398346904842970}
+  - component: {fileID: 9033391521434699774}
   m_Layer: 0
   m_Name: Taxi
   m_TagString: Obstacle
@@ -103,5 +104,26 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.247918, y: 1.9772949, z: 5.5286865}
-  m_Center: {x: 0, y: 0.98864746, z: 0}
+  m_Size: {x: 2.247918, y: 1.9772949, z: 3.888596}
+  m_Center: {x: 0, y: 0.98864746, z: -0.8200452}
+--- !u!65 &9033391521434699774
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102204373591914974}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.247918, y: 1.1958389, z: 1.6563213}
+  m_Center: {x: 0, y: 0.59791946, z: 1.9361826}

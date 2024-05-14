@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2367413161859854479}
   - component: {fileID: 521937017298043973}
   - component: {fileID: 7063198888967605435}
+  - component: {fileID: 647258873584240540}
   m_Layer: 0
   m_Name: Car_2_3
   m_TagString: Obstacle
@@ -103,5 +104,26 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2272494, y: 1.4573463, z: 5.558018}
-  m_Center: {x: 0, y: 0.72867316, z: 0}
+  m_Size: {x: 2.2272494, y: 1.4573463, z: 3.9394693}
+  m_Center: {x: 0, y: 0.72867316, z: -0.8092747}
+--- !u!65 &647258873584240540
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035264757950506384}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.2272494, y: 0.9803653, z: 1.6359286}
+  m_Center: {x: 0, y: 0.49018264, z: 1.961045}
