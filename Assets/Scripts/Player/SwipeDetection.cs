@@ -39,6 +39,7 @@ public class SwipeDetection : MonoBehaviour
         
         [SerializeField] private float slideDuration = 1.0f;
         private float slideTimer;
+        
         private void Awake()
         {
             inputManager = GetComponent<InputManager>();

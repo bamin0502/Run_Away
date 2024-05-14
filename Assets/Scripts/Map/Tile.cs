@@ -5,7 +5,6 @@ public class Tile : MonoBehaviour
 {
     [Header("Transforms"), Tooltip("The transforms of the tile, obstacle, and player.")]
     public Transform tilePrefab;
-    public Transform[] obstaclePrefabs;
     public Transform playerTransform;
 
     [Header("BackGround"), Tooltip("The transforms of the ground and background.")]
@@ -27,12 +26,18 @@ public class Tile : MonoBehaviour
     private List<Transform> groundPool = new List<Transform>();
     private List<Transform> backgroundPool = new List<Transform>();
 
+    private List<GameObject> obstaclePrefabs;
+
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         
         InitializeObjectPool(groundPrefabs, groundPool, 10);
         InitializeObjectPool(backgroundPrefabs, backgroundPool, 10);
+
+        // DataManager를 통해 장애물 로드
+        var obstacleTable = DataManager.GetObstacleTable();
+        obstaclePrefabs = obstacleTable.GetLoadedObstacles();
     }
 
     void Start()
@@ -120,13 +125,18 @@ public class Tile : MonoBehaviour
 
         for (var i = 0; i < spawnPoints.Count; i++)
         {
-            if (i != emptyIndex && obstaclePrefabs.Length > 0)
+            if (i != emptyIndex && obstaclePrefabs.Count > 0)
             {
                 var spawnPoint = spawnPoints[i];
                 if (Random.Range(0, 2) == 0)
                 {
-                    var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
-                    Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity, spawnPoint);
+                    var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
+                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity);
+                    Vector3 originalScale = obstacle.transform.localScale;
+                    obstacle.transform.SetParent(spawnPoint);
+                    var lossyScale = spawnPoint.lossyScale;
+                    obstacle.transform.localScale = Vector3.Scale(originalScale, 
+                        new Vector3(1 / lossyScale.x, 1 / lossyScale.y, 1 / lossyScale.z));
                 }
             }
         }
@@ -214,7 +224,7 @@ public class Tile : MonoBehaviour
     {
         foreach (var prefab in prefabs)
         {
-            for (int i = 0; i < initialSize; i++)
+            for (var i = 0; i < initialSize; i++)
             {
                 var instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
                 instance.gameObject.SetActive(false);
@@ -227,7 +237,7 @@ public class Tile : MonoBehaviour
     {
         if (pool.Count > 0)
         {
-            int randomIndex = Random.Range(0, pool.Count);
+            var randomIndex = Random.Range(0, pool.Count);
             var obj = pool[randomIndex];
             pool.RemoveAt(randomIndex);
             return obj;

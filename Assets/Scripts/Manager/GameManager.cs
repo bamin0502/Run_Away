@@ -30,11 +30,22 @@ public class GameManager : Singleton<GameManager>
             distanceText.text = "Distance: " + distanceTravelled.ToString("F2") + " meters";
         }
         
+        if(Input.GetKeyDown(KeyCode.Escape))
+        #if UNITY_ANDROID
+            Application.Quit(); 
+        #endif
+
     }
 
     public void GameOver()
     {
         Debug.Log("Game Over");
         isGameover = true;
+        Handheld.Vibrate();
+    }
+    
+    public void RestartGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 }

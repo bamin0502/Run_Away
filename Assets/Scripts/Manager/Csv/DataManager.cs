@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public static class DataManager
@@ -9,22 +7,28 @@ public static class DataManager
 
     static DataManager()
     {
-        foreach (var id in tables.Keys.ToList())
-        {
-            tables[id].Load(string.Format(DataTable.FormatPath, id));
-            tables.Add(id,tables[id]);
-        }
-        
+        // 테이블 초기화 및 로드
+        AddTable<ObstacleTable>("RunAway_Obstacle");
     }
-    
-    public static StringTable GetStringTable()
+
+    private static void AddTable<T>(string id) where T : DataTable, new()
     {
-        return Get<StringTable>("StringTable");
+        if (!tables.ContainsKey(id))
+        {
+            var table = new T();
+            table.Load(id);
+            tables.Add(id, table);
+        }
+    }
+
+    public static ObstacleTable GetObstacleTable()
+    {
+        return Get<ObstacleTable>("RunAway_Obstacle");
     }
 
     private static T Get<T> (string id) where T : DataTable
     {
-        if(!tables.TryGetValue(id, out var table))
+        if (!tables.TryGetValue(id, out var table))
         {
             Debug.LogError("Table not found: " + id);
             return null;
@@ -32,4 +36,3 @@ public static class DataManager
         return table as T;
     }
 }
-

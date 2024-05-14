@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
@@ -15,8 +14,14 @@ public class ObstacleTable : DataTable
     {
         path = string.Format(FormatPath, path);
         
-        var textAsset = Resources.Load<TextAsset>(path);
-        using (var reader = new StringReader(textAsset.text))
+        var fullPath = Path.Combine(Application.dataPath, path);
+        if (!File.Exists(fullPath))
+        {
+            Debug.LogError($"CSV file not found at path: {fullPath}");
+            return;
+        }
+        
+        using (var reader = new StreamReader(fullPath))
         using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
                {
                    Delimiter = ",",
@@ -29,7 +34,7 @@ public class ObstacleTable : DataTable
             {
                 Debug.Log($"한국어 확인용: {obstacle.ObstacleNameKorean}");
                 
-                GameObject prefab = Resources.Load<GameObject>($"Prefabs/Obstacle/{obstacle.ObstacleNameEnglish}");
+                GameObject prefab = Resources.Load<GameObject>($"Obstacle/{obstacle.ObstacleNameEnglish}");
                 if (prefab != null)
                 {
                     loadedObstacles.Add(prefab);
