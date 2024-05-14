@@ -11,6 +11,8 @@ TagManager:
   - TallSpawnPoint
   - SmallSpawnPoint
   - BackGround
+  - WalkBy
+  - Item
   layers:
   - Default
   - TransparentFX
