@@ -8,6 +8,10 @@ public class Tile : MonoBehaviour
     public Transform[] obstaclePrefabs;
     public Transform playerTransform;
 
+    [Header("BackGround"), Tooltip("The transforms of the ground and background.")]
+    public Transform[] groundPrefabs;
+    public Transform[] backgroundPrefabs;
+
     [Header("Tile Settings"), Tooltip("The tile prefab to spawn.")]
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
@@ -17,14 +21,20 @@ public class Tile : MonoBehaviour
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
-    
+
     private GameManager gameManager;
     
+    private List<Transform> groundPool = new List<Transform>();
+    private List<Transform> backgroundPool = new List<Transform>();
+
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+        
+        InitializeObjectPool(groundPrefabs, groundPool, 10);
+        InitializeObjectPool(backgroundPrefabs, backgroundPool, 10);
     }
-    
+
     void Start()
     {
         nextTilePosition = startPoint;
@@ -39,14 +49,12 @@ public class Tile : MonoBehaviour
         if (!gameManager.isGameover)
         {
             moveSpeed = gameManager.stageSpeed;
-            Debug.Log(moveSpeed);
             MoveTiles();
             if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
             {
                 ReuseTile();
             }
         }
-        
     }
 
     private void MoveTiles()
@@ -78,7 +86,7 @@ public class Tile : MonoBehaviour
             Debug.LogWarning("TileEndPoint component is missing on the tile prefab.");
             return;
         }
-    
+
         if (tileEndPoint.endPoint == null)
         {
             Debug.LogWarning("EndPoint is not assigned in TileEndPoint component.");
@@ -92,11 +100,13 @@ public class Tile : MonoBehaviour
         {
             SpawnObstacles(newTile);
         }
+
+        SpawnGroundElements(newTile);
+        SpawnBackgroundElements(newTile);
     }
 
     private void SpawnObstacles(Transform tile)
     {
-        // 모든 자식 스폰 포인트를 리스트에 추가
         var spawnPoints = new List<Transform>();
         foreach (Transform child in tile)
         {
@@ -106,20 +116,66 @@ public class Tile : MonoBehaviour
             }
         }
 
-        // 장애물을 생성하지 않을 포인트를 무작위로 선택
         var emptyIndex = Random.Range(0, spawnPoints.Count);
 
-        // 선택된 포인트를 제외한 나머지 포인트에 장애물 생성
         for (var i = 0; i < spawnPoints.Count; i++)
         {
-            if (i != emptyIndex && obstaclePrefabs.Length > 0) // 비워둘 인덱스가 아니면
+            if (i != emptyIndex && obstaclePrefabs.Length > 0)
             {
                 var spawnPoint = spawnPoints[i];
-                if (Random.Range(0, 2) == 0) // 50% 확률로 장애물 생성
+                if (Random.Range(0, 2) == 0)
                 {
                     var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
                     Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity, spawnPoint);
                 }
+            }
+        }
+    }
+
+    private void SpawnGroundElements(Transform tile)
+    {
+        var groundPoints = new List<Transform>();
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("SmallSpawnPoint"))
+            {
+                groundPoints.Add(child);
+            }
+        }
+
+        foreach (var point in groundPoints)
+        {
+            if (groundPrefabs.Length > 0 && Random.Range(0f, 1f) <= 0.7f)
+            {
+                var groundElement = GetRandomPooledObject(groundPool, groundPrefabs);
+                groundElement.position = point.position;
+                groundElement.rotation = point.rotation;
+                groundElement.gameObject.SetActive(true);
+                groundElement.SetParent(point);
+            }
+        }
+    }
+
+    private void SpawnBackgroundElements(Transform tile)
+    {
+        var backgroundPoints = new List<Transform>();
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("TallSpawnPoint"))
+            {
+                backgroundPoints.Add(child);
+            }
+        }
+
+        foreach (var point in backgroundPoints)
+        {
+            if (backgroundPrefabs.Length > 0 && Random.Range(0f, 1f) <= 0.7f)
+            {
+                var backgroundElement = GetRandomPooledObject(backgroundPool, backgroundPrefabs);
+                backgroundElement.position = point.position;
+                backgroundElement.rotation = point.rotation;
+                backgroundElement.gameObject.SetActive(true);
+                backgroundElement.SetParent(point);
             }
         }
     }
@@ -131,6 +187,56 @@ public class Tile : MonoBehaviour
         var endPoint = tiles[^1].GetComponent<TileEndPoint>().endPoint.position;
         tile.position = endPoint;
         tiles.Add(tile);
+
+        DeactivateAndEnqueue(tile, "SmallSpawnPoint", groundPool);
+        DeactivateAndEnqueue(tile, "TallSpawnPoint", backgroundPool);
+        
+        SpawnGroundElements(tile);
+        SpawnBackgroundElements(tile);
+    }
+
+    private void DeactivateAndEnqueue(Transform tile, string spawnPointTag, List<Transform> pool)
+    {
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag(spawnPointTag))
+            {
+                foreach (Transform element in child)
+                {
+                    element.gameObject.SetActive(false);
+                    pool.Add(element);
+                }
+            }
+        }
+    }
+
+    private void InitializeObjectPool(Transform[] prefabs, List<Transform> pool, int initialSize)
+    {
+        foreach (var prefab in prefabs)
+        {
+            for (int i = 0; i < initialSize; i++)
+            {
+                var instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+                instance.gameObject.SetActive(false);
+                pool.Add(instance);
+            }
+        }
+    }
+
+    private Transform GetRandomPooledObject(List<Transform> pool, Transform[] prefabs)
+    {
+        if (pool.Count > 0)
+        {
+            int randomIndex = Random.Range(0, pool.Count);
+            var obj = pool[randomIndex];
+            pool.RemoveAt(randomIndex);
+            return obj;
+        }
+        else
+        {
+            var prefab = prefabs[Random.Range(0, prefabs.Length)];
+            var instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            return instance;
+        }
     }
 }
-

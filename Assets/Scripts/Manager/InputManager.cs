@@ -26,7 +26,6 @@ public class InputManager : Singleton<InputManager>
     private void OnDisable()
     {
         playerControls.Disable();
-        
     }
 
     void Start()
@@ -43,7 +42,6 @@ public class InputManager : Singleton<InputManager>
     private void StartTouchPrimary(InputAction.CallbackContext context)
     {
         OnStartTouch?.Invoke(PrimaryPosition(),(float)context.startTime);
-        
     }
 
     private Vector2 PrimaryPosition()

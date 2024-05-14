@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/BangMinho.unity
+    guid: e65114dc6ec08a143b7d021c1803d6be
   m_configObjects: {}

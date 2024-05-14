@@ -8,6 +8,9 @@ TagManager:
   - ObstacleSpawnPoint
   - Manager
   - Obstacle
+  - TallSpawnPoint
+  - SmallSpawnPoint
+  - BackGround
   layers:
   - Default
   - TransparentFX
