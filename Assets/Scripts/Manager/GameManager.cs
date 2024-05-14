@@ -21,8 +21,9 @@ public class GameManager : Singleton<GameManager>
         if (!isGameover)
         {
             distanceTravelled += stageSpeed * Time.deltaTime;
-            
+
             if (distanceTravelled > speedIncreaseMilestone)
+
             {
                 stageSpeed *= speedMultiplier;
                 speedIncreaseMilestone *= speedMultiplier;

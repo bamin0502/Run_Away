@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.191991, g: 0.5946723, b: 0.7773275, a: 1}
+  m_IndirectSpecularColor: {r: 0.19201712, g: 0.5946824, b: 0.7740943, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -831,11 +831,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 465066774852f184f96c4feffc802931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageSpeed: 5
+  stageSpeed: 15
   isGameover: 0
   distanceTravelled: 0
   speedIncreaseMilestone: 100
-  speedMultiplier: 1.1
+  speedMultiplier: 1
   distanceText: {fileID: 1834485004}
 --- !u!4 &1504525080
 Transform:
