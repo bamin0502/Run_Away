@@ -82,10 +82,9 @@ public class SwipeDetection : MonoBehaviour
 
         private void OnCollisionEnter(Collision other)
         {
-            if (!GameManager.Instance.isGameover && groundCheck !=null && groundCheck.CompareTag("Ground"))
+            if (!GameManager.Instance.isGameover && groundCheck != null && other.collider.CompareTag("Ground"))
             {
                 isGrounded = true;
-                
             }
             
             if(other.gameObject.CompareTag("Obstacle"))
@@ -104,7 +103,7 @@ public class SwipeDetection : MonoBehaviour
 
         private void OnCollisionExit(Collision other)
         {
-            if (groundCheck!=null && groundCheck.CompareTag("Ground"))
+            if (groundCheck!=null && other.collider.CompareTag("Ground"))
             {
                 isGrounded = false;
             }

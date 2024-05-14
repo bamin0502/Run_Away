@@ -43,6 +43,7 @@ public class ObstacleTable : DataTable
                 else
                 {
                     Debug.LogWarning($"해당 위치에 프리팹이 존재하지 않음 {obstacle.ObstacleNameEnglish}");
+                    return;
                 }
             }
         }

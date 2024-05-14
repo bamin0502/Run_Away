@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19201712, g: 0.5946824, b: 0.7740943, a: 1}
+  m_IndirectSpecularColor: {r: 0.19024794, g: 0.59240067, b: 0.7727873, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -183,7 +183,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 105
+  field of view: 120
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -209,8 +209,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 41886609}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: -6}
+  m_LocalRotation: {x: 0.019202089, y: 0, z: 0, w: 0.99981564}
+  m_LocalPosition: {x: 0, y: 5.73, z: -3.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -304,6 +304,8 @@ GameObject:
   m_Component:
   - component: {fileID: 488759354}
   - component: {fileID: 488759357}
+  - component: {fileID: 488759359}
+  - component: {fileID: 488759358}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -338,6 +340,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &488759358
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488759353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &488759359
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488759353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Damping: 0
 --- !u!1 &539059097
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,10 +410,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 1063533099136412895, guid: ea6339cca5c675c4f91462fbf016e09f, type: 3}
-  obstaclePrefabs:
-  - {fileID: 942608943820464092, guid: 8b7b8645a9db656438e71b61ee048b67, type: 3}
-  - {fileID: 942608943820464092, guid: 3c61a9019d1ba9a44b7d7d2a272bc16a, type: 3}
-  - {fileID: 942608943820464092, guid: cef68ab1e57046c4e9f8db7557158386, type: 3}
   playerTransform: {fileID: 4625979568379758971}
   groundPrefabs:
   - {fileID: 7621207150434823679, guid: 087fff42d3c77b246925b4782351aa19, type: 3}
@@ -653,7 +676,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 1678267275}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 105
+    FieldOfView: 120
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -679,8 +702,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929700431}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: -6}
+  m_LocalRotation: {x: 0.019202089, y: 0, z: 0, w: 0.99981564}
+  m_LocalPosition: {x: 0, y: 5.73, z: -3.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -877,7 +900,7 @@ Transform:
   m_GameObject: {fileID: 1678267274}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.35}
+  m_LocalPosition: {x: 0, y: 0, z: 145.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
