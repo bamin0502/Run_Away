@@ -75,12 +75,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eac0803a389c9b48aaeedf9a9ac90a5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 101186214032022350}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eac0803a389c9b48aaeedf9a9ac90a5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4654472453291720846}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eac0803a389c9b48aaeedf9a9ac90a5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1293698919425809611}
   m_SourcePrefab: {fileID: 100100000, guid: 5eac0803a389c9b48aaeedf9a9ac90a5, type: 3}
 --- !u!1 &1650345016999353462 stripped
 GameObject:
@@ -106,47 +100,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2272496, y: 1.0155635, z: 4.7813396}
-  m_Center: {x: 0, y: 0.50778174, z: -0.38834095}
---- !u!65 &4654472453291720846
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650345016999353462}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.2272496, y: 0.9520185, z: 0.7668209}
-  m_Center: {x: 0, y: 0.47600925, z: 2.3956037}
---- !u!65 &1293698919425809611
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650345016999353462}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.2272496, y: 0.44297814, z: 3.547963}
-  m_Center: {x: 0, y: 1.2358592, z: -1.0050352}
+  m_Size: {x: 2.2272496, y: 1.5195979, z: 5.4348288}
+  m_Center: {x: 0, y: 0.75979894, z: -0.061596394}

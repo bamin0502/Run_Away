@@ -7,105 +7,137 @@ using UnityEngine.SceneManagement;
 public class UiManager : Singleton<UiManager>
 {
     [Header("UI Elements")] 
-    public GameObject PausePanel;
-    public GameObject GameOverPanel;
-    //public GameObject QuitPanel;
-    //public GameObject HomePanel;
+    [SerializeField] public GameObject PausePanel;
+    [SerializeField] public GameObject GameOverPanel;
     
     [Header("Pause Panel Ui Button")]
-    public Button homeButton;
-    public Button resumeButton;
-    public Button quitButton;
+    [SerializeField] public Button homeButton;
+    [SerializeField] public Button resumeButton;
+    [SerializeField] public Button quitButton;
     
     [Header("Game Over Panel Ui Button")]
-    public Button restartButton;
-    public Button quitButton2;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button quitButton2;
 
     [Header("Game Over Panel Ui Text")]
-    public TextMeshProUGUI distanceText;
-    //public TextMeshProUGUI coinText;
-    //public TextMeshProUGUI bestDistanceText;
-    
-    //[Header("Quit Panel Ui Button")]
-    //public Button yesButton;
-    //public Button noButton;
-    
-    //[Header("Home Panel Ui Button")]
-    //public Button StartButton;
-    
+    [SerializeField] public TextMeshProUGUI distanceText;
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        InitializeUI();
+    }
+
     public override void Awake()
     {
-        PausePanel.SetActive(false);
-        GameOverPanel.SetActive(false);
-        //QuitPanel.SetActive(false);
-        //HomePanel.SetActive(false);
+        base.Awake();
+        InitializeUI();
     }
-    
+
+    private void InitializeUI()
+    {
+        
+        
+        
+        if (PausePanel != null)
+        {
+            PausePanel.SetActive(false);
+        }
+        if (GameOverPanel != null)
+        {
+            GameOverPanel.SetActive(false);
+        }
+
+        if (homeButton != null)
+        {
+            homeButton.onClick.AddListener(OnHomeButtonClick);
+        }
+        if (resumeButton != null)
+        {
+            resumeButton.onClick.AddListener(OnResumeButtonClick);
+        }
+        if (quitButton != null)
+        {
+            quitButton.onClick.AddListener(OnQuitButtonClick);
+        }
+        if (restartButton != null)
+        {
+            restartButton.onClick.AddListener(OnRestartButtonClick);
+        }
+        if (quitButton2 != null)
+        {
+            quitButton2.onClick.AddListener(OnQuitButtonClick);
+        }
+    }
+
     public void ShowPausePanel()
     {
+        if (!PausePanel) return;
+
         PausePanel.SetActive(true);
         FadeIn(PausePanel);
         Time.timeScale = 0;
     }
-    
+
     public void ShowGameOverPanel()
     {
+        if (GameOverPanel == null) return;
+
         GameOverPanel.SetActive(true);
         FadeIn(GameOverPanel);
         Time.timeScale = 0;
     }
-    
+
     public void UpdateDistanceText(float distance)
     {
-        distanceText.text = "Distance: " + distance.ToString("F2") + " meters";
-    }
-    
-    public void UpdateCoinText(int coin)
-    {
-        //coinText.text = "Coin: " + coin;
-    }
-    
-    public void UpdateBestDistanceText(float bestDistance)
-    {
-        //bestDistanceText.text = "Best Distance: " + bestDistance.ToString("F2") + " meters";
+        if (distanceText != null)
+            distanceText.text = "Distance: " + distance.ToString("F2") + " meters";
     }
 
     private void FadeIn(GameObject obj)
     {
-        obj.GetComponent<CanvasGroup>().DOFade(1, 0.5f);
+        CanvasGroup canvasGroup = obj.GetComponent<CanvasGroup>();
+        if (canvasGroup)
+            canvasGroup.DOFade(1, 0.5f);
     }
-    
+
     private void FadeOut(GameObject obj)
     {
-        obj.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
+        CanvasGroup canvasGroup = obj.GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+            canvasGroup.DOFade(0, 0.5f);
     }
-    
-    public void OnHomeButtonClick()
+
+    private void OnHomeButtonClick()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
     }
-    
-    public void OnResumeButtonClick()
+
+    private void OnResumeButtonClick()
     {
         Time.timeScale = 1;
         FadeOut(PausePanel);
         PausePanel.SetActive(false);
     }
-    
-    public void OnQuitButtonClick()
+
+    private void OnQuitButtonClick()
     {
         Application.Quit();
     }
-    public void OnRestartButtonClick()
+
+    private void OnRestartButtonClick()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    
-    public void OnStartButtonClick()
-    {
-        Time.timeScale = 1;
-    }
-    
 }

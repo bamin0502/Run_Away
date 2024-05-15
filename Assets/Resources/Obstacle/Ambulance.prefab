@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1493698371004476936}
   - component: {fileID: 3701494387874585282}
   - component: {fileID: 5410042875388916053}
-  - component: {fileID: 3778346901130270812}
   m_Layer: 0
   m_Name: Ambulance
   m_TagString: Obstacle
@@ -104,26 +103,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.426696, y: 2.8345528, z: 4.65226}
-  m_Center: {x: 0, y: 1.4172764, z: -0.5844115}
---- !u!65 &3778346901130270812
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2908944898091809559}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.426696, y: 1.6938959, z: 1.1668806}
-  m_Center: {x: 0, y: 0.84694797, z: 2.3271008}
+  m_Size: {x: 2.426696, y: 2.8345528, z: 5.8043737}
+  m_Center: {x: 0, y: 1.4172764, z: -0.008354545}

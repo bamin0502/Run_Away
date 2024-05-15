@@ -47,11 +47,13 @@ public class Tile : MonoBehaviour
         {
             SpawnTile(i >= noObstaclesInitially);
         }
-    }
+                   
 
+    }
+ 
     void Update()
     {
-        if (!gameManager.isGameover)
+        if (!gameManager.isGameover || !gameManager.isPaused)
         {
             moveSpeed = gameManager.stageSpeed;
             MoveTiles();
@@ -64,6 +66,7 @@ public class Tile : MonoBehaviour
 
     private void MoveTiles()
     {
+        if(gameManager.isPaused || gameManager.isGameover) return;
         foreach (var tile in tiles)
         {
             tile.Translate(-Vector3.forward * (moveSpeed * Time.deltaTime), Space.World);

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3041010411569653320}
   - component: {fileID: 997302755881079426}
   - component: {fileID: 2984192280446373057}
-  - component: {fileID: 5889370210572792032}
   m_Layer: 0
   m_Name: Bulldozer
   m_TagString: Obstacle
@@ -104,26 +103,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.9874187, y: 4.57481, z: 4.4363484}
-  m_Center: {x: 0, y: 2.287405, z: -1.8647506}
---- !u!65 &5889370210572792032
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1646028154367701847}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4.9874187, y: 2.6156518, z: 3.7105398}
-  m_Center: {x: 0, y: 1.3078259, z: 2.227656}
+  m_Size: {x: 4.9874187, y: 4.57481, z: 8.009471}
+  m_Center: {x: 0, y: 2.287405, z: -0.07818949}

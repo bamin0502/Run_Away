@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5548762726295650206}
   - component: {fileID: 7702805750725692244}
   - component: {fileID: 9041858102546438839}
-  - component: {fileID: 3734342163079847994}
   m_Layer: 0
   m_Name: Main_Truck_3
   m_TagString: Obstacle
@@ -104,26 +103,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.9050262, y: 2.983824, z: 5.963784}
-  m_Center: {x: 0, y: 1.491912, z: -0.81055105}
---- !u!65 &3734342163079847994
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8207002681667545729}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.9050262, y: 1.9471352, z: 1.6212535}
-  m_Center: {x: 0, y: 0.9735676, z: 2.9818165}
+  m_Size: {x: 2.9050262, y: 2.983824, z: 7.1448855}
+  m_Center: {x: 0, y: 1.491912, z: -0.2200005}

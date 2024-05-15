@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static T instance;
+    private static T instance = null;
+
     public static T Instance
     {
         get
         {
-            if (instance == null)
+            if (!instance)
             {
                 instance = FindObjectOfType<T>();
-                if (instance == null)
+                if (!instance)
                 {
                     GameObject obj = new GameObject
                     {
@@ -22,6 +23,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             return instance;
         }
     }
+
     public virtual void Awake()
     {
         if (instance == null)
@@ -29,10 +31,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             instance = this as T;
             DontDestroyOnLoad(this.gameObject);
         }
-        else
+        else if (instance != this)
         {
+            Debug.LogWarning($"Instance of {typeof(T).Name} already exists, destroying duplicate.");
             Destroy(gameObject);
         }
     }
-} 
-
+}

@@ -44,11 +44,15 @@ public class SwipeDetection : MonoBehaviour
         {
             inputManager = GetComponent<InputManager>();
             rb = GetComponent<Rigidbody>();
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
 
         private void Start()
         {
             minSwipeDistancePixels = minSwipeDistanceInch * Screen.dpi;
+            swipeDirection = Defines.SwipeDirection.RUN;
+            rb.isKinematic = false;
+            
         }
 
         private void Update()
@@ -87,18 +91,24 @@ public class SwipeDetection : MonoBehaviour
                 isGrounded = true;
             }
             
-            if(other.gameObject.CompareTag("Obstacle"))
+            if (other.collider.CompareTag("Obstacle"))
             {
                 Debug.Log("Obstacle Hit");
                 Die();
             }
         }
 
+        private void StopPlayer()
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;    
+        }
+        
         private void Die()
         {
-            GameManager.Instance.GameOver();
             swipeDirection = Defines.SwipeDirection.DEAD;
-            
+            GameManager.Instance.GameOver();
         }
 
         private void OnCollisionExit(Collision other)
@@ -116,6 +126,7 @@ public class SwipeDetection : MonoBehaviour
                 UpdateMovement(pendingMovement);
                 pendingMovement = Vector2.zero;
             }
+            
         }
 
         private void SwipeStart(Vector2 pos, float time)
@@ -193,4 +204,6 @@ public class SwipeDetection : MonoBehaviour
             rb.MovePosition(groundPosition);
             isGrounded = true;
         }
+        
+        
     }

@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 4486574445757302965}
   - component: {fileID: 1848574788808047743}
   - component: {fileID: 6376972678290458739}
-  - component: {fileID: 6949058838023085625}
-  - component: {fileID: 3425815409928386852}
   m_Layer: 0
   m_Name: Car_1_1
   m_TagString: Obstacle
@@ -105,47 +103,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2377975, y: 1.1575725, z: 4.7824736}
-  m_Center: {x: 0, y: 0.57878625, z: -0.37169123}
---- !u!65 &6949058838023085625
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 191271634886909354}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.2377975, y: 1.1754646, z: 0.7424183}
-  m_Center: {x: 0, y: 0.5877323, z: 2.3917189}
---- !u!65 &3425815409928386852
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 191271634886909354}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.2377975, y: 0.60956, z: 2.3798401}
-  m_Center: {x: 0, y: 1.4576545, z: -0.42179573}
+  m_Size: {x: 2.2377975, y: 1.8779104, z: 5.4591217}
+  m_Center: {x: 0, y: 0.9389552, z: -0.033367157}
