@@ -1,11 +1,13 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
     public float stageSpeed = 5f;
     public bool isGameover;
-    
+    public bool isPaused;
+    public bool isPlaying=false;
     public float distanceTravelled = 0;
     public float speedIncreaseMilestone = 10;
     public float speedMultiplier = 1.1f;
@@ -18,7 +20,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
-        if (!isGameover)
+        if (!isGameover || !isPaused || isPlaying)
         {
             distanceTravelled += stageSpeed * Time.deltaTime;
 
@@ -31,13 +33,11 @@ public class GameManager : Singleton<GameManager>
             distanceText.text = "Distance: " + distanceTravelled.ToString("F2") + " meters";
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) 
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-
+            UiManager.Instance.ShowPausePanel();
         }
-        #if UNITY_ANDROID
-            Application.Quit(); 
-        #endif
+        
 
     }
 
