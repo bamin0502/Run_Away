@@ -9,8 +9,8 @@ public class UiManager : Singleton<UiManager>
     [Header("UI Elements")] 
     public GameObject PausePanel;
     public GameObject GameOverPanel;
-    public GameObject QuitPanel;
-    public GameObject HomePanel;
+    //public GameObject QuitPanel;
+    //public GameObject HomePanel;
     
     [Header("Pause Panel Ui Button")]
     public Button homeButton;
@@ -23,24 +23,22 @@ public class UiManager : Singleton<UiManager>
 
     [Header("Game Over Panel Ui Text")]
     public TextMeshProUGUI distanceText;
-    public TextMeshProUGUI coinText;
-    public TextMeshProUGUI bestDistanceText;
+    //public TextMeshProUGUI coinText;
+    //public TextMeshProUGUI bestDistanceText;
     
-    [Header("Quit Panel Ui Button")]
-    public Button yesButton;
-    public Button noButton;
+    //[Header("Quit Panel Ui Button")]
+    //public Button yesButton;
+    //public Button noButton;
     
-    [Header("Home Panel Ui Button")]
-    public Button StartButton;
+    //[Header("Home Panel Ui Button")]
+    //public Button StartButton;
     
     public override void Awake()
     {
         PausePanel.SetActive(false);
         GameOverPanel.SetActive(false);
-        
-        
-        
-        
+        //QuitPanel.SetActive(false);
+        //HomePanel.SetActive(false);
     }
     
     public void ShowPausePanel()
@@ -64,12 +62,12 @@ public class UiManager : Singleton<UiManager>
     
     public void UpdateCoinText(int coin)
     {
-        coinText.text = "Coin: " + coin;
+        //coinText.text = "Coin: " + coin;
     }
     
     public void UpdateBestDistanceText(float bestDistance)
     {
-        bestDistanceText.text = "Best Distance: " + bestDistance.ToString("F2") + " meters";
+        //bestDistanceText.text = "Best Distance: " + bestDistance.ToString("F2") + " meters";
     }
 
     private void FadeIn(GameObject obj)
