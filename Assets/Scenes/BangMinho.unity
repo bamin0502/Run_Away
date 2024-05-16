@@ -1170,7 +1170,7 @@ MonoBehaviour:
   startPoint: {x: 0, y: 0, z: 0}
   numberOfTiles: 10
   noObstaclesInitially: 2
-  tileLength: 17
+  tileLength: 18.7
   moveSpeed: 15
 --- !u!1 &552271112
 GameObject:
