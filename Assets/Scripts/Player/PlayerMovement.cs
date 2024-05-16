@@ -49,10 +49,9 @@ public class PlayerMovement : MonoBehaviour
                 playerAni.SetRunAnimation();
             }
         }
-
-        // Smoothly move to target position
+        
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
-        newPosition.y = rb.position.y;  // Preserve the Y position during horizontal movement
+        newPosition.y = rb.position.y; 
         rb.MovePosition(newPosition);
     }
 
@@ -63,8 +62,7 @@ public class PlayerMovement : MonoBehaviour
             UpdateMovement(pendingMovement);
             pendingMovement = Vector2.zero;
         }
-
-        // Apply gravity manually if jumping
+        
         if (isJumping)
         {
             rb.AddForce(Physics.gravity * (rb.mass * rb.mass), ForceMode.Force);
@@ -96,8 +94,7 @@ public class PlayerMovement : MonoBehaviour
                 currentLaneIndex = Mathf.Clamp(currentLaneIndex - 1, 0, lanes.Length - 1);
                 swipeDirection = Defines.SwipeDirection.RUN;
             }
-
-            // Set target position for horizontal movement only
+            
             targetPosition = rb.position;
             targetPosition.x = lanes[currentLaneIndex];
         }
@@ -105,7 +102,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (vertical > 0.7f && !isJumping && !isSliding)
             {
-                rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);  // Reset vertical velocity
+                var velocity = rb.velocity;
+                velocity = new Vector3(velocity.x, 0, velocity.z);  // Reset vertical velocity
+                rb.velocity = velocity;
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 swipeDirection = Defines.SwipeDirection.JUMP;
                 isJumping = true;
@@ -115,8 +114,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (isJumping)
                 {
-                    // Apply downward force to quickly land
-                    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);  // Reset vertical velocity
+                    var velocity = rb.velocity;
+                    velocity = new Vector3(velocity.x, 0, velocity.z);  // Reset vertical velocity
+                    rb.velocity = velocity;
                     rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
                     isJumping = false;
                 }
