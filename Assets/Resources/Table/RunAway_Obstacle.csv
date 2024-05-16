@@ -1,7 +1,7 @@
 Obstacle_ID,Obstacle_name(korean),Obstacle_name(english),Obstacle_coin,Obstacle_type,Obstacle_speed
 11101,도로가드,Road_barrier,1,1,0
-11502,작업표시판1,Road_sign_1,1,5,0
-11503,작업표시판2,Road_sign_2,1,5,0
+11502,작업표시판1,Road_Work_sign_1,1,5,0
+11503,작업표시판2,Road_Work_sign_2,1,5,0
 10104,자동차1,Car_1_1,0,1,0
 10105,자동차2,Car_1_2,0,1,0
 10106,자동차3,Car_1_3,0,1,0
