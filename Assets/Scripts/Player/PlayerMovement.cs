@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Smooth Movement")]
     [SerializeField] private float laneChangeSpeed = 5f;
     private Vector3 targetPosition;
+    private Vector3 lastPosition;
+    private int lastLaneIndex;
 
     private bool isJumping;
     private bool isSliding;
@@ -33,7 +35,10 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         swipeDirection = Defines.SwipeDirection.RUN;
-        targetPosition = rb.position;
+        var position = rb.position;
+        targetPosition = position;
+        lastPosition = position;
+        lastLaneIndex = currentLaneIndex;
         playerAni.SetRunAnimation();
     }
 
@@ -49,9 +54,10 @@ public class PlayerMovement : MonoBehaviour
                 playerAni.SetRunAnimation();
             }
         }
-        
+
+
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
-        newPosition.y = rb.position.y; 
+        newPosition.y = rb.position.y;
         rb.MovePosition(newPosition);
     }
 
@@ -65,7 +71,8 @@ public class PlayerMovement : MonoBehaviour
         
         if (isJumping)
         {
-            rb.AddForce(Physics.gravity * (rb.mass * rb.mass), ForceMode.Force);
+            var mass = rb.mass;
+            rb.AddForce(Physics.gravity * (mass * mass), ForceMode.Force);
         }
     }
 
@@ -86,17 +93,12 @@ public class PlayerMovement : MonoBehaviour
         {
             if (horizontal > 0.7f)
             {
-                currentLaneIndex = Mathf.Clamp(currentLaneIndex + 1, 0, lanes.Length - 1);
-                swipeDirection = Defines.SwipeDirection.RUN;
+                TryMoveToLane(currentLaneIndex + 1);
             }
             else if (horizontal < -0.7f)
             {
-                currentLaneIndex = Mathf.Clamp(currentLaneIndex - 1, 0, lanes.Length - 1);
-                swipeDirection = Defines.SwipeDirection.RUN;
+                TryMoveToLane(currentLaneIndex - 1);
             }
-            
-            targetPosition = rb.position;
-            targetPosition.x = lanes[currentLaneIndex];
         }
         else
         {
@@ -128,6 +130,40 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void TryMoveToLane(int newLaneIndex)
+    {
+        lastPosition = rb.position;
+        lastLaneIndex = currentLaneIndex;
+        int clampedLaneIndex = Mathf.Clamp(newLaneIndex, 0, lanes.Length - 1);
+
+        Vector3 potentialTargetPosition = rb.position;
+        potentialTargetPosition.x = lanes[clampedLaneIndex];
+
+        if (IsObstacleInPath(potentialTargetPosition))
+        {
+            targetPosition = lastPosition;
+            currentLaneIndex = lastLaneIndex;
+            return;
+        }
+
+        currentLaneIndex = clampedLaneIndex;
+        swipeDirection = Defines.SwipeDirection.RUN;
+        targetPosition = potentialTargetPosition;
+    }
+
+    private bool IsObstacleInPath(Vector3 targetPos)
+    {
+        Vector3 direction = targetPos - transform.position;
+        if (Physics.Raycast(transform.position, direction, out var hit, direction.magnitude))
+        {
+            if (hit.collider.CompareTag("Obstacle"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.collider.CompareTag("Ground"))
@@ -138,9 +174,23 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.collider.CompareTag("Obstacle"))
         {
-            Debug.Log("Obstacle Hit");
-            GameManager.Instance.GameOver();
-            Die();
+            var transform1 = transform;
+            var collisionDirection = other.contacts[0].point - transform1.position;
+            var angle = Vector3.Angle(transform1.forward, collisionDirection);
+
+            if (angle < 45)
+            {
+                Debug.Log("Obstacle Hit");
+                GameManager.Instance.GameOver();
+                Die();
+            }
+            else
+            {
+                Debug.Log("Side Obstacle Hit");
+                targetPosition = lastPosition;
+                rb.position = lastPosition;
+                currentLaneIndex = lastLaneIndex; 
+            }
         }
     }
 

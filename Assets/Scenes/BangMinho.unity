@@ -7343,10 +7343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f6500caa660144badee9e9bcbf7e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheck: {fileID: 0}
-  groundDistance: 0.5
-  isGrounded: 0
   jumpForce: 10
+  slideForce: -10
   lanes:
   - -3.8
   - 0
@@ -7354,6 +7352,7 @@ MonoBehaviour:
   currentLaneIndex: 1
   swipeDirection: 0
   slideDuration: 1
+  laneChangeSpeed: 5
 --- !u!1 &8550035237995654825
 GameObject:
   m_ObjectHideFlags: 0
