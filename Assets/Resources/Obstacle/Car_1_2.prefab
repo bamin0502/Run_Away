@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 954184248855065485}
   - component: {fileID: 3087506498039285575}
   - component: {fileID: 1490419434462627210}
+  - component: {fileID: -3115678093208471898}
   m_Layer: 0
   m_Name: Car_1_2
   m_TagString: Obstacle
@@ -105,3 +106,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.2377975, y: 1.7624345, z: 5.464016}
   m_Center: {x: 0, y: 0.88121724, z: -0.030920148}
+--- !u!205 &-3115678093208471898
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3592177867728365202}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.3
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.1
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1

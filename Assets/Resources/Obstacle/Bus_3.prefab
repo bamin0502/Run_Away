@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 72378950783483647}
   - component: {fileID: 2802878393089706549}
   - component: {fileID: 965219467811725285}
+  - component: {fileID: 3087104669195027299}
   m_Layer: 0
   m_Name: Bus_3
   m_TagString: Obstacle
@@ -105,3 +106,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.5221791, y: 2.9792385, z: 8.31326}
   m_Center: {x: 0, y: 1.4896193, z: 0}
+--- !u!205 &3087104669195027299
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4460023217449692128}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.3
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.1
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1

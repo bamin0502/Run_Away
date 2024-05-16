@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.191991, g: 0.5946723, b: 0.7773275, a: 1}
+  m_IndirectSpecularColor: {r: 0.19024794, g: 0.59240067, b: 0.7727873, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6404,18 +6404,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minDistance: 0.2
-  dirThreshold: 0.7
-  groundCheck: {fileID: 0}
-  groundDistance: 0.5
-  isGrounded: 1
-  jumpForce: 3
-  lanes:
-  - -3.8
-  - 0
-  - 3.8
-  currentLaneIndex: 1
-  swipeDirection: 5
-  slideDuration: 1
 --- !u!1 &5284916784257924842
 GameObject:
   m_ObjectHideFlags: 0
@@ -7137,6 +7125,7 @@ GameObject:
   - component: {fileID: 5266339523630760296}
   - component: {fileID: 7620510938037725202}
   - component: {fileID: 7159841372867896205}
+  - component: {fileID: 8545993632921454123}
   - component: {fileID: 538381145455349133}
   - component: {fileID: 996333005841412847}
   m_Layer: 0
@@ -7342,6 +7331,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8545993632921454123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7988252260097491202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f6500caa660144badee9e9bcbf7e61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheck: {fileID: 0}
+  groundDistance: 0.5
+  isGrounded: 0
+  jumpForce: 10
+  lanes:
+  - -3.8
+  - 0
+  - 3.8
+  currentLaneIndex: 1
+  swipeDirection: 0
+  slideDuration: 1
 --- !u!1 &8550035237995654825
 GameObject:
   m_ObjectHideFlags: 0

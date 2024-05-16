@@ -8,6 +8,7 @@ public class PlayerAni : MonoBehaviour
 {
     private Animator ani;
     private SwipeDetection swipeDetection;
+    private PlayerMovement playerMovement;
 
     [Tooltip("애니메이션 관련 해쉬코드")] 
     private static readonly int IsDead = Animator.StringToHash("isDead");
@@ -21,6 +22,7 @@ public class PlayerAni : MonoBehaviour
     {
         ani = GetComponent<Animator>();
         swipeDetection = GetComponent<SwipeDetection>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     private void Start()
@@ -43,7 +45,7 @@ public class PlayerAni : MonoBehaviour
 
         if (deathTrigger) return;
 
-        if (swipeDetection.isGrounded)
+        if (playerMovement.isGrounded)
         {
             ani.SetBool(IsJump, false);
             ani.SetBool(IsRun, true);
@@ -54,7 +56,7 @@ public class PlayerAni : MonoBehaviour
             ani.SetBool(IsRun, false);
         }
 
-        ani.SetBool(IsSlide, swipeDetection.swipeDirection == Defines.SwipeDirection.SLIDE);
+        ani.SetBool(IsSlide, playerMovement.swipeDirection == Defines.SwipeDirection.SLIDE);
     }
 
     public void EndResult()

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4425143950377265722}
   - component: {fileID: 1913383001574891248}
   - component: {fileID: 2016212114922090151}
+  - component: {fileID: 3703024448735365785}
   m_Layer: 0
   m_Name: Main_Truck_4
   m_TagString: Obstacle
@@ -105,3 +106,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.9050262, y: 2.983824, z: 7.599799}
   m_Center: {x: 0, y: 1.491912, z: 0.0074557066}
+--- !u!205 &3703024448735365785
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111833268559281957}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.3
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.1
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1

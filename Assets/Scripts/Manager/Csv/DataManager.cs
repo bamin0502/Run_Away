@@ -30,7 +30,7 @@ public static class DataManager
     {
         if (!tables.TryGetValue(id, out var table))
         {
-            Debug.LogError("Table not found: " + id);
+            Debug.LogWarning("Table not found: " + id);
             return null;
         }
         return table as T;
