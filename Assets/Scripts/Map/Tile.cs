@@ -18,13 +18,13 @@ public class Tile : MonoBehaviour
     public float tileLength = 30.0f;
     public float moveSpeed;
 
-    private List<Transform> tiles = new List<Transform>();
+    private readonly List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
 
     private GameManager gameManager;
     
-    private List<Transform> groundPool = new List<Transform>();
-    private List<Transform> backgroundPool = new List<Transform>();
+    private readonly List<Transform> groundPool = new List<Transform>();
+    private readonly List<Transform> backgroundPool = new List<Transform>();
 
     private List<GameObject> obstaclePrefabs;
 
@@ -38,9 +38,6 @@ public class Tile : MonoBehaviour
         // DataManager를 통해 장애물 로드
         var obstacleTable = DataManager.GetObstacleTable();
         obstaclePrefabs = obstacleTable.GetLoadedObstacles("Obstacle");
-
-        Debug.Log($"Loaded {obstaclePrefabs.Count} obstacle prefabs.");
-        
     }
 
     void Start()
@@ -118,14 +115,14 @@ public class Tile : MonoBehaviour
     {
         foreach (var obstaclePrefab in obstaclePrefabs)
         {
-            var collider = obstaclePrefab.GetComponent<Collider>();
-            if (collider == null)
+            var component = obstaclePrefab.GetComponent<Collider>();
+            if (component == null)
             {
                 Debug.LogWarning($"Obstacle prefab {obstaclePrefab.name} does not have a Collider component.");
             }
             else
             {
-                Debug.Log($"Obstacle prefab {obstaclePrefab.name} Collider found. Tag: {collider.tag}, isTrigger: {collider.isTrigger}");
+                Debug.Log($"Obstacle prefab {obstaclePrefab.name} Collider found. Tag: {component.tag}, isTrigger: {component.isTrigger}");
             }
         }
     }
@@ -151,23 +148,20 @@ public class Tile : MonoBehaviour
                 if (Random.Range(0, 2) == 0)
                 {
                     var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
-                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity);
+                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
 
-                    // 장애물을 타일의 자식으로 설정
-                    obstacle.transform.SetParent(tile);
-                    obstacle.transform.localPosition = spawnPoint.localPosition;
-                    obstacle.transform.localRotation = spawnPoint.localRotation;
-                    obstacle.transform.localScale = Vector3.one; // 스케일 고정
 
-                    // 콜라이더 검사 추가
-                    var collider = obstacle.GetComponent<Collider>();
-                    if (collider == null)
+                    obstacle.transform.SetParent(tile, true);
+
+
+                    var component = obstacle.GetComponent<Collider>();
+                    if (component == null)
                     {
                         Debug.LogWarning($"Obstacle {obstacle.name} does not have a Collider component.");
                     }
                     else
                     {
-                        Debug.Log($"Obstacle {obstacle.name} Collider found. Tag: {collider.tag}, isTrigger: {collider.isTrigger}");
+                        Debug.Log($"Obstacle {obstacle.name} Collider found. Tag: {component.tag}, isTrigger: {component.isTrigger}");
                     }
                 }
             }
