@@ -15,12 +15,12 @@ public class UiManager : Singleton<UiManager>
     [SerializeField] public Button resumeButton;
     [SerializeField] public Button quitButton;
     
-    [Header("Game Over Panel Ui Button")]
-    [SerializeField] private Button restartButton;
-    [SerializeField] private Button quitButton2;
+    // [Header("Game Over Panel Ui Button")]
+    // [SerializeField] private Button restartButton;
+    // [SerializeField] private Button quitButton2;
 
-    [Header("Game Over Panel Ui Text")]
-    [SerializeField] public TextMeshProUGUI distanceText;
+    // [Header("Game Over Panel Ui Text")]
+    // [SerializeField] public TextMeshProUGUI distanceText;
 
     private void OnEnable()
     {
@@ -69,14 +69,14 @@ public class UiManager : Singleton<UiManager>
         {
             quitButton.onClick.AddListener(OnQuitButtonClick);
         }
-        if (restartButton != null)
-        {
-            restartButton.onClick.AddListener(OnRestartButtonClick);
-        }
-        if (quitButton2 != null)
-        {
-            quitButton2.onClick.AddListener(OnQuitButtonClick);
-        }
+        // if (restartButton != null)
+        // {
+        //     restartButton.onClick.AddListener(OnRestartButtonClick);
+        // }
+        // if (quitButton2 != null)
+        // {
+        //     quitButton2.onClick.AddListener(OnQuitButtonClick);
+        // }
     }
 
     public void ShowPausePanel()
@@ -97,11 +97,11 @@ public class UiManager : Singleton<UiManager>
         Time.timeScale = 0;
     }
 
-    public void UpdateDistanceText(float distance)
-    {
-        if (distanceText != null)
-            distanceText.text = "Distance: " + distance.ToString("F2") + " meters";
-    }
+    // public void UpdateDistanceText(float distance)
+    // {
+    //     if (distanceText != null)
+    //         distanceText.text = "Distance: " + distance.ToString("F2") + " meters";
+    // }
 
     private void FadeIn(GameObject obj)
     {
@@ -133,6 +133,7 @@ public class UiManager : Singleton<UiManager>
     private void OnQuitButtonClick()
     {
         Application.Quit();
+        Debug.Log("Quit");
     }
 
     private void OnRestartButtonClick()

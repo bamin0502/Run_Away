@@ -51,7 +51,7 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("Game Over");
         isGameover = true;
-        Handheld.Vibrate();
+        //Handheld.Vibrate();
     }
 
     public void RestartGame()

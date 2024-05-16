@@ -38,7 +38,6 @@ public class PlayerAni : MonoBehaviour
             ani.SetBool(IsJump, false);
             ani.SetBool(IsSlide, false);
             deathTrigger = true;
-            GameManager.Instance.isGameover = false;
             return;
         }
 

@@ -44,14 +44,12 @@ public class SwipeDetection : MonoBehaviour
         {
             inputManager = GetComponent<InputManager>();
             rb = GetComponent<Rigidbody>();
-            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
 
         private void Start()
         {
             minSwipeDistancePixels = minSwipeDistanceInch * Screen.dpi;
             swipeDirection = Defines.SwipeDirection.RUN;
-            rb.isKinematic = false;
             
         }
 
@@ -94,6 +92,7 @@ public class SwipeDetection : MonoBehaviour
             if (other.collider.CompareTag("Obstacle"))
             {
                 Debug.Log("Obstacle Hit");
+                GameManager.Instance.GameOver();
                 Die();
             }
         }
@@ -108,7 +107,6 @@ public class SwipeDetection : MonoBehaviour
         private void Die()
         {
             swipeDirection = Defines.SwipeDirection.DEAD;
-            GameManager.Instance.GameOver();
         }
 
         private void OnCollisionExit(Collision other)

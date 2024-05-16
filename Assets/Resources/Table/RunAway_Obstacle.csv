@@ -18,7 +18,7 @@ Obstacle_ID,Obstacle_name(korean),Obstacle_name(english),Obstacle_coin,Obstacle_
 10210,경찰차,Police,0,2,20
 10211,택시,Taxi,0,2,30
 10408,이동버스,Bus_2,1,4,5
-10408,구급차,Ambulacnce,1,4,15
+10408,구급차,Ambulance,1,4,15
 10409,소방차,Fire_Truck,1,4,15
 10410,가스차,Gas_Truck,1,4,10
 10411,메인트럭3,Main_Truck_3,1,4,10
