@@ -1167,10 +1167,10 @@ MonoBehaviour:
   - {fileID: 3360387841742649527, guid: 7204a8d4c276a2744a178cde0344b774, type: 3}
   - {fileID: 320020283101617022, guid: 8bd38d3f078dafe41b6d7699c405ac4c, type: 3}
   - {fileID: 7026000295285956488, guid: a824f9a62caf9c54a9458419d6dcbbe8, type: 3}
-  startPoint: {x: 0, y: 0, z: 17}
+  startPoint: {x: 0, y: 0, z: 0}
   numberOfTiles: 10
   noObstaclesInitially: 2
-  tileLength: 5
+  tileLength: 17
   moveSpeed: 15
 --- !u!1 &552271112
 GameObject:

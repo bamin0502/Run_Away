@@ -15,14 +15,14 @@ public class Tile : MonoBehaviour
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
-    public float tileLength = 30.0f;
+    public float tileLength = 17;
     public float moveSpeed;
 
     private readonly List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
 
     private GameManager gameManager;
-    
+
     private readonly List<Transform> groundPool = new List<Transform>();
     private readonly List<Transform> backgroundPool = new List<Transform>();
 
@@ -31,7 +31,7 @@ public class Tile : MonoBehaviour
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        
+
         InitializeObjectPool(groundPrefabs, groundPool, 10);
         InitializeObjectPool(backgroundPrefabs, backgroundPool, 10);
 
@@ -49,7 +49,7 @@ public class Tile : MonoBehaviour
         }
         CheckObstacleColliders();
     }
- 
+
     void Update()
     {
         if (!gameManager.isGameover)
@@ -86,20 +86,7 @@ public class Tile : MonoBehaviour
             return;
         }
 
-        var tileEndPoint = newTile.GetComponent<TileEndPoint>();
-        if (tileEndPoint == null)
-        {
-            Debug.LogWarning("TileEndPoint component is missing on the tile prefab.");
-            return;
-        }
-
-        if (tileEndPoint.endPoint == null)
-        {
-            Debug.LogWarning("EndPoint is not assigned in TileEndPoint component.");
-            return;
-        }
-
-        nextTilePosition = tileEndPoint.endPoint.position;
+        nextTilePosition += new Vector3(0, 0, tileLength);
         tiles.Add(newTile);
 
         if (spawnObstacles)
@@ -150,9 +137,7 @@ public class Tile : MonoBehaviour
                     var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
                     var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
 
-
                     obstacle.transform.SetParent(tile, true);
-
 
                     var component = obstacle.GetComponent<Collider>();
                     if (component == null)
@@ -220,13 +205,13 @@ public class Tile : MonoBehaviour
     {
         var tile = tiles[0];
         tiles.RemoveAt(0);
-        var endPoint = tiles[^1].GetComponent<TileEndPoint>().endPoint.position;
+        var endPoint = tiles[^1].position + new Vector3(0, 0, tileLength);
         tile.position = endPoint;
         tiles.Add(tile);
 
         DeactivateAndEnqueue(tile, "SmallSpawnPoint", groundPool);
         DeactivateAndEnqueue(tile, "TallSpawnPoint", backgroundPool);
-        
+
         SpawnGroundElements(tile);
         SpawnBackgroundElements(tile);
     }
