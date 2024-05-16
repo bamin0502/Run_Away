@@ -1,14 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public class PlayerAni : MonoBehaviour
 {
     private Animator ani;
-    private SwipeDetection swipeDetection;
-    private PlayerMovement playerMovement;
 
     [Tooltip("애니메이션 관련 해쉬코드")] 
     private static readonly int IsDead = Animator.StringToHash("isDead");
@@ -21,8 +17,6 @@ public class PlayerAni : MonoBehaviour
     private void Awake()
     {
         ani = GetComponent<Animator>();
-        swipeDetection = GetComponent<SwipeDetection>();
-        playerMovement = GetComponent<PlayerMovement>();
     }
 
     private void Start()
@@ -35,28 +29,38 @@ public class PlayerAni : MonoBehaviour
     {
         if (GameManager.Instance.isGameover && !deathTrigger)
         {
-            ani.SetTrigger(IsDead);
-            ani.SetBool(IsRun, false);
-            ani.SetBool(IsJump, false);
-            ani.SetBool(IsSlide, false);
+            SetDeathAnimation();
             deathTrigger = true;
-            return;
         }
+    }
 
-        if (deathTrigger) return;
+    public void SetRunAnimation()
+    {
+        ani.SetBool(IsRun, true);
+        ani.SetBool(IsJump, false);
+        ani.SetBool(IsSlide, false);
+    }
 
-        if (playerMovement.isGrounded)
-        {
-            ani.SetBool(IsJump, false);
-            ani.SetBool(IsRun, true);
-        }
-        else
-        {
-            ani.SetBool(IsJump, true);
-            ani.SetBool(IsRun, false);
-        }
+    public void SetJumpAnimation()
+    {
+        ani.SetBool(IsRun, false);
+        ani.SetBool(IsJump, true);
+        ani.SetBool(IsSlide, false);
+    }
 
-        ani.SetBool(IsSlide, playerMovement.swipeDirection == Defines.SwipeDirection.SLIDE);
+    public void SetSlideAnimation()
+    {
+        ani.SetBool(IsRun, false);
+        ani.SetBool(IsJump, false);
+        ani.SetBool(IsSlide, true);
+    }
+
+    public void SetDeathAnimation()
+    {
+        ani.SetTrigger(IsDead);
+        ani.SetBool(IsRun, false);
+        ani.SetBool(IsJump, false);
+        ani.SetBool(IsSlide, false);
     }
 
     public void EndResult()
