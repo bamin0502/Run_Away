@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isJumping;
     private bool isSliding;
+    private bool isCollidingFront;
 
     private void Awake()
     {
@@ -40,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
         lastPosition = position;
         lastLaneIndex = currentLaneIndex;
         playerAni.SetRunAnimation();
+        isCollidingFront = false;
     }
 
     private void Update()
@@ -54,8 +56,7 @@ public class PlayerMovement : MonoBehaviour
                 playerAni.SetRunAnimation();
             }
         }
-
-
+        
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
         rb.MovePosition(newPosition);
@@ -85,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateMovement(Vector2 swipeDir)
     {
-        if (GameManager.Instance.isGameover) return;
+        if (GameManager.Instance.isGameover || isCollidingFront) return;
         var horizontal = swipeDir.x;
         var vertical = swipeDir.y;
 
@@ -105,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
             if (vertical > 0.7f && !isJumping && !isSliding)
             {
                 var velocity = rb.velocity;
-                velocity = new Vector3(velocity.x, 0, velocity.z);  // Reset vertical velocity
+                velocity = new Vector3(velocity.x, 0, velocity.z); 
                 rb.velocity = velocity;
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 swipeDirection = Defines.SwipeDirection.JUMP;
@@ -117,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
                 if (isJumping)
                 {
                     var velocity = rb.velocity;
-                    velocity = new Vector3(velocity.x, 0, velocity.z);  // Reset vertical velocity
+                    velocity = new Vector3(velocity.x, 0, velocity.z); 
                     rb.velocity = velocity;
                     rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
                     isJumping = false;
@@ -174,9 +175,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.collider.CompareTag("Obstacle"))
         {
-            var transform1 = transform;
-            var collisionDirection = other.contacts[0].point - transform1.position;
-            var angle = Vector3.Angle(transform1.forward, collisionDirection);
+            var collisionDirection = other.contacts[0].point - transform.position;
+            var forward = transform.forward;
+            forward.y = 0; 
+            var angle = Vector3.Angle(forward, collisionDirection);
 
             if (angle < 45)
             {
@@ -189,7 +191,7 @@ public class PlayerMovement : MonoBehaviour
                 Debug.Log("Side Obstacle Hit");
                 targetPosition = lastPosition;
                 rb.position = lastPosition;
-                currentLaneIndex = lastLaneIndex; 
+                currentLaneIndex = lastLaneIndex;
             }
         }
     }
@@ -199,6 +201,10 @@ public class PlayerMovement : MonoBehaviour
         if (other.collider.CompareTag("Ground"))
         {
             isJumping = true;
+        }
+        if (other.collider.CompareTag("Obstacle"))
+        {
+            isCollidingFront = false;
         }
     }
 
