@@ -35,11 +35,11 @@ public class ObstacleTable : DataTable
 
     public List<GameObject> GetLoadedObstacles(string obstacleFolderPath)
     {
-        List<GameObject> loadedObstacles = new List<GameObject>();
+        var loadedObstacles = new List<GameObject>();
 
         foreach (var obstacle in obstacleData)
         {
-            string fullPath = $"{obstacleFolderPath}/{obstacle.ObstacleNameEnglish}";
+            var fullPath = $"{obstacleFolderPath}/{obstacle.ObstacleNameEnglish}";
             Debug.Log($"Loading obstacle prefab from path: {fullPath}");
             var obstaclePrefab = Resources.Load<GameObject>(fullPath);
             if (obstaclePrefab != null)

@@ -10,6 +10,7 @@ public static class DataManager
         // 테이블 초기화 및 로드
         AddTable<ObstacleTable>("RunAway_Obstacle");
         AddTable<ItemTable>("RunAway_Item");
+        AddTable<SectionTable>("RunAway_Section");
     }
 
     private static void AddTable<T>(string id) where T : DataTable, new()
@@ -31,7 +32,11 @@ public static class DataManager
     {
         return Get<ItemTable>("RunAway_Item");
     }
-
+    
+    public static SectionTable GetSectionTable()
+    {
+        return Get<SectionTable>("RunAway_Section");
+    }
     private static T Get<T> (string id) where T : DataTable
     {
         if (!tables.TryGetValue(id, out var table))
