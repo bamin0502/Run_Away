@@ -32,9 +32,11 @@ public class Tile : MonoBehaviour
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;
     private float distanceCounter = 0f;
-    public float switchDistance = 100f; // 아이템을 변경할 거리
+    public float initialOtherItemSpawnChance = 0.05f; // 초기 아이템 출현 확률
+    public float maxOtherItemSpawnChance = 0.2f; // 최대 아이템 출현 확률
+    public float distanceFactor = 0.0005f; // 거리 증가에 따른 확률 증가 비율
 
-    private Collider[] overlapResults = new Collider[10]; 
+    private Collider[] overlapResults = new Collider[10]; // OverlapSphereNonAlloc 결과를 저장할 배열
 
     void Awake()
     {
@@ -49,8 +51,8 @@ public class Tile : MonoBehaviour
         var itemTable = DataManager.GetItemTable();
         itemPrefabs = itemTable.GetLoadedItems("Item");
 
-        primaryItemPrefab = itemPrefabs.Find(item => item.name == "collectible__072");
-        otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "collectible__072");
+        primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
+        otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
     }
 
     private void Start()
@@ -282,23 +284,25 @@ public class Tile : MonoBehaviour
     {
         var bounds = tile.GetComponent<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
-        var laneCount = lanePositions.Length;
+        int laneCount = lanePositions.Length;
+        
+        Vector3 currentItemPosition = Vector3.zero;
 
-        for (var lane = 0; lane < laneCount; lane++)
+        for (int lane = 0; lane < laneCount; lane++)
         {
-            var attempts = 0;
-            var maxAttempts = 10;
-            var itemSpawned = false;
+            int attempts = 0;
+            int maxAttempts = 10;
+            bool itemSpawned = false;
 
             while (attempts < maxAttempts && !itemSpawned)
             {
-                var randomPosition = GetRandomPositionInLane(bounds, lanePositions[lane]);
+                Vector3 randomPosition = GetRandomPositionInLane(bounds, lanePositions[lane]);
                 
                 if (!IsObstacleAtPosition(randomPosition))
                 {
-                    var currentItemPosition = randomPosition;
+                    currentItemPosition = randomPosition;
 
-                    if (!isFirstItem && Mathf.Approximately(previousItemPosition.z, currentItemPosition.z))
+                    if (!isFirstItem && previousItemPosition.z != currentItemPosition.z)
                     {
                         Vector3 midPosition = (previousItemPosition + currentItemPosition) / 2;
                         midPosition.y = bounds.min.y;
@@ -318,8 +322,12 @@ public class Tile : MonoBehaviour
     private void SpawnSingleItem(Vector3 position, Transform tile)
     {
         GameObject itemPrefab;
+        float currentDistance = Vector3.Distance(Vector3.zero, position); // 시작 위치부터 현재 위치까지의 거리
 
-        if (distanceCounter >= switchDistance)
+        float otherItemSpawnChance = initialOtherItemSpawnChance + (currentDistance * distanceFactor);
+        otherItemSpawnChance = Mathf.Clamp(otherItemSpawnChance, initialOtherItemSpawnChance, maxOtherItemSpawnChance);
+
+        if (Random.value < otherItemSpawnChance)
         {
             itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
             distanceCounter = 0f;
@@ -336,16 +344,16 @@ public class Tile : MonoBehaviour
 
     private Vector3 GetRandomPositionInLane(Bounds bounds, float lanePosition)
     {
-        var x = lanePosition;
-        var y = bounds.min.y;
-        var z = Random.Range(bounds.min.z, bounds.max.z);
+        float x = lanePosition;
+        float y = bounds.min.y;
+        float z = Random.Range(bounds.min.z, bounds.max.z);
         return new Vector3(x, y, z);
     }
 
     private bool IsObstacleAtPosition(Vector3 position)
     {
-        var numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
-        for (var i = 0; i < numColliders; i++)
+        int numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
+        for (int i = 0; i < numColliders; i++)
         {
             if (overlapResults[i].CompareTag("Obstacle"))
             {

@@ -55,10 +55,18 @@ public class PlayerMovement : MonoBehaviour
                 playerAni.SetRunAnimation();
             }
         }
+        
 
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
         rb.MovePosition(newPosition);
+
+        if (pendingMovement != Vector2.zero)
+        {
+            UpdateMovement(pendingMovement);
+            pendingMovement = Vector2.zero;
+        }
+
     }
 
     private void FixedUpdate()

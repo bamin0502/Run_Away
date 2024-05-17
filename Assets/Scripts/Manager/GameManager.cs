@@ -23,15 +23,15 @@ public class GameManager : Singleton<GameManager>
     }
     private void Start()
     {
-        InitializeGame();   
+        //InitializeGame();   
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        InitializeGame(); // 씬이 로드될 때마다 게임 상태 초기화
+        InitializeGame(); 
     }
     private void Update()
     {
-        if (!isGameover || !isPaused && isPlaying)
+        if (!isGameover && !isPaused && isPlaying)
         {
             distanceTravelled += stageSpeed * Time.deltaTime;
 
@@ -40,7 +40,7 @@ public class GameManager : Singleton<GameManager>
                 stageSpeed *= speedMultiplier;
                 speedIncreaseMilestone *= speedMultiplier;
             }
-            distanceText.text = "Distance: " + distanceTravelled.ToString("F2") + " meters";
+            distanceText.text = "Speed: " + stageSpeed.ToString("F0") + "m/s\n" + "Distance: " + distanceTravelled.ToString("F0") + "m";
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -79,7 +79,6 @@ public class GameManager : Singleton<GameManager>
         isPaused = false;
         isPlaying = true;
         distanceTravelled = 0;
-        stageSpeed = 5f;
         speedIncreaseMilestone = 10;
     }
 }
