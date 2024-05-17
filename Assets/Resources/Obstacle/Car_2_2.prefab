@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4012850375080978582}
   - component: {fileID: 1176694519524908124}
   - component: {fileID: 366087595120237907}
-  - component: {fileID: -57945982370997747}
+  - component: {fileID: 3818726398641630081}
   m_Layer: 0
   m_Name: Car_2_2
   m_TagString: Obstacle
@@ -104,29 +104,26 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2272494, y: 1.4573463, z: 5.411312}
-  m_Center: {x: 0, y: 0.72867316, z: -0.07335341}
---- !u!205 &-57945982370997747
-LODGroup:
+  m_Size: {x: 2.2272494, y: 1.4573463, z: 3.9659657}
+  m_Center: {x: 0, y: 0.72867316, z: -0.79602605}
+--- !u!65 &3818726398641630081
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816428196210802057}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.6
-    fadeTransitionWidth: 0
-    renderers: []
-  - screenRelativeHeight: 0.3
-    fadeTransitionWidth: 0
-    renderers: []
-  - screenRelativeHeight: 0.1
-    fadeTransitionWidth: 0
-    renderers: []
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.2272494, y: 1.0260963, z: 1.5883727}
+  m_Center: {x: 0, y: 0.5130482, z: 1.984823}

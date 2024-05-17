@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5486495052204012167}
   - component: {fileID: 7766182024554874445}
   - component: {fileID: 1948032972773884380}
-  - component: {fileID: -2881724446752336932}
+  - component: {fileID: 6300376386626778156}
   m_Layer: 0
   m_Name: Main_Truck_1
   m_TagString: Obstacle
@@ -104,29 +104,26 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.9051497, y: 2.9835854, z: 7.304468}
-  m_Center: {x: 0, y: 1.4917927, z: -0.14024651}
---- !u!205 &-2881724446752336932
-LODGroup:
+  m_Size: {x: 2.9051497, y: 2.9835854, z: 5.512341}
+  m_Center: {x: 0, y: 1.4917927, z: -0.8603446}
+--- !u!65 &6300376386626778156
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8126737932816066456}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.6
-    fadeTransitionWidth: 0
-    renderers: []
-  - screenRelativeHeight: 0.3
-    fadeTransitionWidth: 0
-    renderers: []
-  - screenRelativeHeight: 0.1
-    fadeTransitionWidth: 0
-    renderers: []
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.9051497, y: 2.0256698, z: 1.9159698}
+  m_Center: {x: 0, y: 1.0128349, z: 2.8344955}
