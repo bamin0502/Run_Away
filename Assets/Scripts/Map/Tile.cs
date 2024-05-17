@@ -26,8 +26,15 @@ public class Tile : MonoBehaviour
     private List<GameObject> obstaclePrefabs;
     private List<GameObject> itemPrefabs;
 
+    private GameObject primaryItemPrefab;
+    private List<GameObject> otherItemPrefabs;
+
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;
+    private float distanceCounter = 0f;
+    public float switchDistance = 50f; // 아이템을 변경할 거리
+
+    private Collider[] overlapResults = new Collider[10]; 
 
     void Awake()
     {
@@ -41,6 +48,9 @@ public class Tile : MonoBehaviour
         
         var itemTable = DataManager.GetItemTable();
         itemPrefabs = itemTable.GetLoadedItems("Item");
+
+        primaryItemPrefab = itemPrefabs.Find(item => item.name == "collectible__072");
+        otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "collectible__072");
     }
 
     private void Start()
@@ -272,25 +282,23 @@ public class Tile : MonoBehaviour
     {
         var bounds = tile.GetComponent<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
-        int laneCount = lanePositions.Length;
-        
-        Vector3 currentItemPosition = Vector3.zero;
+        var laneCount = lanePositions.Length;
 
-        for (int lane = 0; lane < laneCount; lane++)
+        for (var lane = 0; lane < laneCount; lane++)
         {
-            int attempts = 0;
-            int maxAttempts = 10;
-            bool itemSpawned = false;
+            var attempts = 0;
+            var maxAttempts = 10;
+            var itemSpawned = false;
 
             while (attempts < maxAttempts && !itemSpawned)
             {
-                Vector3 randomPosition = GetRandomPositionInLane(bounds, lanePositions[lane]);
+                var randomPosition = GetRandomPositionInLane(bounds, lanePositions[lane]);
                 
                 if (!IsObstacleAtPosition(randomPosition))
                 {
-                    currentItemPosition = randomPosition;
+                    var currentItemPosition = randomPosition;
 
-                    if (!isFirstItem && previousItemPosition.z != currentItemPosition.z)
+                    if (!isFirstItem && Mathf.Approximately(previousItemPosition.z, currentItemPosition.z))
                     {
                         Vector3 midPosition = (previousItemPosition + currentItemPosition) / 2;
                         midPosition.y = bounds.min.y;
@@ -309,25 +317,37 @@ public class Tile : MonoBehaviour
 
     private void SpawnSingleItem(Vector3 position, Transform tile)
     {
-        var itemPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Count)];
+        GameObject itemPrefab;
+
+        if (distanceCounter >= switchDistance)
+        {
+            itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+            distanceCounter = 0f;
+        }
+        else
+        {
+            itemPrefab = primaryItemPrefab;
+            distanceCounter += Vector3.Distance(previousItemPosition, position);
+        }
+
         var item = Instantiate(itemPrefab, position, Quaternion.identity);
         item.transform.SetParent(tile, true);
     }
 
     private Vector3 GetRandomPositionInLane(Bounds bounds, float lanePosition)
     {
-        float x = lanePosition;
-        float y = bounds.min.y;
-        float z = Random.Range(bounds.min.z, bounds.max.z);
+        var x = lanePosition;
+        var y = bounds.min.y;
+        var z = Random.Range(bounds.min.z, bounds.max.z);
         return new Vector3(x, y, z);
     }
 
     private bool IsObstacleAtPosition(Vector3 position)
     {
-        Collider[] colliders = Physics.OverlapSphere(position, 1f);
-        foreach (var collider in colliders)
+        var numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
+        for (var i = 0; i < numColliders; i++)
         {
-            if (collider.CompareTag("Obstacle"))
+            if (overlapResults[i].CompareTag("Obstacle"))
             {
                 return true;
             }

@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpForce = 3f;
     public float slideForce = -10f;
+    
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
     [SerializeField] private int currentLaneIndex = 1;
 

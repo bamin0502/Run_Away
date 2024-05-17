@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: collectible__139
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -100,7 +104,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
