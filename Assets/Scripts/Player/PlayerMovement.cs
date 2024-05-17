@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpForce = 3f;
     public float slideForce = -10f;
-    
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
     [SerializeField] private int currentLaneIndex = 1;
 
@@ -103,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (vertical > 0.7f)
+            if (vertical > 0.7f && !isJumping) // 점프 중 다시 점프 불가
             {
                 PerformJump();
             }
@@ -136,6 +135,14 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
             isJumping = false;
         }
+
+        if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f)) // 슬라이드 전방 장애물 검사
+        {
+            Debug.Log("Obstacle detected during slide");
+            Die(); // 장애물이 있으면 슬라이드 중 죽음
+            return;
+        }
+
         swipeDirection = Defines.SwipeDirection.SLIDE;
         slideTimer = slideDuration;
         isSliding = true;
@@ -144,6 +151,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void TryMoveToLane(int newLaneIndex)
     {
+        if (isCollidingFront) return; // 충돌 중일 때는 레인 변경을 막음
+
         lastPosition = rb.position;
         lastLaneIndex = currentLaneIndex;
         int clampedLaneIndex = Mathf.Clamp(newLaneIndex, 0, lanes.Length - 1);
@@ -191,13 +200,14 @@ public class PlayerMovement : MonoBehaviour
             forward.y = 0;
             var angle = Vector3.Angle(forward, collisionDirection);
 
-            if (angle < 45)
+            if (angle < 75) // 전면 충돌
             {
-                Debug.Log("Obstacle Hit");
+                Debug.Log("Frontal Obstacle Hit");
+                isCollidingFront = true;
                 GameManager.Instance.GameOver();
                 Die();
             }
-            else
+            else // 측면 충돌
             {
                 Debug.Log("Side Obstacle Hit");
                 targetPosition = lastPosition;
@@ -205,8 +215,6 @@ public class PlayerMovement : MonoBehaviour
                 currentLaneIndex = lastLaneIndex;
             }
         }
-        
-
     }
 
     private void OnCollisionExit(Collision other)
@@ -219,15 +227,13 @@ public class PlayerMovement : MonoBehaviour
         {
             isCollidingFront = false;
         }
-
-        
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Item"))
         {
-            //아이템 효과 발동 예정 
+            // 아이템 효과 발동 예정
             other.gameObject.SetActive(false);
         }
     }
@@ -236,5 +242,6 @@ public class PlayerMovement : MonoBehaviour
     {
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
+        // 추가로 죽음 처리 로직 필요시 여기에 추가
     }
 }

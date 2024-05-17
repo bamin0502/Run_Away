@@ -32,7 +32,7 @@ public class Tile : MonoBehaviour
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;
     private float distanceCounter = 0f;
-    public float switchDistance = 50f; // 아이템을 변경할 거리
+    public float switchDistance = 100f; // 아이템을 변경할 거리
 
     private Collider[] overlapResults = new Collider[10]; 
 
