@@ -1,4 +1,8 @@
 
+using CsvHelper;
+using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
+
 public static class Defines
 {
     public enum SwipeDirection
@@ -11,3 +15,14 @@ public static class Defines
     }
 }
 
+public class Int32DefaultConverter:Int32Converter
+{
+    public override object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return 0;
+        }
+        return base.ConvertFromString(text, row, memberMapData);
+    }
+}

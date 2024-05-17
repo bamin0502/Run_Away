@@ -9,6 +9,7 @@ public static class DataManager
     {
         // 테이블 초기화 및 로드
         AddTable<ObstacleTable>("RunAway_Obstacle");
+        AddTable<ItemTable>("RunAway_Item");
     }
 
     private static void AddTable<T>(string id) where T : DataTable, new()
@@ -24,6 +25,11 @@ public static class DataManager
     public static ObstacleTable GetObstacleTable()
     {
         return Get<ObstacleTable>("RunAway_Obstacle");
+    }
+    
+    public static ItemTable GetItemTable()
+    {
+        return Get<ItemTable>("RunAway_Item");
     }
 
     private static T Get<T> (string id) where T : DataTable

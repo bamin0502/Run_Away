@@ -203,6 +203,12 @@ public class PlayerMovement : MonoBehaviour
                 currentLaneIndex = lastLaneIndex;
             }
         }
+        
+        if (other.collider.CompareTag("Item"))
+        {
+            //아이템 효과 발동 예정 
+            Destroy(other.gameObject);
+        }
     }
 
     private void OnCollisionExit(Collision other)
@@ -215,6 +221,8 @@ public class PlayerMovement : MonoBehaviour
         {
             isCollidingFront = false;
         }
+
+        
     }
 
     private void Die()
