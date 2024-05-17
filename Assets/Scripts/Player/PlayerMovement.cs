@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -204,11 +205,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         
-        if (other.collider.CompareTag("Item"))
-        {
-            //아이템 효과 발동 예정 
-            Destroy(other.gameObject);
-        }
+
     }
 
     private void OnCollisionExit(Collision other)
@@ -223,6 +220,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Item"))
+        {
+            //아이템 효과 발동 예정 
+            other.gameObject.SetActive(false);
+        }
     }
 
     private void Die()

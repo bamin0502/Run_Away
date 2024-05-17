@@ -6,9 +6,6 @@ public class ObstacleData
     [TypeConverter(typeof(Int32DefaultConverter))]
     public int ObstacleID { get; set; }
     
-    [Name("Obstacle_name(korean)")]
-    public string ObstacleNameKorean { get; set; }
-    
     [Name("Obstacle_name(english)")]
     public string ObstacleNameEnglish { get; set; }
     

@@ -3,15 +3,12 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [Header("Transforms"), Tooltip("The transforms of the tile, obstacle, and player.")]
     public Transform tilePrefab;
     public Transform playerTransform;
 
-    [Header("BackGround"), Tooltip("The transforms of the ground and background.")]
     public Transform[] groundPrefabs;
     public Transform[] backgroundPrefabs;
 
-    [Header("Tile Settings"), Tooltip("The tile prefab to spawn.")]
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
@@ -27,6 +24,10 @@ public class Tile : MonoBehaviour
     private readonly List<Transform> backgroundPool = new List<Transform>();
 
     private List<GameObject> obstaclePrefabs;
+    private List<GameObject> itemPrefabs;
+
+    private Vector3 previousItemPosition = Vector3.zero;
+    private bool isFirstItem = true;
 
     void Awake()
     {
@@ -35,9 +36,11 @@ public class Tile : MonoBehaviour
         InitializeObjectPool(groundPrefabs, groundPool, 10);
         InitializeObjectPool(backgroundPrefabs, backgroundPool, 10);
 
-        // DataManager를 통해 장애물 로드
         var obstacleTable = DataManager.GetObstacleTable();
         obstaclePrefabs = obstacleTable.GetLoadedObstacles("Obstacle");
+        
+        var itemTable = DataManager.GetItemTable();
+        itemPrefabs = itemTable.GetLoadedItems("Item");
     }
 
     private void Start()
@@ -45,7 +48,8 @@ public class Tile : MonoBehaviour
         nextTilePosition = startPoint;
         for (var i = 0; i < numberOfTiles; i++)
         {
-            SpawnTile(i >= noObstaclesInitially);
+            var tile = SpawnTile(i >= noObstaclesInitially);
+            SpawnItems(tile);
         }
         CheckObstacleColliders();
     }
@@ -71,19 +75,19 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SpawnTile(bool spawnObstacles)
+    private Transform SpawnTile(bool spawnObstacles)
     {
         if (tilePrefab == null)
         {
             Debug.LogWarning("Tile prefab is not assigned.");
-            return;
+            return null;
         }
 
         var newTile = Instantiate(tilePrefab, nextTilePosition, Quaternion.identity, transform);
         if (newTile == null)
         {
             Debug.LogWarning("Failed to instantiate tile prefab.");
-            return;
+            return null;
         }
 
         nextTilePosition += new Vector3(0, 0, tileLength);
@@ -96,6 +100,8 @@ public class Tile : MonoBehaviour
 
         SpawnGroundElements(newTile);
         SpawnBackgroundElements(newTile);
+
+        return newTile;
     }
 
     private void CheckObstacleColliders()
@@ -214,6 +220,7 @@ public class Tile : MonoBehaviour
 
         SpawnGroundElements(tile);
         SpawnBackgroundElements(tile);
+        SpawnItems(tile);
     }
 
     private void DeactivateAndEnqueue(Transform tile, string spawnPointTag, List<Transform> pool)
@@ -259,5 +266,72 @@ public class Tile : MonoBehaviour
             var instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             return instance;
         }
+    }
+
+    private void SpawnItems(Transform tile)
+    {
+        var bounds = tile.GetComponent<Collider>().bounds;
+        float[] lanePositions = { -3.8f, 0f, 3.8f };
+        int laneCount = lanePositions.Length;
+        
+        Vector3 currentItemPosition = Vector3.zero;
+
+        for (int lane = 0; lane < laneCount; lane++)
+        {
+            int attempts = 0;
+            int maxAttempts = 10;
+            bool itemSpawned = false;
+
+            while (attempts < maxAttempts && !itemSpawned)
+            {
+                Vector3 randomPosition = GetRandomPositionInLane(bounds, lanePositions[lane]);
+                
+                if (!IsObstacleAtPosition(randomPosition))
+                {
+                    currentItemPosition = randomPosition;
+
+                    if (!isFirstItem && previousItemPosition.z != currentItemPosition.z)
+                    {
+                        Vector3 midPosition = (previousItemPosition + currentItemPosition) / 2;
+                        midPosition.y = bounds.min.y;
+                        SpawnSingleItem(midPosition, tile);
+                    }
+
+                    SpawnSingleItem(currentItemPosition, tile);
+                    previousItemPosition = currentItemPosition;
+                    itemSpawned = true;
+                    isFirstItem = false;
+                }
+                attempts++;
+            }
+        }
+    }
+
+    private void SpawnSingleItem(Vector3 position, Transform tile)
+    {
+        var itemPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Count)];
+        var item = Instantiate(itemPrefab, position, Quaternion.identity);
+        item.transform.SetParent(tile, true);
+    }
+
+    private Vector3 GetRandomPositionInLane(Bounds bounds, float lanePosition)
+    {
+        float x = lanePosition;
+        float y = bounds.min.y;
+        float z = Random.Range(bounds.min.z, bounds.max.z);
+        return new Vector3(x, y, z);
+    }
+
+    private bool IsObstacleAtPosition(Vector3 position)
+    {
+        Collider[] colliders = Physics.OverlapSphere(position, 1f);
+        foreach (var collider in colliders)
+        {
+            if (collider.CompareTag("Obstacle"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

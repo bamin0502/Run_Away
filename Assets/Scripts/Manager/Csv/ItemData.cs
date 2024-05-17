@@ -7,9 +7,6 @@ public class ItemData
     [TypeConverter(typeof(Int32DefaultConverter))]
     public int ItemID { get; set; }
     
-    [Name("Item_name(korean)")]
-    public string ItemNameKorean { get; set; }
-    
     [Name("Item_name(english)")]
     public string ItemNameEnglish { get; set; }
     
