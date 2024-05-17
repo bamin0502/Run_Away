@@ -14,6 +14,8 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] public TextMeshProUGUI distanceText;
 
+    public bool isTutorialActive = true;
+    
     public override void Awake()
     {
         base.Awake();

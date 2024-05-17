@@ -6,9 +6,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private PlayerAni playerAni;
 
-    [Header("Swipe Movement")]
     public float jumpForce = 3f;
-    public float slideForce = -10f; // 빠르게 하강하는 힘
+    public float slideForce = -10f;
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
     [SerializeField] private int currentLaneIndex = 1;
 
@@ -17,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float slideDuration = 1.0f;
     private float slideTimer;
 
-    [Header("Smooth Movement")]
     [SerializeField] private float laneChangeSpeed = 5f;
     private Vector3 targetPosition;
     private Vector3 lastPosition;
@@ -56,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
                 playerAni.SetRunAnimation();
             }
         }
-        
+
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
         rb.MovePosition(newPosition);
@@ -69,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
             UpdateMovement(pendingMovement);
             pendingMovement = Vector2.zero;
         }
-        
+
         if (isJumping)
         {
             var mass = rb.mass;
@@ -103,32 +101,43 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (vertical > 0.7f && !isJumping && !isSliding)
+            if (vertical > 0.7f)
             {
-                var velocity = rb.velocity;
-                velocity = new Vector3(velocity.x, 0, velocity.z); 
-                rb.velocity = velocity;
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                swipeDirection = Defines.SwipeDirection.JUMP;
-                isJumping = true;
-                playerAni.SetJumpAnimation();
+                PerformJump();
             }
             else if (vertical < -0.7f)
             {
-                if (isJumping)
-                {
-                    var velocity = rb.velocity;
-                    velocity = new Vector3(velocity.x, 0, velocity.z); 
-                    rb.velocity = velocity;
-                    rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
-                    isJumping = false;
-                }
-                swipeDirection = Defines.SwipeDirection.SLIDE;
-                slideTimer = slideDuration;
-                isSliding = true;
-                playerAni.SetSlideAnimation();
+                PerformSlide();
             }
         }
+    }
+
+    private void PerformJump()
+    {
+        var velocity = rb.velocity;
+        velocity = new Vector3(velocity.x, 0, velocity.z);
+        rb.velocity = velocity;
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        swipeDirection = Defines.SwipeDirection.JUMP;
+        isJumping = true;
+        isSliding = false;
+        playerAni.SetJumpAnimation();
+    }
+
+    private void PerformSlide()
+    {
+        if (isJumping)
+        {
+            var velocity = rb.velocity;
+            velocity = new Vector3(velocity.x, 0, velocity.z);
+            rb.velocity = velocity;
+            rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
+            isJumping = false;
+        }
+        swipeDirection = Defines.SwipeDirection.SLIDE;
+        slideTimer = slideDuration;
+        isSliding = true;
+        playerAni.SetSlideAnimation();
     }
 
     private void TryMoveToLane(int newLaneIndex)
@@ -177,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
         {
             var collisionDirection = other.contacts[0].point - transform.position;
             var forward = transform.forward;
-            forward.y = 0; 
+            forward.y = 0;
             var angle = Vector3.Angle(forward, collisionDirection);
 
             if (angle < 45)

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19025388, g: 0.5924093, b: 0.771748, a: 1}
+  m_IndirectSpecularColor: {r: 0.19024794, g: 0.59240067, b: 0.7727873, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1104,6 +1104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 539059098}
   - component: {fileID: 539059099}
+  - component: {fileID: 539059100}
   m_Layer: 0
   m_Name: TileManager
   m_TagString: Untagged
@@ -1172,6 +1173,19 @@ MonoBehaviour:
   noObstaclesInitially: 2
   tileLength: 18.7
   moveSpeed: 5
+--- !u!114 &539059100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539059097}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78f4505e04a288146952ccac17cd606d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialText: {fileID: 0}
 --- !u!1 &552271112
 GameObject:
   m_ObjectHideFlags: 0
@@ -3654,6 +3668,7 @@ MonoBehaviour:
   speedIncreaseMilestone: 100
   speedMultiplier: 1
   distanceText: {fileID: 1834485004}
+  isTutorialActive: 1
 --- !u!4 &1504525080
 Transform:
   m_ObjectHideFlags: 0

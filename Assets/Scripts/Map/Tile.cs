@@ -40,7 +40,7 @@ public class Tile : MonoBehaviour
         obstaclePrefabs = obstacleTable.GetLoadedObstacles("Obstacle");
     }
 
-    void Start()
+    private void Start()
     {
         nextTilePosition = startPoint;
         for (var i = 0; i < numberOfTiles; i++)
@@ -50,7 +50,7 @@ public class Tile : MonoBehaviour
         CheckObstacleColliders();
     }
 
-    void Update()
+    private void Update()
     {
         if (!gameManager.isGameover)
         {
