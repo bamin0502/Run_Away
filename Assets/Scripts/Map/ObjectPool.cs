@@ -18,20 +18,20 @@ public class ObjectPool
         }
     }
 
-    public Transform GetRandomPooledObject(Transform[] prefabs)
+    public Transform GetRandomPooledObject(Transform prefab)
     {
-        if (pool.Count > 0)
+        for (int i = 0; i < pool.Count; i++)
         {
-            var randomIndex = Random.Range(0, pool.Count);
-            var obj = pool[randomIndex];
-            pool.RemoveAt(randomIndex);
-            return obj;
+            if (pool[i].name.Contains(prefab.name) && !pool[i].gameObject.activeInHierarchy)
+            {
+                var obj = pool[i];
+                pool.RemoveAt(i);
+                return obj;
+            }
         }
-        else
-        {
-            var prefab = prefabs[Random.Range(0, prefabs.Length)];
-            return Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
-        }
+
+        var newInstance = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        return newInstance;
     }
 
     public void DeactivateAndEnqueue(Transform tile, string spawnPointTag)

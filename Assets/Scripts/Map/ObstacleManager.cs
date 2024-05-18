@@ -3,45 +3,117 @@ using UnityEngine;
 
 public class ObstacleManager : MonoBehaviour
 {
-    private List<GameObject> obstaclePrefabs;
+    private Dictionary<int, List<GameObject>> obstaclePrefabsBySection;
+    private ObjectPool obstaclePool;
 
     void Awake()
     {
-        var obstacleTable = DataManager.GetObstacleTable();
-        obstaclePrefabs = obstacleTable.GetLoadedObstacles("Obstacle");
+        Initialize();
     }
 
-    public void SpawnObstacles(Transform tile)
+    public void Initialize()
     {
-        var spawnPoints = GetChildTransformsWithTag(tile, "ObstacleSpawnPoint");
-        var emptyIndex = Random.Range(0, spawnPoints.Count);
+        var obstacleTable = DataManager.GetObstacleTable();
+        obstaclePrefabsBySection = obstacleTable.GetObstaclesBySection();
 
-        for (var i = 0; i < spawnPoints.Count; i++)
+        var allObstaclePrefabs = new List<GameObject>();
+        foreach (var obstacleList in obstaclePrefabsBySection.Values)
         {
-            if (i != emptyIndex && obstaclePrefabs.Count > 0)
+            allObstaclePrefabs.AddRange(obstacleList);
+        }
+
+        obstaclePool = new ObjectPool();
+        obstaclePool.InitializePool(allObstaclePrefabs.ConvertAll(item => item.transform).ToArray(), 10);
+    }
+
+    public void SpawnObstacles(Transform tile, int sectionType)
+    {
+        var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
+
+        if (spawnPoints.Count == 0)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("No ObstacleSpawnPoint found in the tile.");
+#endif
+            return;
+        }
+
+        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"No obstacles found for section type: {sectionType}");
+#endif
+            return;
+        }
+
+        var selectedLanes = new HashSet<int>();
+        while (selectedLanes.Count < Random.Range(1, 3))
+        {
+            selectedLanes.Add(Random.Range(0, 3));
+        }
+
+        foreach (var spawnPoint in spawnPoints)
+        {
+            var lanePosition = Mathf.FloorToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
+
+            if (selectedLanes.Contains(lanePosition))
             {
-                var spawnPoint = spawnPoints[i];
-                if (Random.Range(0, 2) == 0)
+                var obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
+                var obstacleCollider = obstaclePrefab.GetComponent<Collider>();
+
+                if (obstacleCollider == null)
                 {
-                    var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
-                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
-                    obstacle.transform.SetParent(tile, true);
-                    //obstacle.transform.localScale = obstaclePrefab.transform.localScale;
+#if UNITY_EDITOR
+                    Debug.LogWarning($"Obstacle prefab {obstaclePrefab.name} does not have a Collider component.");
+#endif
+                    continue;
+                }
+
+                var obstacleSize = obstacleCollider.bounds.size;
+                var obstacleCenter = spawnPoint.position + obstacleCollider.bounds.center;
+
+                if (!Physics.CheckBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")))
+                {
+                    var obstacleTransform = obstaclePool.GetRandomPooledObject(obstaclePrefab.transform);
+                    if (obstacleTransform != null)
+                    {
+                        obstacleTransform.position = spawnPoint.position;
+                        obstacleTransform.rotation = spawnPoint.rotation;
+                        obstacleTransform.gameObject.SetActive(true);
+                        obstacleTransform.SetParent(tile, true);
+                    }
+                }
+                else
+                {
+#if UNITY_EDITOR
+                    Debug.LogWarning($"Spawn point at {spawnPoint.position} is already occupied by another obstacle.");
+#endif
                 }
             }
         }
     }
 
-    private List<Transform> GetChildTransformsWithTag(Transform parent, string tag)
+    private List<Transform> GetAllChildTransforms(Transform parent, string tag)
     {
         var result = new List<Transform>();
-        foreach (Transform child in parent)
+        var queue = new Queue<Transform>();
+
+        queue.Enqueue(parent);
+
+        while (queue.Count > 0)
         {
-            if (child.CompareTag(tag))
+            var current = queue.Dequeue();
+
+            foreach (Transform child in current)
             {
-                result.Add(child);
+                if (child.CompareTag(tag))
+                {
+                    result.Add(child);
+                }
+                queue.Enqueue(child);
             }
         }
+
         return result;
     }
 }
