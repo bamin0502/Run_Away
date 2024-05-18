@@ -1143,23 +1143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 4625979568379758971}
-  groundPrefabs:
-  - {fileID: 7621207150434823679, guid: 087fff42d3c77b246925b4782351aa19, type: 3}
-  - {fileID: 141165712776378042, guid: 31f228c1024f8da4581961e96457b4b4, type: 3}
-  - {fileID: 63838491106208084, guid: 03f358efa0d17c64da70da4586677108, type: 3}
-  - {fileID: 2271270224055212082, guid: a5391901c82175647a0dc80298d1724e, type: 3}
-  - {fileID: 6866636862930972171, guid: abaf13a763c700b4c9759cfe2b3ede0a, type: 3}
-  - {fileID: 4083500987716091142, guid: afe45cbd4e2c80847b699dded3cbda43, type: 3}
-  - {fileID: 8258544328128618727, guid: 1cf3082eab4e53e4ea2c6260232e313e, type: 3}
-  - {fileID: 4618933953056581451, guid: 88434706d6ff5e243868b378b33cd8b1, type: 3}
-  - {fileID: 8296435334403486821, guid: ff39cab3e6ddeda4ba9d7d17a9501182, type: 3}
-  - {fileID: 3321019878548125065, guid: 9af55394096b68c42b07d13f698ac0c0, type: 3}
-  - {fileID: 1177731139114268019, guid: a80e693172871c146bd1012208b1c07f, type: 3}
-  - {fileID: 5220498809700295444, guid: f6151e4719635974eaa7afbcb69dd895, type: 3}
-  - {fileID: 4759606077516059406, guid: d90aae874bef7074eac4ba2f7fa1097d, type: 3}
-  - {fileID: 3146491133151377636, guid: ba36d2d797a6524448a103756e50ae5c, type: 3}
-  - {fileID: 8437557469370930624, guid: 8adadfa643c87f74bb2402c31a4e577c, type: 3}
-  - {fileID: 8000086569554189771, guid: d7b05eca61aae2d41a54f37e25c50dc9, type: 3}
+  tileManagerTransform: {fileID: 539059098}
   startPoint: {x: 0, y: 0, z: 0}
   numberOfTiles: 10
   noObstaclesInitially: 2

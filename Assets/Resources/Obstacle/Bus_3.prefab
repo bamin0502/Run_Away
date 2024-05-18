@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2802878393089706549}
   - component: {fileID: 965219467811725285}
   - component: {fileID: 3087104669195027299}
-  - component: {fileID: -5414975770442436192}
+  - component: {fileID: 2460773650140814214}
   m_Layer: 0
   m_Name: Bus_3
   m_TagString: Obstacle
@@ -131,7 +131,7 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
---- !u!114 &-5414975770442436192
+--- !u!114 &2460773650140814214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  obstacleDistance: 0
-  obstacleID: 0
-  obstacleName: 
+  obstacleID: 11306
+  obstacleNameEnglish: Bus_3
+  obstacleCoin: 1
+  obstacleType: 3
+  obstacleSpeed: 0
+  obstacleSection: 2

@@ -14,10 +14,12 @@ public class ObstacleData
     [Name("Obstacle_type")]
     public int ObstacleType { get; set; }
     
+    [Name("Obstacle_speed")]
+    public int ObstacleSpeed { get; set; }    
+    
     [Name("obstacle_section")]
     [TypeConverter(typeof(Int32DefaultConverter))]
     public int ObstacleSection { get; set; }
     
-    [Name("Obstacle_speed")]
-    public int ObstacleSpeed { get; set; }    
+
 }

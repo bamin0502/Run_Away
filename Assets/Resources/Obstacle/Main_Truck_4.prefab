@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2016212114922090151}
   - component: {fileID: 492856858549156629}
   - component: {fileID: 7275889169750623390}
+  - component: {fileID: -321402708197286621}
   m_Layer: 0
   m_Name: Main_Truck_4
   m_TagString: Obstacle
@@ -140,7 +141,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  obstacleDistance: 0
   obstacleID: 0
-  obstacleName: 
+  obstacleNameEnglish: 
+  obstacleCoin: 0
+  obstacleType: 0
+  obstacleSpeed: 0
+  obstacleSection: 0
+--- !u!114 &-321402708197286621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111833268559281957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleID: 10412
+  obstacleNameEnglish: Main_Truck_4
+  obstacleCoin: 1
+  obstacleType: 4
+  obstacleSpeed: 10
+  obstacleSection: 3

@@ -4,6 +4,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public Transform playerTransform;
+    public Transform tileManagerTransform;  // 타일의 부모를 지정하기 위한 Transform
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
@@ -28,12 +29,12 @@ public class Tile : MonoBehaviour
     public float maxOtherItemSpawnChance = 0.2f;
     public float distanceFactor = 0.0005f;
 
-    private readonly Collider[] overlapResults = new Collider[10];
+    private Collider[] overlapResults = new Collider[10];
 
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        
+
         var itemTable = DataManager.GetItemTable();
         itemPrefabs = itemTable.GetLoadedItems("Item");
 
@@ -53,7 +54,10 @@ public class Tile : MonoBehaviour
         for (var i = 0; i < numberOfTiles; i++)
         {
             var tile = SpawnTile(i >= noObstaclesInitially);
-            SpawnItems(tile);
+            if (tile != null)
+            {
+                SpawnItems(tile);
+            }
         }
         CheckObstacleColliders();
     }
@@ -88,7 +92,7 @@ public class Tile : MonoBehaviour
         }
 
         var sectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
-        var newTile = Instantiate(sectionPrefab, nextTilePosition, Quaternion.identity, transform).transform;
+        var newTile = Instantiate(sectionPrefab, nextTilePosition, Quaternion.identity, tileManagerTransform).transform; // 부모를 지정하여 생성
         if (newTile == null)
         {
             Debug.LogWarning("Failed to instantiate section prefab.");
@@ -103,8 +107,8 @@ public class Tile : MonoBehaviour
             var sectionTypeComponent = newTile.GetComponent<SectionType>();
             if (sectionTypeComponent != null)
             {
-                Debug.Log($"Spawning obstacles for section ID: {sectionTypeComponent.sectionID}");
-                SpawnObstacles(newTile, sectionTypeComponent.sectionID);
+                Debug.Log($"Spawning obstacles for section type: {sectionTypeComponent.sectionType}");
+                SpawnObstacles(newTile, sectionTypeComponent.sectionType);
             }
             else
             {
@@ -117,9 +121,9 @@ public class Tile : MonoBehaviour
 
     private void CheckObstacleColliders()
     {
-        foreach (var obstacleSection in obstaclePrefabsBySection.Keys)
+        foreach (var obstacleType in obstaclePrefabsBySection.Keys)
         {
-            foreach (var obstaclePrefab in obstaclePrefabsBySection[obstacleSection])
+            foreach (var obstaclePrefab in obstaclePrefabsBySection[obstacleType])
             {
                 var component = obstaclePrefab.GetComponent<Collider>();
                 if (component == null)
@@ -134,7 +138,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SpawnObstacles(Transform tile, int sectionID)
+    private void SpawnObstacles(Transform tile, int sectionType)
     {
         var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
 
@@ -144,14 +148,14 @@ public class Tile : MonoBehaviour
             return;
         }
 
-        if (!obstaclePrefabsBySection.TryGetValue(sectionID, out var filteredObstacles) || filteredObstacles.Count == 0)
+        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
         {
-            Debug.LogWarning($"No obstacles found for section ID: {sectionID}");
+            Debug.LogWarning($"No obstacles found for section type: {sectionType}");
             return;
         }
 
-        // 섹션 ID별 장애물 리스트 출력
-        Debug.Log($"Obstacles for section ID {sectionID}: {filteredObstacles.Count}");
+        // 타입별 장애물 리스트 출력
+        Debug.Log($"Obstacles for section type {sectionType}: {filteredObstacles.Count}");
 
         // 스폰할 레인 선택 (최대 2개의 레인)
         List<int> lanes = new List<int> { 0, 1, 2 };
@@ -170,12 +174,12 @@ public class Tile : MonoBehaviour
             // 레인 위치 계산 (왼쪽, 중앙, 오른쪽)
             var lanePosition = Mathf.FloorToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
 
-            if (selectedLanes.Contains(lanePosition) && filteredObstacles.Count > 0)
+            if (selectedLanes.Contains(lanePosition))
             {
                 var obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
                 var obstacleCollider = obstaclePrefab.GetComponent<Collider>();
 
-                if (!obstacleCollider)
+                if (obstacleCollider == null)
                 {
                     Debug.LogWarning($"Obstacle prefab {obstaclePrefab.name} does not have a Collider component.");
                     continue;
@@ -184,12 +188,12 @@ public class Tile : MonoBehaviour
                 var obstacleSize = obstacleCollider.bounds.size;
                 var obstacleCenter = spawnPoint.position + obstacleCollider.bounds.center;
 
-                // OverlapBox를 사용하여 충돌 체크
-                if (Physics.OverlapBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")).Length == 0)
+                // CheckBox를 사용하여 충돌 체크
+                if (!Physics.CheckBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")))
                 {
                     var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
 
-                    if (!obstacle)
+                    if (obstacle == null)
                     {
                         Debug.LogError($"Failed to instantiate obstacle prefab: {obstaclePrefab.name}");
                         continue;
@@ -242,7 +246,7 @@ public class Tile : MonoBehaviour
         var sectionTypeComponent = tile.GetComponent<SectionType>();
         if (sectionTypeComponent != null)
         {
-            SpawnObstacles(tile, sectionTypeComponent.sectionID);
+            SpawnObstacles(tile, sectionTypeComponent.sectionType);
         }
         else
         {

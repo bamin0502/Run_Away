@@ -144,7 +144,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  obstacleDistance: 0
   obstacleID: 0
-  obstacleName: 
+  obstacleNameEnglish: 
+  obstacleCoin: 0
+  obstacleType: 0
+  obstacleSpeed: 0
+  obstacleSection: 0

@@ -1,8 +1,8 @@
-using CsvHelper;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using CsvHelper;
 using UnityEngine;
 
 public class ObstacleTable : DataTable
@@ -22,7 +22,7 @@ public class ObstacleTable : DataTable
             Debug.LogError($"Failed to load text asset from path: {path}");
             return;
         }
-        
+
         using (var reader = new StringReader(textAsset.text))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
@@ -44,6 +44,18 @@ public class ObstacleTable : DataTable
             var obstaclePrefab = Resources.Load<GameObject>(fullPath);
             if (obstaclePrefab != null)
             {
+                var existingObstacleTypeComponent = obstaclePrefab.GetComponent<ObstacleType>();
+                if (existingObstacleTypeComponent == null)
+                {
+                    var obstacleTypeComponent = obstaclePrefab.AddComponent<ObstacleType>();
+                    obstacleTypeComponent.obstacleID = obstacle.ObstacleID;
+                    obstacleTypeComponent.obstacleNameEnglish = obstacle.ObstacleNameEnglish;
+                    obstacleTypeComponent.obstacleCoin = obstacle.ObstacleCoin;
+                    obstacleTypeComponent.obstacleType = obstacle.ObstacleType;
+                    obstacleTypeComponent.obstacleSpeed = obstacle.ObstacleSpeed;
+                    obstacleTypeComponent.obstacleSection = obstacle.ObstacleSection;
+                }
+
                 loadedObstacles.Add(obstaclePrefab);
                 Debug.Log($"Successfully loaded obstacle prefab: {fullPath}");
             }
@@ -62,15 +74,13 @@ public class ObstacleTable : DataTable
 
         foreach (var obstacle in obstacleData)
         {
-            if (!obstaclesBySection.ContainsKey(obstacle.ObstacleSection))
-            {
-                obstaclesBySection[obstacle.ObstacleSection] = new List<GameObject>();
-            }
-
-            var fullPath = $"Obstacle/{obstacle.ObstacleNameEnglish}";
-            var obstaclePrefab = Resources.Load<GameObject>(fullPath);
+            var obstaclePrefab = Resources.Load<GameObject>($"Obstacle/{obstacle.ObstacleNameEnglish}");
             if (obstaclePrefab != null)
             {
+                if (!obstaclesBySection.ContainsKey(obstacle.ObstacleSection))
+                {
+                    obstaclesBySection[obstacle.ObstacleSection] = new List<GameObject>();
+                }
                 obstaclesBySection[obstacle.ObstacleSection].Add(obstaclePrefab);
             }
         }

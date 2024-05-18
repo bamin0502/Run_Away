@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3701494387874585282}
   - component: {fileID: 5410042875388916053}
   - component: {fileID: 3651758410152946997}
-  - component: {fileID: -227280119481689788}
+  - component: {fileID: 6315928460163015634}
   m_Layer: 0
   m_Name: Ambulance
   m_TagString: Obstacle
@@ -131,7 +131,7 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
---- !u!114 &-227280119481689788
+--- !u!114 &6315928460163015634
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  obstacleDistance: 0
-  obstacleID: 0
-  obstacleName: 
+  obstacleID: 10408
+  obstacleNameEnglish: Ambulance
+  obstacleCoin: 1
+  obstacleType: 4
+  obstacleSpeed: 15
+  obstacleSection: 3

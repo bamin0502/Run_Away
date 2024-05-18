@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9180966813731040199}
   - component: {fileID: 4804701844224758257}
   - component: {fileID: -6455854095001393157}
-  - component: {fileID: -9156143422580274243}
+  - component: {fileID: 4434563641790446327}
   m_Layer: 0
   m_Name: Fire_Truck
   m_TagString: Obstacle
@@ -131,7 +131,7 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
---- !u!114 &-9156143422580274243
+--- !u!114 &4434563641790446327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  obstacleDistance: 0
-  obstacleID: 0
-  obstacleName: 
+  obstacleID: 10409
+  obstacleNameEnglish: Fire_Truck
+  obstacleCoin: 1
+  obstacleType: 4
+  obstacleSpeed: 15
+  obstacleSection: 3

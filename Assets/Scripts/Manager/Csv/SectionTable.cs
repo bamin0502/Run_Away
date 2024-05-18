@@ -8,7 +8,6 @@ using UnityEngine;
 public class SectionTable : DataTable
 {
     private List<SectionData> sectionData = new List<SectionData>();
-    private Dictionary<int, SectionData> sectionDataDict = new Dictionary<int, SectionData>();
 
     public override void Load(string path)
     {
@@ -23,18 +22,17 @@ public class SectionTable : DataTable
             Debug.LogError($"Failed to load text asset from path: {path}");
             return;
         }
-        
+
         using (var reader = new StringReader(textAsset.text))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var records = csvReader.GetRecords<SectionData>().ToList();
             sectionData.AddRange(records);
-            sectionDataDict = records.ToDictionary(x => x.SectionID);
         }
 
         Debug.Log($"Loaded {sectionData.Count} section data records.");
     }
-    
+
     public List<GameObject> GetLoadedSections(string sectionFolderPath)
     {
         var loadedSections = new List<GameObject>();
@@ -46,7 +44,16 @@ public class SectionTable : DataTable
             var sectionPrefab = Resources.Load<GameObject>(fullPath);
             if (sectionPrefab != null)
             {
-                loadedSections.Add(sectionPrefab);
+                var sectionInstance = sectionPrefab;
+                var sectionTypeComponent = sectionInstance.GetComponent<SectionType>();
+                if (sectionTypeComponent != null)
+                {
+                    sectionTypeComponent.sectionID = section.SectionID;
+                    sectionTypeComponent.sectionName = section.SectionName;
+                    sectionTypeComponent.sectionType = section.SectionType;
+                    sectionTypeComponent.sectionDistance = section.SectionDistance;
+                }
+                loadedSections.Add(sectionInstance);
                 Debug.Log($"Successfully loaded section prefab: {fullPath}");
             }
             else
@@ -56,11 +63,5 @@ public class SectionTable : DataTable
         }
 
         return loadedSections;
-    }
-
-    public SectionData GetSectionData(int sectionID)
-    {
-        sectionDataDict.TryGetValue(sectionID, out var sectionData);
-        return sectionData;
     }
 }

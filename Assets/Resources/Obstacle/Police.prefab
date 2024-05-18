@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2731041316258390525}
   - component: {fileID: -6041482979812847088}
   - component: {fileID: 5434746434499117696}
+  - component: {fileID: 7020828326860514582}
   m_Layer: 0
   m_Name: Police
   m_TagString: Obstacle
@@ -143,7 +144,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  obstacleDistance: 0
   obstacleID: 0
-  obstacleName: 
+  obstacleNameEnglish: 
+  obstacleCoin: 0
+  obstacleType: 0
+  obstacleSpeed: 0
+  obstacleSection: 0
+--- !u!114 &7020828326860514582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412363122834768907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleID: 10210
+  obstacleNameEnglish: Police
+  obstacleCoin: 0
+  obstacleType: 2
+  obstacleSpeed: 20
+  obstacleSection: 1

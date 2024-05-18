@@ -83,7 +83,7 @@ PrefabInstance:
       addedObject: {fileID: 1488557317390872658}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7a8ba0f506678504f9b5a4baf06c2e45, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1292672734105887344}
+      addedObject: {fileID: -7861145673107760717}
   m_SourcePrefab: {fileID: 100100000, guid: 7a8ba0f506678504f9b5a4baf06c2e45, type: 3}
 --- !u!1 &2844044224883698905 stripped
 GameObject:
@@ -153,7 +153,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.16901341, y: 1.162228, z: 0.6772966}
   m_Center: {x: -0.7681905, y: 0.581114, z: 0}
---- !u!114 &1292672734105887344
+--- !u!114 &-7861145673107760717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,7 +165,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  obstacleDistance: 0
-  obstacleID: 0
-  obstacleName: 
+  obstacleID: 11503
+  obstacleNameEnglish: Road_Work_sign_2
+  obstacleCoin: 1
+  obstacleType: 5
+  obstacleSpeed: 0
+  obstacleSection: 0
