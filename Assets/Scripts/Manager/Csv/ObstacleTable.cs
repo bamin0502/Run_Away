@@ -55,4 +55,26 @@ public class ObstacleTable : DataTable
 
         return loadedObstacles;
     }
+
+    public Dictionary<int, List<GameObject>> GetObstaclesBySection()
+    {
+        var obstaclesBySection = new Dictionary<int, List<GameObject>>();
+
+        foreach (var obstacle in obstacleData)
+        {
+            if (!obstaclesBySection.ContainsKey(obstacle.ObstacleSection))
+            {
+                obstaclesBySection[obstacle.ObstacleSection] = new List<GameObject>();
+            }
+
+            var fullPath = $"Obstacle/{obstacle.ObstacleNameEnglish}";
+            var obstaclePrefab = Resources.Load<GameObject>(fullPath);
+            if (obstaclePrefab != null)
+            {
+                obstaclesBySection[obstacle.ObstacleSection].Add(obstaclePrefab);
+            }
+        }
+
+        return obstaclesBySection;
+    }
 }

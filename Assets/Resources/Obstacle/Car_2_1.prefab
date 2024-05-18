@@ -78,6 +78,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eac0803a389c9b48aaeedf9a9ac90a5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7265086764489959812}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5eac0803a389c9b48aaeedf9a9ac90a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7501582070844305873}
   m_SourcePrefab: {fileID: 100100000, guid: 5eac0803a389c9b48aaeedf9a9ac90a5, type: 3}
 --- !u!1 &1650345016999353462 stripped
 GameObject:
@@ -129,3 +132,19 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
+--- !u!114 &7501582070844305873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650345016999353462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  obstacleDistance: 0
+  obstacleID: 0
+  obstacleName: 

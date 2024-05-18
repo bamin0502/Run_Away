@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1160372297906173092}
   - component: {fileID: -8663505967298975536}
   - component: {fileID: 2073250074770759318}
+  - component: {fileID: -8953077538291232757}
   m_Layer: 0
   m_Name: Car_1_3
   m_TagString: Obstacle
@@ -127,3 +128,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.2377975, y: 1.1551751, z: 1.7485671}
   m_Center: {x: 0, y: 0.57758754, z: 1.8886445}
+--- !u!114 &-8953077538291232757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800097039903430001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  obstacleDistance: 0
+  obstacleID: 0
+  obstacleName: 

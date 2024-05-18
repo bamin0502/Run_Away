@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 619601975448839646}
   - component: {fileID: 2731041316258390525}
   - component: {fileID: -6041482979812847088}
+  - component: {fileID: 5434746434499117696}
   m_Layer: 0
   m_Name: Police
   m_TagString: Obstacle
@@ -130,3 +131,19 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
+--- !u!114 &5434746434499117696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412363122834768907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  obstacleDistance: 0
+  obstacleID: 0
+  obstacleName: 

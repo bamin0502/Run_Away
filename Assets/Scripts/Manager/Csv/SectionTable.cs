@@ -1,13 +1,15 @@
 using System.Collections.Generic;
-using UnityEngine;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using CsvHelper;
+using UnityEngine;
 
 public class SectionTable : DataTable
 {
     private List<SectionData> sectionData = new List<SectionData>();
-    
+    private Dictionary<int, SectionData> sectionDataDict = new Dictionary<int, SectionData>();
+
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
@@ -23,10 +25,11 @@ public class SectionTable : DataTable
         }
         
         using (var reader = new StringReader(textAsset.text))
-        using (var csvReader = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
+        using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var records = csvReader.GetRecords<SectionData>().ToList();
             sectionData.AddRange(records);
+            sectionDataDict = records.ToDictionary(x => x.SectionID);
         }
 
         Debug.Log($"Loaded {sectionData.Count} section data records.");
@@ -53,5 +56,11 @@ public class SectionTable : DataTable
         }
 
         return loadedSections;
+    }
+
+    public SectionData GetSectionData(int sectionID)
+    {
+        sectionDataDict.TryGetValue(sectionID, out var sectionData);
+        return sectionData;
     }
 }

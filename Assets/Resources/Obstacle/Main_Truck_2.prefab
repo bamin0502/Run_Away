@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 509980107235132358}
   - component: {fileID: 8563611560361278862}
   - component: {fileID: 7861082586064802406}
+  - component: {fileID: -5608793719094889580}
   m_Layer: 0
   m_Name: Main_Truck_2
   m_TagString: Obstacle
@@ -127,3 +128,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.9050262, y: 1.9287224, z: 1.8426046}
   m_Center: {x: 0, y: 0.9643612, z: 2.871141}
+--- !u!114 &-5608793719094889580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023009331022897683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  obstacleDistance: 0
+  obstacleID: 0
+  obstacleName: 

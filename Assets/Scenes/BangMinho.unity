@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19024794, g: 0.59240067, b: 0.7727873, a: 1}
+  m_IndirectSpecularColor: {r: 0.191991, g: 0.5946723, b: 0.7773275, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1137,12 +1137,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539059097}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e2958ede23eeba44bd937b4228f2b62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 1063533099136412895, guid: ea6339cca5c675c4f91462fbf016e09f, type: 3}
   playerTransform: {fileID: 4625979568379758971}
   groundPrefabs:
   - {fileID: 7621207150434823679, guid: 087fff42d3c77b246925b4782351aa19, type: 3}
@@ -1161,20 +1160,10 @@ MonoBehaviour:
   - {fileID: 3146491133151377636, guid: ba36d2d797a6524448a103756e50ae5c, type: 3}
   - {fileID: 8437557469370930624, guid: 8adadfa643c87f74bb2402c31a4e577c, type: 3}
   - {fileID: 8000086569554189771, guid: d7b05eca61aae2d41a54f37e25c50dc9, type: 3}
-  backgroundPrefabs:
-  - {fileID: 4709064888965862368, guid: 360d5822e57359447b9ce3d8a3b37532, type: 3}
-  - {fileID: 8991091930390453267, guid: 407cec0499750964c87373d454cba99e, type: 3}
-  - {fileID: 915984234201245256, guid: 7497d6b5522b3ef4c975da4d035b26ae, type: 3}
-  - {fileID: 3165756947429540171, guid: 0ff0f5c3302eee844945115bfe13f943, type: 3}
-  - {fileID: 7790538391088313120, guid: 99420a4e47be02047983a8de78548f17, type: 3}
-  - {fileID: 5490380456002871131, guid: 0fdb1dadc44702f499b648f9f11bcf9b, type: 3}
-  - {fileID: 3360387841742649527, guid: 7204a8d4c276a2744a178cde0344b774, type: 3}
-  - {fileID: 320020283101617022, guid: 8bd38d3f078dafe41b6d7699c405ac4c, type: 3}
-  - {fileID: 7026000295285956488, guid: a824f9a62caf9c54a9458419d6dcbbe8, type: 3}
   startPoint: {x: 0, y: 0, z: 0}
   numberOfTiles: 10
   noObstaclesInitially: 2
-  tileLength: 18.7
+  tileLength: 30
   moveSpeed: 5
   initialOtherItemSpawnChance: 0.1
   maxOtherItemSpawnChance: 0.5
@@ -1255,7 +1244,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539059097}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c9908cf1401b8418b2e43b1733736c, type: 3}
   m_Name: 

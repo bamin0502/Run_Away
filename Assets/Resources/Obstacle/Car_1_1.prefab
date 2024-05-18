@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1848574788808047743}
   - component: {fileID: 6376972678290458739}
   - component: {fileID: 4128068949856189212}
+  - component: {fileID: -3950383918229264603}
   m_Layer: 0
   m_Name: Car_1_1
   m_TagString: Obstacle
@@ -130,3 +131,19 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
+--- !u!114 &-3950383918229264603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 191271634886909354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  obstacleDistance: 0
+  obstacleID: 0
+  obstacleName: 

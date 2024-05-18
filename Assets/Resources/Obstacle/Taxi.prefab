@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 444866585003841547}
   - component: {fileID: 5781398346904842970}
   - component: {fileID: -4637144262713035651}
+  - component: {fileID: -3489540491753253289}
   m_Layer: 0
   m_Name: Taxi
   m_TagString: Obstacle
@@ -130,3 +131,19 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
+--- !u!114 &-3489540491753253289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102204373591914974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  obstacleDistance: 0
+  obstacleID: 0
+  obstacleName: 

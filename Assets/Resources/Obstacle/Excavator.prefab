@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 893075411021113826}
   - component: {fileID: 7699154217632231874}
   - component: {fileID: -7237846883446748158}
+  - component: {fileID: -5210891833574992079}
   m_Layer: 0
   m_Name: Excavator
   m_TagString: Obstacle
@@ -130,3 +131,19 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
+--- !u!114 &-5210891833574992079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685519623977633847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleType: 0
+  obstacleDistance: 0
+  obstacleID: 0
+  obstacleName: 
