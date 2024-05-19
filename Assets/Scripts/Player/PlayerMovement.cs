@@ -55,7 +55,6 @@ public class PlayerMovement : MonoBehaviour
                 playerAni.SetRunAnimation();
             }
         }
-        
 
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
@@ -66,7 +65,6 @@ public class PlayerMovement : MonoBehaviour
             UpdateMovement(pendingMovement);
             pendingMovement = Vector2.zero;
         }
-
     }
 
     private void FixedUpdate()
@@ -208,7 +206,7 @@ public class PlayerMovement : MonoBehaviour
             forward.y = 0;
             var angle = Vector3.Angle(forward, collisionDirection);
 
-            if (angle < 75) // 전면 충돌
+            if (angle < 75 || isJumping) // 전면 충돌이거나 점프 중 충돌
             {
                 Debug.Log("Frontal Obstacle Hit");
                 isCollidingFront = true;
