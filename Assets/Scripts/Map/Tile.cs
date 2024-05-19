@@ -24,14 +24,13 @@ public class Tile : MonoBehaviour
 
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;
-    private float distanceCounter = 0f;
     private float totalDistance = 0f;
     public float specialItemSpawnDistance = 100f; // 특정 아이템이 스폰될 거리
     public float initialOtherItemSpawnChance = 0.05f;
     public float maxOtherItemSpawnChance = 0.2f;
     public float distanceFactor = 0.0005f;
     public int coinLineLength = 5; // 코인 라인의 길이
-    public float coinSpacing = 1.0f; // 코인 간의 간격
+    public float coinSpacing = 3.0f; // 코인 간의 간격
 
     private Collider[] overlapResults = new Collider[10];
 
@@ -223,7 +222,7 @@ public class Tile : MonoBehaviour
 #endif
         }
 
-        SpawnItems(tile);
+        SpawnItems(tile); // 아이템을 재배치합니다.
     }
 
     private void SpawnItems(Transform tile)
@@ -231,21 +230,20 @@ public class Tile : MonoBehaviour
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
-        foreach (var lane in lanePositions)
+        // 랜덤으로 한 레인을 선택합니다.
+        float selectedLane = lanePositions[Random.Range(0, lanePositions.Length)];
+
+        // 선택된 레인에 코인 라인을 스폰합니다.
+        for (int attempts = 0; attempts < 10; attempts++)
         {
-            for (int attempts = 0; attempts < 10; attempts++)
+            var randomPosition = new Vector3(selectedLane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+
+            if (!IsObstacleAtPosition(randomPosition))
             {
-                var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
-
-                if (!IsObstacleAtPosition(randomPosition))
-                {
-                    // 코인을 한 줄로 스폰하는 로직
-                    SpawnCoinLine(randomPosition, lane, tile);
-
-                    previousItemPosition = randomPosition;
-                    isFirstItem = false;
-                    break;
-                }
+                SpawnCoinLine(randomPosition, selectedLane, tile);
+                previousItemPosition = randomPosition;
+                isFirstItem = false;
+                break;
             }
         }
     }
@@ -282,16 +280,14 @@ public class Tile : MonoBehaviour
             else
             {
                 float otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
-
                 if (Random.value < otherItemSpawnChance)
                 {
                     itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
-                    distanceCounter = 0f;
                 }
                 else
                 {
                     itemPrefab = primaryItemPrefab;
-                    distanceCounter += Vector3.Distance(previousItemPosition, position);
+                    Vector3.Distance(previousItemPosition, position);
                 }
             }
         }
@@ -302,7 +298,10 @@ public class Tile : MonoBehaviour
         var itemTypeComponent = item.GetComponent<ItemType>();
         if (itemTypeComponent)
         {
+#if UNITY_EDITOR
             Debug.Log($"Spawned Item: {itemTypeComponent.ItemNameEnglish}, ID: {itemTypeComponent.ItemID}, Information: {itemTypeComponent.ItemInformation}");
+#endif
+            
         }
         else
         {
