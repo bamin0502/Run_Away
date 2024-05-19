@@ -1137,7 +1137,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539059097}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e2958ede23eeba44bd937b4228f2b62, type: 3}
   m_Name: 
@@ -1189,9 +1189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e8a5cf9bf91c5e489fc323c73a08295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialOtherItemSpawnChance: 0.05
-  maxOtherItemSpawnChance: 0.2
-  distanceFactor: 0.0005
+  specialItemInterval: 100
 --- !u!114 &539059103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1199,16 +1197,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539059097}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c9908cf1401b8418b2e43b1733736c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 4625979568379758971}
-  tilePrefab: {fileID: 0}
   startPoint: {x: 0, y: 0, z: 0}
   numberOfTiles: 10
-  noObstaclesInitially: 2
   tileLength: 18.7
   moveSpeed: 0
 --- !u!1 &552271112

@@ -11,7 +11,7 @@ public class Tile : MonoBehaviour
     public float tileLength = 17;
     public float moveSpeed;
 
-    private List<Transform> tiles = new List<Transform>();
+    private readonly List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
     private GameManager gameManager;
 
@@ -29,7 +29,7 @@ public class Tile : MonoBehaviour
     public float maxOtherItemSpawnChance = 0.2f;
     public float distanceFactor = 0.0005f;
 
-    private Collider[] overlapResults = new Collider[10];
+    private readonly Collider[] overlapResults = new Collider[10];
 
     void Awake()
     {
@@ -208,7 +208,7 @@ public class Tile : MonoBehaviour
 
         foreach (var lane in lanePositions)
         {
-            for (int attempts = 0; attempts < 10; attempts++)
+            for (var attempts = 0; attempts < 10; attempts++)
             {
                 var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
 
@@ -231,9 +231,9 @@ public class Tile : MonoBehaviour
     private void SpawnSingleItem(Vector3 position, Transform tile)
     {
         GameObject itemPrefab;
-        float currentDistance = Vector3.Distance(Vector3.zero, position);
+        var currentDistance = Vector3.Distance(Vector3.zero, position);
 
-        float otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
+        var otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
 
         if (Random.value < otherItemSpawnChance)
         {
@@ -252,8 +252,8 @@ public class Tile : MonoBehaviour
 
     private bool IsObstacleAtPosition(Vector3 position)
     {
-        int numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
-        for (int i = 0; i < numColliders; i++)
+        var numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
+        for (var i = 0; i < numColliders; i++)
         {
             if (overlapResults[i].CompareTag("Obstacle"))
             {

@@ -2,28 +2,16 @@ using UnityEngine;
 
 public class ItemType : MonoBehaviour
 {
-    public enum Type
-    {
-        Coin,
-        SpeedUp,
-        SpeedDown,
-        Shield,
-        Magnet,
-        DoubleCoin,
-        Invincible,
+    [SerializeField]int itemID;
+    [SerializeField]string itemNameEnglish;
+    [SerializeField]int itemType;
+    [SerializeField]int itemSave;
+    [SerializeField]int itemEffect;
+    [SerializeField]int itemPrice;
+    [SerializeField]int itemAmount;
+    [SerializeField]int itemDuration;
+    [SerializeField]string itemInformation;
 
-    }
-
-    [SerializeField]private int itemID;
-    [SerializeField]private string itemNameEnglish;
-    [SerializeField]private int itemType;
-    [SerializeField]private int itemSave;
-    [SerializeField]private int itemEffect;
-    [SerializeField]private int itemPrice;
-    [SerializeField]private int itemAmount;
-    [SerializeField]private int itemDuration;
-    [SerializeField]private string itemInformation;
-    
     public int ItemID
     {
         get=> itemID;
@@ -78,8 +66,8 @@ public class ItemType : MonoBehaviour
         set => itemInformation = value;
     }
 
-    public Type GetItemType()
+    public void UseItem()
     {
-        return (Type)itemType;
+        Debug.Log($"Item {itemNameEnglish} used.");
     }
 }
