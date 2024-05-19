@@ -86,6 +86,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a6fc78cd7655369449fc00c47f21b239, type: 3}
       insertIndex: -1
       addedObject: {fileID: -6605194145909077947}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a6fc78cd7655369449fc00c47f21b239, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3554380048493973288}
   m_SourcePrefab: {fileID: 100100000, guid: a6fc78cd7655369449fc00c47f21b239, type: 3}
 --- !u!1 &4094085656639344817 stripped
 GameObject:
@@ -125,12 +128,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dafde99b210de24381efc5f39222c0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemID: 0
-  itemNameEnglish: 
+  itemID: 301001
+  itemNameEnglish: Coin
   itemType: 0
-  itemSave: 0
+  itemSave: 1
   itemEffect: 0
   itemPrice: 0
-  itemAmount: 0
+  itemAmount: 1
   itemDuration: 0
-  itemInformation: 
+  itemInformation: "\uCF54\uC778\uC744 \uD68D\uB4DD\uD569\uB2C8\uB2E4. \uCF54\uC778
+    \uD68D\uB4DD \uC2DC \uD53C\uBC84\uAC8C\uC774\uC9C0\uB97C 1 \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4."
+--- !u!114 &-3554380048493973288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4094085656639344817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ca92b2a2df25de44a4fb138f0688b76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 30

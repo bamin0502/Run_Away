@@ -25,9 +25,13 @@ public class Tile : MonoBehaviour
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;
     private float distanceCounter = 0f;
+    private float totalDistance = 0f;
+    public float specialItemSpawnDistance = 100f; // 특정 아이템이 스폰될 거리
     public float initialOtherItemSpawnChance = 0.05f;
     public float maxOtherItemSpawnChance = 0.2f;
     public float distanceFactor = 0.0005f;
+    public int coinLineLength = 5; // 코인 라인의 길이
+    public float coinSpacing = 1.0f; // 코인 간의 간격
 
     private Collider[] overlapResults = new Collider[10];
 
@@ -79,6 +83,9 @@ public class Tile : MonoBehaviour
             {
                 ReuseTile();
             }
+
+            // 거리 카운터 업데이트
+            totalDistance += moveSpeed * Time.deltaTime;
         }
     }
 
@@ -232,12 +239,9 @@ public class Tile : MonoBehaviour
 
                 if (!IsObstacleAtPosition(randomPosition))
                 {
-                    if (!isFirstItem && Mathf.Approximately(previousItemPosition.z, randomPosition.z))
-                    {
-                        SpawnSingleItem((previousItemPosition + randomPosition) / 2, tile);
-                    }
+                    // 코인을 한 줄로 스폰하는 로직
+                    SpawnCoinLine(randomPosition, lane, tile);
 
-                    SpawnSingleItem(randomPosition, tile);
                     previousItemPosition = randomPosition;
                     isFirstItem = false;
                     break;
@@ -246,22 +250,50 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SpawnSingleItem(Vector3 position, Transform tile)
+    private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile)
+    {
+        for (int i = 0; i < coinLineLength; i++)
+        {
+            Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
+            if (!IsObstacleAtPosition(position))
+            {
+                SpawnSingleItem(position, tile, true);
+            }
+        }
+    }
+
+    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin = false)
     {
         GameObject itemPrefab;
-        float currentDistance = Vector3.Distance(Vector3.zero, position);
 
-        float otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
-
-        if (Random.value < otherItemSpawnChance)
+        if (isCoin)
         {
-            itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
-            distanceCounter = 0f;
+            itemPrefab = primaryItemPrefab;
         }
         else
         {
-            itemPrefab = primaryItemPrefab;
-            distanceCounter += Vector3.Distance(previousItemPosition, position);
+            float currentDistance = Vector3.Distance(Vector3.zero, position);
+
+            if (totalDistance >= specialItemSpawnDistance)
+            {
+                itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+                totalDistance = 0f; // 스폰 후 거리 카운터 초기화
+            }
+            else
+            {
+                float otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
+
+                if (Random.value < otherItemSpawnChance)
+                {
+                    itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+                    distanceCounter = 0f;
+                }
+                else
+                {
+                    itemPrefab = primaryItemPrefab;
+                    distanceCounter += Vector3.Distance(previousItemPosition, position);
+                }
+            }
         }
 
         var item = Instantiate(itemPrefab, position, Quaternion.identity);

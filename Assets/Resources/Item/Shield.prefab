@@ -86,6 +86,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cde2f37f4a1642d4180716e48399a446, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3838926690721598929}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cde2f37f4a1642d4180716e48399a446, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1624463670344593553}
   m_SourcePrefab: {fileID: 100100000, guid: cde2f37f4a1642d4180716e48399a446, type: 3}
 --- !u!1 &4449412172675903028 stripped
 GameObject:
@@ -133,6 +136,18 @@ MonoBehaviour:
   itemPrice: 460
   itemAmount: 1
   itemDuration: 20
-  itemInformation: "20\uFFFD\u02B5\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\u05B9\uFFFD \uFFFD\u6D79
-    \uFFFD\uFFFD\uFFFD\u0638\uFFFD 1\u0238 \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\u05B4\uFFFD
-    \uFFFD\u01F5\u5E26 \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\u0574\u03F4\uFFFD.  "
+  itemInformation: "20\uCD08\uB3D9\uC548 \uC7A5\uC560\uBB3C \uCDA9\uB3CC \uD53C\uD574\uB97C
+    1\uD68C \uB9C9\uC544\uC8FC\uB294 \uC2E4\uB4DC\uB97C \uC0DD\uC131\uD569\uB2C8\uB2E4.  "
+--- !u!114 &-1624463670344593553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4449412172675903028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ca92b2a2df25de44a4fb138f0688b76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 30

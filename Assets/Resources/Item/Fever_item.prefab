@@ -86,6 +86,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d9e7399921242e04aab604575b303a01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2211592944118831599}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d9e7399921242e04aab604575b303a01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6413751123099776721}
   m_SourcePrefab: {fileID: 100100000, guid: d9e7399921242e04aab604575b303a01, type: 3}
 --- !u!1 &8146132665525121287 stripped
 GameObject:
@@ -133,5 +136,17 @@ MonoBehaviour:
   itemPrice: 0
   itemAmount: 0
   itemDuration: 6
-  itemInformation: "6\uFFFD\u02B5\uFFFD\uFFFD\uFFFD \uFFFD\u01F9\uFFFD\uFFFD\uFFFD
-    \uFFFD\u07F5\uFFFD\uFFFD\u0574\u03F4\uFFFD."
+  itemInformation: "6\uCD08\uB3D9\uC548 \uD53C\uBC84\uB97C \uBC1C\uB3D9\uD569\uB2C8\uB2E4."
+--- !u!114 &-6413751123099776721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146132665525121287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ca92b2a2df25de44a4fb138f0688b76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 30
