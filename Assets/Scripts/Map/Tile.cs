@@ -43,6 +43,8 @@ public class Tile : MonoBehaviour
         obstaclePrefabsBySection = DataManager.GetObstacleTable().GetObstaclesBySection();
 
         primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
+
+#if UNITY_EDITOR
         if (primaryItemPrefab == null)
         {
             Debug.LogError("Primary item prefab (Coin) not found!");
@@ -50,13 +52,19 @@ public class Tile : MonoBehaviour
         else
         {
             Debug.Log($"Primary Item Prefab: {primaryItemPrefab.name}");
-        }
+        } 
+#endif
+        
 
         otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
+#if UNITY_EDITOR
         foreach (var item in otherItemPrefabs)
         {
+            
             Debug.Log($"Other Item Prefab: {item.name}");
+            
         }
+#endif
     }
 
     private void Start()
@@ -156,8 +164,10 @@ public class Tile : MonoBehaviour
 #endif
             return;
         }
-
+#if UNITY_EDITOR
         Debug.Log($"Spawn points found: {spawnPoints.Count}, filtered obstacles: {filteredObstacles.Count}");
+#endif
+        
 
         var selectedLanes = new HashSet<int>();
         while (selectedLanes.Count < Random.Range(1, 3))
@@ -305,7 +315,9 @@ public class Tile : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogWarning("ItemType component not found on the spawned item.");
+#endif
         }
     }
 

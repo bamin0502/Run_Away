@@ -12,14 +12,20 @@ public class ItemTable : DataTable
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
+#if UNITY_EDITOR
         Debug.Log($"Formatted path for loading: {path}");
+#endif
+       
 
         itemData.Clear();
 
         var textAsset = Resources.Load<TextAsset>(path);
         if (textAsset == null)
         {
-            Debug.LogError($"Failed to load text asset from path: {path}");
+#if UNITY_EDITOR
+            Debug.LogError($"Failed to load text asset from path: {path}"); 
+#endif
+            
             return;
         }
 
@@ -38,7 +44,10 @@ public class ItemTable : DataTable
             itemData.AddRange(records);
         }
 
+#if UNITY_EDITOR
         Debug.Log($"Loaded {itemData.Count} item data records.");
+#endif
+        
     }
 
     public List<GameObject> GetLoadedItems(string itemFolderPath)
@@ -48,7 +57,10 @@ public class ItemTable : DataTable
         foreach (var item in itemData)
         {
             string fullPath = $"{itemFolderPath}/{item.ItemNameEnglish}";
+#if UNITY_EDITOR
             Debug.Log($"Loading item prefab from path: {fullPath}");
+#endif
+            
             var itemPrefab = Resources.Load<GameObject>(fullPath);
             if (itemPrefab != null)
             {
@@ -68,14 +80,17 @@ public class ItemTable : DataTable
                 itemTypeComponent.ItemAmount = item.ItemAmount;
                 itemTypeComponent.ItemDuration = item.ItemDuration;
                 itemTypeComponent.ItemInformation = item.ItemInformation;
-
+#if UNITY_EDITOR
                 Debug.Log($"Set ItemType for {itemTypeComponent.ItemNameEnglish}: ID={itemTypeComponent.ItemID}, Type={itemTypeComponent.ItemTypeNum}, Information={itemTypeComponent.ItemInformation}");
-
+#endif
                 loadedItems.Add(itemInstance);
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"Item prefab not found: {fullPath}");
+#endif
+                
             }
         }
 

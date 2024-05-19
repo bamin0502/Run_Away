@@ -51,9 +51,15 @@ public class GameManager : Singleton<GameManager>
 
     public void GameOver()
     {
+#if UNITY_EDITOR
         Debug.Log("Game Over");
+#endif
+       
         isGameover = true;
-        //Handheld.Vibrate();
+#if UNITY_ANDROID
+        Handheld.Vibrate();
+#endif
+        
     }
 
     public void RestartGame()

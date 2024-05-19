@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -146,7 +145,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f)) // 슬라이드 전방 장애물 검사
         {
-            Debug.Log("Obstacle detected during slide");
+#if UNITY_EDITOR
+            Debug.Log("Obstacle detected during slide"); 
+#endif
+            
             Die(); // 장애물이 있으면 슬라이드 중 죽음
             return;
         }
@@ -210,14 +212,19 @@ public class PlayerMovement : MonoBehaviour
 
             if (angle < 75) // 전면 충돌
             {
+#if UNITY_EDITOR
                 Debug.Log("Frontal Obstacle Hit");
+#endif
                 isCollidingFront = true;
                 GameManager.Instance.GameOver();
                 Die();
             }
             else // 측면 충돌
             {
+#if UNITY_EDITOR
                 Debug.Log("Side Obstacle Hit");
+#endif
+                
                 targetPosition = lastPosition;
                 rb.position = lastPosition;
                 currentLaneIndex = lastLaneIndex;
