@@ -48,10 +48,10 @@ public class SectionTable : DataTable
                 var sectionTypeComponent = sectionInstance.GetComponent<SectionType>();
                 if (sectionTypeComponent != null)
                 {
-                    sectionTypeComponent.sectionID = section.SectionID;
-                    sectionTypeComponent.sectionName = section.SectionName;
-                    sectionTypeComponent.sectionType = section.SectionType;
-                    sectionTypeComponent.sectionDistance = section.SectionDistance;
+                    sectionTypeComponent.SectionID = section.SectionID;
+                    sectionTypeComponent.SectionName = section.SectionName;
+                    sectionTypeComponent.SectionTypeNum = section.SectionType;
+                    sectionTypeComponent.SectionDistance = section.SectionDistance;
                 }
                 loadedSections.Add(sectionInstance);
                 Debug.Log($"Successfully loaded section prefab: {fullPath}");

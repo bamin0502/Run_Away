@@ -2,10 +2,34 @@ using UnityEngine;
 
 public class SectionType : MonoBehaviour
 {
-    public int sectionType { get; set; }
-    public int sectionDistance { get; set; }
-    public int sectionID { get; set; }
-    public string sectionName { get; set; }
+    public int sectionID;
+    public string sectionName;
+    public int sectionType;
+    public int sectionDistance;
+    
+    public int SectionID
+    {
+        get => sectionID;
+        set => sectionID = value;
+    }
+    public string SectionName
+    {
+        get => sectionName;
+        set => sectionName = value;
+    }
+    public int SectionTypeNum
+    {
+        get => sectionType;
+        set => sectionType = value;
+    }
+    public int SectionDistance
+    {
+        get => sectionDistance;
+        set => sectionDistance = value;
+    }
+    
 
+    
+   
     
 }

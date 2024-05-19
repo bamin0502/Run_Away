@@ -47,13 +47,14 @@ public class ObstacleTable : DataTable
                 var existingObstacleTypeComponent = obstaclePrefab.GetComponent<ObstacleType>();
                 if (existingObstacleTypeComponent == null)
                 {
-                    var obstacleTypeComponent = obstaclePrefab.AddComponent<ObstacleType>();
-                    obstacleTypeComponent.obstacleID = obstacle.ObstacleID;
-                    obstacleTypeComponent.obstacleNameEnglish = obstacle.ObstacleNameEnglish;
-                    obstacleTypeComponent.obstacleCoin = obstacle.ObstacleCoin;
-                    obstacleTypeComponent.obstacleType = obstacle.ObstacleType;
-                    obstacleTypeComponent.obstacleSpeed = obstacle.ObstacleSpeed;
-                    obstacleTypeComponent.obstacleSection = obstacle.ObstacleSection;
+                    var obstacleInstance = obstaclePrefab;
+                    var obstacleTypeComponent = obstacleInstance.AddComponent<ObstacleType>();
+                    obstacleTypeComponent.ObstacleID = obstacle.ObstacleID;
+                    obstacleTypeComponent.ObstacleNameEnglish = obstacle.ObstacleNameEnglish;
+                    obstacleTypeComponent.ObstacleCoin = obstacle.ObstacleCoin;
+                    obstacleTypeComponent.ObstacleTypeNum = obstacle.ObstacleType;
+                    obstacleTypeComponent.ObstacleSpeed = obstacle.ObstacleSpeed;
+                    obstacleTypeComponent.ObstacleSection = obstacle.ObstacleSection;
                 }
 
                 loadedObstacles.Add(obstaclePrefab);

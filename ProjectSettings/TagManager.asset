@@ -8,13 +8,13 @@ TagManager:
   - ObstacleSpawnPoint
   - Manager
   - Obstacle
-  - TallSpawnPoint
-  - SmallSpawnPoint
-  - BackGround
   - WalkBy
   - Item
   - Pause
   - Result
+  - BackGround
+  - SmallSpawnPoint
+  - TallSpawnPoint
   layers:
   - Default
   - TransparentFX
@@ -22,7 +22,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
+  - Obstacle
   - 
   - 
   - 

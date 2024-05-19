@@ -40,7 +40,20 @@ public class Tile : MonoBehaviour
         obstaclePrefabsBySection = DataManager.GetObstacleTable().GetObstaclesBySection();
 
         primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
+        if (primaryItemPrefab == null)
+        {
+            Debug.LogError("Primary item prefab (Coin) not found!");
+        }
+        else
+        {
+            Debug.Log($"Primary Item Prefab: {primaryItemPrefab.name}");
+        }
+
         otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
+        foreach (var item in otherItemPrefabs)
+        {
+            Debug.Log($"Other Item Prefab: {item.name}");
+        }
     }
 
     private void Start()
@@ -138,6 +151,8 @@ public class Tile : MonoBehaviour
             return;
         }
 
+        Debug.Log($"Spawn points found: {spawnPoints.Count}, filtered obstacles: {filteredObstacles.Count}");
+
         var selectedLanes = new HashSet<int>();
         while (selectedLanes.Count < Random.Range(1, 3))
         {
@@ -164,10 +179,13 @@ public class Tile : MonoBehaviour
                 var obstacleSize = obstacleCollider.bounds.size;
                 var obstacleCenter = spawnPoint.position + obstacleCollider.bounds.center;
 
-                if (!Physics.CheckBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")))
+                if (Physics.OverlapBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")).Length == 0)
                 {
                     var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
                     obstacle.transform.SetParent(tile, true);
+#if UNITY_EDITOR
+                    Debug.Log($"Spawned obstacle: {obstacle.name} at position: {spawnPoint.position}");
+#endif
                 }
                 else
                 {
@@ -187,7 +205,7 @@ public class Tile : MonoBehaviour
         tiles.Add(tile);
 
         var sectionTypeComponent = tile.GetComponent<SectionType>();
-        if (sectionTypeComponent != null)
+        if (sectionTypeComponent)
         {
             SpawnObstacles(tile, sectionTypeComponent.sectionType);
         }
@@ -248,6 +266,16 @@ public class Tile : MonoBehaviour
 
         var item = Instantiate(itemPrefab, position, Quaternion.identity);
         item.transform.SetParent(tile, true);
+
+        var itemTypeComponent = item.GetComponent<ItemType>();
+        if (itemTypeComponent)
+        {
+            Debug.Log($"Spawned Item: {itemTypeComponent.ItemNameEnglish}, ID: {itemTypeComponent.ItemID}, Information: {itemTypeComponent.ItemInformation}");
+        }
+        else
+        {
+            Debug.LogWarning("ItemType component not found on the spawned item.");
+        }
     }
 
     private bool IsObstacleAtPosition(Vector3 position)
