@@ -1,14 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using UnityEngine;
+using System.IO;
 using CsvHelper;
-using CsvHelper.Configuration;
 
 public class ItemTable : DataTable
 {
     private List<ItemData> itemData = new List<ItemData>();
-
+    
     public override void Load(string path)
     {
         path = string.Format(FormatPath, path);
@@ -22,17 +21,9 @@ public class ItemTable : DataTable
             Debug.LogError($"Failed to load text asset from path: {path}");
             return;
         }
-
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Encoding = System.Text.Encoding.UTF8,
-            Delimiter = ",",
-            HeaderValidated = null,
-            MissingFieldFound = null
-        };
-
-        using (var reader = new StringReader(textAsset.text))
-        using (var csvReader = new CsvReader(reader, config))
+        
+        using (var reader = new StreamReader(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(textAsset.text)), System.Text.Encoding.UTF8))
+        using (var csvReader = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
         {
             var records = csvReader.GetRecords<ItemData>();
             itemData.AddRange(records);
@@ -40,7 +31,7 @@ public class ItemTable : DataTable
 
         Debug.Log($"Loaded {itemData.Count} item data records.");
     }
-
+    
     public List<GameObject> GetLoadedItems(string itemFolderPath)
     {
         List<GameObject> loadedItems = new List<GameObject>();
@@ -52,23 +43,7 @@ public class ItemTable : DataTable
             var itemPrefab = Resources.Load<GameObject>(fullPath);
             if (itemPrefab != null)
             {
-                var itemInstance = itemPrefab;
-                var itemTypeComponent = itemInstance.GetComponent<ItemType>();
-                if (itemTypeComponent == null)
-                {
-                    itemTypeComponent = itemInstance.AddComponent<ItemType>();
-                }
-
-                itemTypeComponent.ItemID = item.ItemID;
-                itemTypeComponent.ItemNameEnglish = item.ItemNameEnglish;
-                itemTypeComponent.ItemTypeNum = item.ItemType;
-                itemTypeComponent.ItemSave = item.ItemSave;
-                itemTypeComponent.ItemEffect = item.ItemEffect;
-                itemTypeComponent.ItemPrice = item.ItemPrice;
-                itemTypeComponent.ItemAmount = item.ItemAmount;
-                itemTypeComponent.ItemDuration = item.ItemDuration;
-                itemTypeComponent.ItemInformation = item.ItemInformation;
-
+                loadedItems.Add(itemPrefab);
                 Debug.Log($"Successfully loaded item prefab: {fullPath}");
             }
             else
