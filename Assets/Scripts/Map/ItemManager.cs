@@ -3,58 +3,39 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    private GameObject primaryItemPrefab;
-    private List<GameObject> otherItemPrefabs;
-    private ObjectPool itemPool;
+    private List<GameObject> itemPrefabs;
+    private GameObject primaryItemPrefab; // 코인
+    private List<GameObject> specialItemPrefabs = new List<GameObject>(); // 특별 아이템
+    public float specialItemInterval = 100f; // 특별 아이템 스폰 간격
 
-    public float initialOtherItemSpawnChance = 0.05f;
-    public float maxOtherItemSpawnChance = 0.2f;
-    public float distanceFactor = 0.0005f;
-
+    private float distanceCounter = 0f;
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;
+
     private Collider[] overlapResults = new Collider[10];
 
     void Awake()
     {
-        Initialize();
-    }
-
-    public void Initialize()
-    {
         var itemTable = DataManager.GetItemTable();
-        var itemPrefabs = itemTable.GetLoadedItems("Item");
+        itemPrefabs = itemTable.GetLoadedItems("Item");
 
         primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
-        otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
-
-        itemPool = new ObjectPool();
-        itemPool.InitializePool(itemPrefabs.ConvertAll(item => item.transform).ToArray(), 10);
+        specialItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
     }
 
     public void SpawnItems(Transform tile)
     {
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
+        int laneIndex = 0;
 
-        foreach (var lane in lanePositions)
+        for (float z = bounds.min.z; z < bounds.max.z; z += 1f)
         {
-            for (int attempts = 0; attempts < 10; attempts++)
+            var position = new Vector3(lanePositions[laneIndex], bounds.min.y, z);
+            if (!IsObstacleAtPosition(position))
             {
-                var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
-
-                if (!IsObstacleAtPosition(randomPosition))
-                {
-                    if (!isFirstItem && Mathf.Approximately(previousItemPosition.z, randomPosition.z))
-                    {
-                        SpawnSingleItem((previousItemPosition + randomPosition) / 2, tile);
-                    }
-
-                    SpawnSingleItem(randomPosition, tile);
-                    previousItemPosition = randomPosition;
-                    isFirstItem = false;
-                    break;
-                }
+                SpawnSingleItem(position, tile);
+                laneIndex = (laneIndex + 1) % lanePositions.Length;
             }
         }
     }
@@ -62,24 +43,28 @@ public class ItemManager : MonoBehaviour
     private void SpawnSingleItem(Vector3 position, Transform tile)
     {
         GameObject itemPrefab;
-        float currentDistance = Vector3.Distance(Vector3.zero, position);
+        distanceCounter += Vector3.Distance(previousItemPosition, position);
 
-        float otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
-
-        if (Random.value < otherItemSpawnChance)
+        if (distanceCounter >= specialItemInterval)
         {
-            itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+            if (specialItemPrefabs.Count > 0)
+            {
+                itemPrefab = specialItemPrefabs[Random.Range(0, specialItemPrefabs.Count)];
+                distanceCounter = 0f;
+            }
+            else
+            {
+                itemPrefab = primaryItemPrefab;
+            }
         }
         else
         {
             itemPrefab = primaryItemPrefab;
         }
 
-        var itemTransform = itemPool.GetRandomPooledObject(itemPrefab.transform);
-        itemTransform.position = position;
-        itemTransform.rotation = Quaternion.identity;
-        itemTransform.gameObject.SetActive(true);
-        itemTransform.SetParent(tile, true);
+        var item = Instantiate(itemPrefab, position, Quaternion.identity);
+        item.transform.SetParent(tile, true);
+        previousItemPosition = position;
     }
 
     private bool IsObstacleAtPosition(Vector3 position)

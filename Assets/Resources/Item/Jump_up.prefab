@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.026811
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.554123e-10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.8721085
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
       propertyPath: m_LocalRotation.w
@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1cb6e7b29e2201b4a8e60f48cebdc6a5, type: 2}
     - target: {fileID: 919132149155446097, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
       propertyPath: m_Name
-      value: collectible__052
+      value: Jump_up
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
       propertyPath: m_TagString
@@ -83,6 +83,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 555901566}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4061926715058275097}
   m_SourcePrefab: {fileID: 100100000, guid: 3a55baa0ed473e74fbc422d29fdc6e72, type: 3}
 --- !u!1 &6155419290575279828 stripped
 GameObject:
@@ -110,3 +113,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.26588127, y: 0.4869526, z: 0.034563635}
   m_Center: {x: -0.01836193, y: 0.2434763, z: -0.000000013038516}
+--- !u!114 &-4061926715058275097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6155419290575279828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dafde99b210de24381efc5f39222c0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: 320405
+  itemNameEnglish: Jump_up
+  itemType: 2
+  itemSave: 0
+  itemEffect: 4
+  itemPrice: 0
+  itemAmount: 50
+  itemDuration: 10
+  itemInformation: "10\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD
+    50 \uFFFD\uFFFD\u022D\uFFFD\u02F4\u03F4\uFFFD."

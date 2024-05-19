@@ -6,7 +6,7 @@ using CsvHelper;
 
 public class ItemTable : DataTable
 {
-    public List<ItemData> itemData = new List<ItemData>();
+    private List<ItemData> itemData = new List<ItemData>();
     
     public override void Load(string path)
     {
@@ -22,7 +22,7 @@ public class ItemTable : DataTable
             return;
         }
         
-        using (var reader = new StringReader(textAsset.text))
+        using (var reader = new StreamReader(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(textAsset.text)), System.Text.Encoding.UTF8))
         using (var csvReader = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
         {
             var records = csvReader.GetRecords<ItemData>();

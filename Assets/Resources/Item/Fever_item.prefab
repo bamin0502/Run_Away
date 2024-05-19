@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9e7399921242e04aab604575b303a01, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.2380295
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9e7399921242e04aab604575b303a01, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.28
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9e7399921242e04aab604575b303a01, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9e7399921242e04aab604575b303a01, type: 3}
       propertyPath: m_LocalRotation.w
@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1cb6e7b29e2201b4a8e60f48cebdc6a5, type: 2}
     - target: {fileID: 919132149155446097, guid: d9e7399921242e04aab604575b303a01, type: 3}
       propertyPath: m_Name
-      value: collectible__032
+      value: Fever_item
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d9e7399921242e04aab604575b303a01, type: 3}
       propertyPath: m_TagString
@@ -83,6 +83,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d9e7399921242e04aab604575b303a01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1944538412}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d9e7399921242e04aab604575b303a01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2211592944118831599}
   m_SourcePrefab: {fileID: 100100000, guid: d9e7399921242e04aab604575b303a01, type: 3}
 --- !u!1 &8146132665525121287 stripped
 GameObject:
@@ -110,3 +113,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2735774, y: 0.32810503, z: 0.03210018}
   m_Center: {x: -0.005583398, y: 0.16405252, z: -0.0000043846667}
+--- !u!114 &2211592944118831599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146132665525121287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dafde99b210de24381efc5f39222c0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: 320204
+  itemNameEnglish: Fever_item
+  itemType: 2
+  itemSave: 0
+  itemEffect: 2
+  itemPrice: 0
+  itemAmount: 0
+  itemDuration: 6
+  itemInformation: "6\uFFFD\u02B5\uFFFD\uFFFD\uFFFD \uFFFD\u01F9\uFFFD\uFFFD\uFFFD
+    \uFFFD\u07F5\uFFFD\uFFFD\u0574\u03F4\uFFFD."

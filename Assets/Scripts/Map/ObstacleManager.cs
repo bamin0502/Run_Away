@@ -4,39 +4,16 @@ using UnityEngine;
 public class ObstacleManager : MonoBehaviour
 {
     private Dictionary<int, List<GameObject>> obstaclePrefabsBySection;
-    private ObjectPool obstaclePool;
 
-    void Awake()
-    {
-        Initialize();
-    }
-
-    public void Initialize()
+    private void Awake()
     {
         var obstacleTable = DataManager.GetObstacleTable();
         obstaclePrefabsBySection = obstacleTable.GetObstaclesBySection();
-
-        var allObstaclePrefabs = new List<GameObject>();
-        foreach (var obstacleList in obstaclePrefabsBySection.Values)
-        {
-            allObstaclePrefabs.AddRange(obstacleList);
-        }
-
-        obstaclePool = new ObjectPool();
-        obstaclePool.InitializePool(allObstaclePrefabs.ConvertAll(item => item.transform).ToArray(), 10);
     }
 
     public void SpawnObstacles(Transform tile, int sectionType)
     {
-        var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
-
-        if (spawnPoints.Count == 0)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("No ObstacleSpawnPoint found in the tile.");
-#endif
-            return;
-        }
+        var spawnPoints = GetChildTransformsWithTag(tile, "ObstacleSpawnPoint");
 
         if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
         {
@@ -46,17 +23,9 @@ public class ObstacleManager : MonoBehaviour
             return;
         }
 
-        var selectedLanes = new HashSet<int>();
-        while (selectedLanes.Count < Random.Range(1, 3))
-        {
-            selectedLanes.Add(Random.Range(0, 3));
-        }
-
         foreach (var spawnPoint in spawnPoints)
         {
-            var lanePosition = Mathf.FloorToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
-
-            if (selectedLanes.Contains(lanePosition))
+            if (filteredObstacles.Count > 0)
             {
                 var obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
                 var obstacleCollider = obstaclePrefab.GetComponent<Collider>();
@@ -74,14 +43,8 @@ public class ObstacleManager : MonoBehaviour
 
                 if (!Physics.CheckBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")))
                 {
-                    var obstacleTransform = obstaclePool.GetRandomPooledObject(obstaclePrefab.transform);
-                    if (obstacleTransform != null)
-                    {
-                        obstacleTransform.position = spawnPoint.position;
-                        obstacleTransform.rotation = spawnPoint.rotation;
-                        obstacleTransform.gameObject.SetActive(true);
-                        obstacleTransform.SetParent(tile, true);
-                    }
+                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
+                    obstacle.transform.SetParent(tile, true);
                 }
                 else
                 {
@@ -93,27 +56,16 @@ public class ObstacleManager : MonoBehaviour
         }
     }
 
-    private List<Transform> GetAllChildTransforms(Transform parent, string tag)
+    private List<Transform> GetChildTransformsWithTag(Transform parent, string tag)
     {
         var result = new List<Transform>();
-        var queue = new Queue<Transform>();
-
-        queue.Enqueue(parent);
-
-        while (queue.Count > 0)
+        foreach (Transform child in parent)
         {
-            var current = queue.Dequeue();
-
-            foreach (Transform child in current)
+            if (child.CompareTag(tag))
             {
-                if (child.CompareTag(tag))
-                {
-                    result.Add(child);
-                }
-                queue.Enqueue(child);
+                result.Add(child);
             }
         }
-
         return result;
     }
 }

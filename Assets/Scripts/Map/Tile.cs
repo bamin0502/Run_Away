@@ -153,7 +153,7 @@ public class Tile : MonoBehaviour
                 var obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
                 var obstacleCollider = obstaclePrefab.GetComponent<Collider>();
 
-                if (obstacleCollider == null)
+                if (!obstacleCollider)
                 {
 #if UNITY_EDITOR
                     Debug.LogWarning($"Obstacle prefab {obstaclePrefab.name} does not have a Collider component.");

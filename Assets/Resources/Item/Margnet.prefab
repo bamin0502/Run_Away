@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.1401157
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.3329582
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
       propertyPath: m_LocalRotation.w
@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1cb6e7b29e2201b4a8e60f48cebdc6a5, type: 2}
     - target: {fileID: 919132149155446097, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
       propertyPath: m_Name
-      value: collectible__139
+      value: Margnet
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
       propertyPath: m_TagString
@@ -83,6 +83,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1809535313}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3325424779530559592}
   m_SourcePrefab: {fileID: 100100000, guid: 5ea2c925fae7e4f448a9996883c72d36, type: 3}
 --- !u!1 &3295009930125949067 stripped
 GameObject:
@@ -110,3 +113,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2805045, y: 0.40376714, z: 0.036222555}
   m_Center: {x: 0.000091567636, y: 0.20188357, z: 0.000000010244548}
+--- !u!114 &-3325424779530559592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3295009930125949067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dafde99b210de24381efc5f39222c0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: 320606
+  itemNameEnglish: Margnet
+  itemType: 2
+  itemSave: 0
+  itemEffect: 6
+  itemPrice: 0
+  itemAmount: 0
+  itemDuration: 10
+  itemInformation: "10\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD
+    \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\u03F4\uFFFD."

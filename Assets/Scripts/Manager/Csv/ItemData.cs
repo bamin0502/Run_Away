@@ -1,3 +1,4 @@
+using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 
 public class ItemData
@@ -7,34 +8,34 @@ public class ItemData
     public int ItemID { get; set; }
     
     [Name("Item_name(english)")]
-    public string ItemNameEnglish { get; set; }
+    public string ItemNameEnglish { get; set;}
     
     [Name("Item_type")]
     [TypeConverter(typeof(Int32DefaultConverter))]
-    public int ItemType { get; set; }
+    public int ItemType { get; set;}
     
     [Name("Item_save")]
     [TypeConverter(typeof(Int32DefaultConverter))]
-    public int ItemSave { get; set; }
+    public int ItemSave { get; set;}
     
     [Name("Item_effect")]
     [TypeConverter(typeof(Int32DefaultConverter))]
-    public int ItemEffect { get; set; }
+    public int ItemEffect { get; set;}
     
     [Name("Item_price")]
     [TypeConverter(typeof(Int32DefaultConverter))]
-    public int ItemPrice { get; set; }
+    public int ItemPrice { get; set;}
     
     [Name("Item_amount")]
     [TypeConverter(typeof(Int32DefaultConverter))]
-    public int ItemAmount { get; set; }
+    public int ItemAmount { get; set;}
     
     [Name("Item_duration")]
     [TypeConverter(typeof(Int32DefaultConverter))]
-    public int ItemDuration { get; set; }
+    public int ItemDuration { get; set;}  
     
     [Name("Item_information")]
-    public string ItemInformation { get; set; }
+    public string ItemInformation { get; set;}
     
     
 }

@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.000000015702101
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.89
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
       propertyPath: m_LocalRotation.w
@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1cb6e7b29e2201b4a8e60f48cebdc6a5, type: 2}
     - target: {fileID: 919132149155446097, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
       propertyPath: m_Name
-      value: collectible__002_1
+      value: Coin_add
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
       propertyPath: m_TagString
@@ -86,6 +86,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
       insertIndex: -1
       addedObject: {fileID: 844294921103481244}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5664036694840123035}
   m_SourcePrefab: {fileID: 100100000, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}
 --- !u!1 &1606767886880965507 stripped
 GameObject:
@@ -113,6 +116,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5216408, y: 0.49619842, z: 0.036646716}
   m_Center: {x: 0.000046536326, y: 0.24809918, z: -0.000000010244548}
+--- !u!114 &-5664036694840123035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606767886880965507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dafde99b210de24381efc5f39222c0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: 320107
+  itemNameEnglish: Coin_add
+  itemType: 2
+  itemSave: 0
+  itemEffect: 1
+  itemPrice: 0
+  itemAmount: 2
+  itemDuration: 10
+  itemInformation: "10\uFFFD\u02B5\uFFFD\uFFFD\uFFFD \u0239\uFFFD\uFFFD\uFFFD\u03F4\uFFFD
+    \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD 2 \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\u0574\u03F4\uFFFD."
 --- !u!4 &2091836599288191289 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6d4fdee5961f9b2468fd012d302b4013, type: 3}

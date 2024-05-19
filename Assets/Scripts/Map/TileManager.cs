@@ -6,7 +6,6 @@ public class TileManager : MonoBehaviour
     public Transform playerTransform;
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
-    public int noObstaclesInitially = 2;
     public float tileLength = 17;
     public float moveSpeed;
 
@@ -33,11 +32,8 @@ public class TileManager : MonoBehaviour
         nextTilePosition = startPoint;
         for (var i = 0; i < numberOfTiles; i++)
         {
-            var tile = SpawnTile(i >= noObstaclesInitially);
-            if (tile != null)
-            {
-                itemManager.SpawnItems(tile);
-            }
+            var tile = SpawnTile(i >= 2); // 처음 두 개 타일에는 장애물 없음
+            itemManager.SpawnItems(tile);
         }
     }
 
@@ -74,14 +70,6 @@ public class TileManager : MonoBehaviour
 
         var sectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
         var newTile = Instantiate(sectionPrefab, nextTilePosition, Quaternion.identity, transform).transform;
-        if (newTile == null)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("Failed to instantiate section prefab.");
-#endif
-            return null;
-        }
-
         nextTilePosition += new Vector3(0, 0, tileLength);
         tiles.Add(newTile);
 
@@ -91,12 +79,6 @@ public class TileManager : MonoBehaviour
             if (sectionTypeComponent != null)
             {
                 obstacleManager.SpawnObstacles(newTile, sectionTypeComponent.sectionType);
-            }
-            else
-            {
-#if UNITY_EDITOR
-                Debug.LogWarning("SectionType component not found on the section prefab.");
-#endif
             }
         }
 
@@ -115,12 +97,6 @@ public class TileManager : MonoBehaviour
         {
             obstacleManager.SpawnObstacles(tile, sectionTypeComponent.sectionType);
         }
-#if UNITY_EDITOR
-        else
-        {
-            Debug.LogWarning("SectionType component not found on the section prefab.");
-        }
-#endif
 
         itemManager.SpawnItems(tile);
     }
