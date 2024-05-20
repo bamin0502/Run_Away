@@ -1,4 +1,3 @@
-using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 
 public class ItemData

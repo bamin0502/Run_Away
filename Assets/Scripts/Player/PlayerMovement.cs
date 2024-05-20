@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody rb;
     private PlayerAni playerAni;
+    private BoxCollider boxCollider;
 
     public float jumpForce = 3f;
     public float slideForce = -10f;
@@ -25,10 +26,18 @@ public class PlayerMovement : MonoBehaviour
     private bool isSliding;
     private bool isCollidingFront;
 
+    // 슬라이드 전 콜라이더 원래 값 저장용
+    private Vector3 originalColliderCenter;
+    private Vector3 originalColliderSize;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         playerAni = GetComponent<PlayerAni>();
+        boxCollider = GetComponent<BoxCollider>();
+
+        // 원래 콜라이더 값 저장
+        originalColliderCenter = boxCollider.center;
+        originalColliderSize = boxCollider.size;
     }
 
     private void Start()
@@ -52,9 +61,12 @@ public class PlayerMovement : MonoBehaviour
                 swipeDirection = Defines.SwipeDirection.RUN;
                 isSliding = false;
                 playerAni.SetRunAnimation();
+
+                // 콜라이더 원래 값으로 되돌림
+                boxCollider.center = originalColliderCenter;
+                boxCollider.size = originalColliderSize;
             }
         }
-        
 
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
@@ -130,6 +142,10 @@ public class PlayerMovement : MonoBehaviour
         isJumping = true;
         isSliding = false;
         playerAni.SetJumpAnimation();
+
+        // 콜라이더 원래 값으로 되돌림
+        boxCollider.center = originalColliderCenter;
+        boxCollider.size = originalColliderSize;
     }
 
     private void PerformSlide()
@@ -157,6 +173,10 @@ public class PlayerMovement : MonoBehaviour
         slideTimer = slideDuration;
         isSliding = true;
         playerAni.SetSlideAnimation();
+
+        // 슬라이드 시 콜라이더 값 변경
+        boxCollider.center = new Vector3(0, 0.45f, 0.15f);
+        boxCollider.size = new Vector3(0.6f, 0.6f, 0.75f);
     }
 
     private void TryMoveToLane(int newLaneIndex)
