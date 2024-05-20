@@ -9,37 +9,28 @@ public class GameManager : Singleton<GameManager>
     public bool isPaused;
     public bool isPlaying = false;
     public float distanceTravelled = 0;
-    public float speedIncreaseMilestone = 10;
-    public float speedMultiplier = 1.1f;
 
     [SerializeField] public TextMeshProUGUI distanceText;
 
     public bool isTutorialActive = true;
-    
+
     public override void Awake()
     {
         base.Awake();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    private void Start()
-    {
-        //InitializeGame();   
-    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        InitializeGame(); 
+        InitializeGame();
     }
+
     private void Update()
     {
         if (!isGameover && !isPaused && isPlaying)
         {
             distanceTravelled += stageSpeed * Time.deltaTime;
 
-            if (distanceTravelled > speedIncreaseMilestone)
-            {
-                stageSpeed *= speedMultiplier;
-                speedIncreaseMilestone *= speedMultiplier;
-            }
             distanceText.text = "Speed: " + stageSpeed.ToString("F0") + "m/s\n" + "Distance: " + distanceTravelled.ToString("F0") + "m";
         }
 
@@ -54,12 +45,11 @@ public class GameManager : Singleton<GameManager>
 #if UNITY_EDITOR
         Debug.Log("Game Over");
 #endif
-       
+
         isGameover = true;
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif
-        
     }
 
     public void RestartGame()
@@ -85,6 +75,6 @@ public class GameManager : Singleton<GameManager>
         isPaused = false;
         isPlaying = true;
         distanceTravelled = 0;
-        speedIncreaseMilestone = 10;
+        stageSpeed = 5f; // 초기 속도 설정
     }
 }

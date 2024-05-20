@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19024794, g: 0.59240067, b: 0.7727873, a: 1}
+  m_IndirectSpecularColor: {r: 0.191991, g: 0.5946723, b: 0.7773275, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1104,10 +1104,6 @@ GameObject:
   m_Component:
   - component: {fileID: 539059098}
   - component: {fileID: 539059099}
-  - component: {fileID: 539059100}
-  - component: {fileID: 539059103}
-  - component: {fileID: 539059102}
-  - component: {fileID: 539059101}
   m_Layer: 0
   m_Name: TileManager
   m_TagString: Untagged
@@ -1148,68 +1144,15 @@ MonoBehaviour:
   numberOfTiles: 10
   noObstaclesInitially: 2
   tileLength: 30
-  moveSpeed: 5
+  initialMoveSpeed: 5
+  moveSpeedIncreaseDistance: 10
+  moveSpeedMultiplier: 1.1
   specialItemSpawnDistance: 100
   initialOtherItemSpawnChance: 0.1
   maxOtherItemSpawnChance: 0.5
   distanceFactor: 0.001
   coinLineLength: 5
   coinSpacing: 3
---- !u!114 &539059100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539059097}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78f4505e04a288146952ccac17cd606d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialText: {fileID: 0}
---- !u!114 &539059101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539059097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02bb3c1b5b2a98040a795d14884df99b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &539059102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539059097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e8a5cf9bf91c5e489fc323c73a08295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  specialItemInterval: 100
---- !u!114 &539059103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539059097}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c9908cf1401b8418b2e43b1733736c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTransform: {fileID: 4625979568379758971}
-  startPoint: {x: 0, y: 0, z: 0}
-  numberOfTiles: 10
-  tileLength: 18.7
-  moveSpeed: 0
 --- !u!1 &552271112
 GameObject:
   m_ObjectHideFlags: 0
@@ -3823,8 +3766,6 @@ MonoBehaviour:
   isPaused: 0
   isPlaying: 0
   distanceTravelled: 0
-  speedIncreaseMilestone: 100
-  speedMultiplier: 1
   distanceText: {fileID: 1122601638}
   isTutorialActive: 1
 --- !u!4 &1504525080
