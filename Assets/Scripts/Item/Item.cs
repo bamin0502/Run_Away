@@ -14,12 +14,6 @@ public class Item : MonoBehaviour
     }
 
     public ItemType itemType;
-    public int value;
-
-    public void Start()
-    {
-        
-    }
 
     public void Use()
     {
@@ -27,7 +21,7 @@ public class Item : MonoBehaviour
         {
             case ItemType.Coin:
                 Debug.Log("코인 획득");
-                //GameManager.Instance.AddCoin();
+                GameManager.Instance.AddCoin();
                 break;
             case ItemType.JumpUp:
                 Debug.Log("점프력 증가");
@@ -36,7 +30,7 @@ public class Item : MonoBehaviour
                 Debug.Log("자석 획득");
                 break;
             case ItemType.Fever:
-                Debug.Log("피버모드");
+                Debug.Log("피버 모드");
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

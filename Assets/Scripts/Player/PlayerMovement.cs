@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
-    private ParticleSystem deadParticle;
+    //private ParticleSystem deadParticle;
     public float jumpForce = 3f;
     public float slideForce = -10f;
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     // 슬라이드 전 콜라이더 원래 값 저장용
     private Vector3 originalColliderCenter;
     private Vector3 originalColliderSize;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -225,31 +226,21 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.collider.CompareTag("Obstacle"))
         {
-            var transform1 = transform;
-            var collisionDirection = other.contacts[0].point - transform1.position;
-            var forward = transform1.forward;
-            forward.y = 0;
-            var angle = Vector3.Angle(forward, collisionDirection);
+#if UNITY_EDITOR
+            Debug.Log("Hit an obstacle, game over!");
+#endif
+            GameManager.Instance.GameOver();
+            Die();
+        }
 
-            if (angle < 75) // 전면 충돌
-            {
+        if (other.collider.CompareTag("Wall"))
+        {
 #if UNITY_EDITOR
-                Debug.Log("Frontal Obstacle Hit");
+            Debug.Log("Hit a wall, returning to last position.");
 #endif
-                isCollidingFront = true;
-                GameManager.Instance.GameOver();
-                Die();
-            }
-            else // 측면 충돌
-            {
-#if UNITY_EDITOR
-                Debug.Log("Side Obstacle Hit");
-#endif
-                
-                targetPosition = lastPosition;
-                rb.position = lastPosition;
-                currentLaneIndex = lastLaneIndex;
-            }
+            targetPosition = lastPosition;
+            rb.position = lastPosition;
+            currentLaneIndex = lastLaneIndex;
         }
     }
 
@@ -280,6 +271,6 @@ public class PlayerMovement : MonoBehaviour
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
         // 추가로 죽음 처리 로직 필요시 여기에 추가
-        deadParticle.Play();
+        //deadParticle.Play();
     }
 }

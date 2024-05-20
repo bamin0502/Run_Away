@@ -22,6 +22,10 @@ public class UiManager : Singleton<UiManager>
     // [Header("Game Over Panel Ui Text")]
     // [SerializeField] public TextMeshProUGUI distanceText;
 
+    [Header("Game UI")]
+    [SerializeField] public TextMeshProUGUI coinText;
+    
+    
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -140,5 +144,10 @@ public class UiManager : Singleton<UiManager>
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void UpdateCoinText(int i)
+    {
+        coinText.text = i.ToString();
     }
 }

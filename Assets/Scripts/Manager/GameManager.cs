@@ -13,6 +13,10 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] public TextMeshProUGUI distanceText;
 
     public bool isTutorialActive = true;
+    
+    public bool isFeverMode = false;
+    public int CoinCount = 0;
+    
 
     public override void Awake()
     {
@@ -45,7 +49,6 @@ public class GameManager : Singleton<GameManager>
 #if UNITY_EDITOR
         Debug.Log("Game Over");
 #endif
-
         isGameover = true;
 #if UNITY_ANDROID
         Handheld.Vibrate();
@@ -76,5 +79,11 @@ public class GameManager : Singleton<GameManager>
         isPlaying = true;
         distanceTravelled = 0;
         stageSpeed = 5f; // 초기 속도 설정
+    }
+    
+    public void AddCoin()
+    {
+        // 코인 획득 시 처리
+        UiManager.Instance.UpdateCoinText(++CoinCount); 
     }
 }
