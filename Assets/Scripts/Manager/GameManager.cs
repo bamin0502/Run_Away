@@ -17,11 +17,13 @@ public class GameManager : Singleton<GameManager>
     public bool isFeverMode = false;
     public int CoinCount = 0;
     
+    private UiManager uiManager;
 
     public override void Awake()
     {
         base.Awake();
         SceneManager.sceneLoaded += OnSceneLoaded;
+        uiManager = GetComponent<UiManager>();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -40,7 +42,7 @@ public class GameManager : Singleton<GameManager>
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            UiManager.Instance.ShowPausePanel();
+            uiManager.ShowPausePanel();
         }
     }
 
@@ -84,6 +86,6 @@ public class GameManager : Singleton<GameManager>
     public void AddCoin()
     {
         // 코인 획득 시 처리
-        UiManager.Instance.UpdateCoinText(++CoinCount); 
+        uiManager.UpdateCoinText(++CoinCount); 
     }
 }

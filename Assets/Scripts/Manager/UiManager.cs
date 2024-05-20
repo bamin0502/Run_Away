@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class UiManager : Singleton<UiManager>
+public class UiManager : MonoBehaviour
 {
     [Header("UI Elements")] 
     [SerializeField] public GameObject PausePanel;
@@ -41,17 +42,25 @@ public class UiManager : Singleton<UiManager>
         InitializeUI();
     }
 
-    public override void Awake()
+    public void Awake()
     {
-        base.Awake();
-        InitializeUI();
+        //InitializeUI();
+        
+        PausePanel = GameObject.FindGameObjectWithTag("Pause").GetComponent<GameObject>();
+        homeButton = GameObject.FindGameObjectWithTag("HomeButton").GetComponent<Button>();
+        resumeButton = GameObject.FindGameObjectWithTag("ResumeButton").GetComponent<Button>();
+        quitButton = GameObject.FindGameObjectWithTag("QuitButton").GetComponent<Button>();
+    }
+
+    public void Start()
+    {
+        homeButton.onClick.AddListener(OnHomeButtonClick);
+        resumeButton.onClick.AddListener(OnResumeButtonClick);
+        quitButton.onClick.AddListener(OnQuitButtonClick);
     }
 
     private void InitializeUI()
     {
-        
-        
-        
         if (PausePanel != null)
         {
             PausePanel.SetActive(false);
@@ -121,20 +130,22 @@ public class UiManager : Singleton<UiManager>
             canvasGroup.DOFade(0, 0.5f);
     }
 
-    private void OnHomeButtonClick()
+    public void OnHomeButtonClick()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
+        Debug.Log("Home");
     }
 
-    private void OnResumeButtonClick()
+    public void OnResumeButtonClick()
     {
         Time.timeScale = 1;
         FadeOut(PausePanel);
         PausePanel.SetActive(false);
+        Debug.Log("Resume");
     }
 
-    private void OnQuitButtonClick()
+    public void OnQuitButtonClick()
     {
         Application.Quit();
         Debug.Log("Quit");

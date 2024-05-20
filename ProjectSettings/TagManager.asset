@@ -14,6 +14,9 @@ TagManager:
   - Result
   - BackGround
   - Wall
+  - HomeButton
+  - ResumeButton
+  - QuitButton
   layers:
   - Default
   - TransparentFX

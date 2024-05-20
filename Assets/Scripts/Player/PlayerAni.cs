@@ -13,10 +13,11 @@ public class PlayerAni : MonoBehaviour
     private static readonly int IsSlide = Animator.StringToHash("isSlide");
 
     private bool deathTrigger;
-
+    private UiManager uiManager;
     private void Awake()
     {
         ani = GetComponent<Animator>();
+        uiManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<UiManager>();
     }
 
     private void Start()
@@ -65,6 +66,6 @@ public class PlayerAni : MonoBehaviour
 
     public void EndResult()
     {
-        UiManager.Instance.ShowGameOverPanel();
+        uiManager.ShowGameOverPanel();
     }
 }
