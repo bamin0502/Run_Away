@@ -150,4 +150,6 @@ public class UiManager : Singleton<UiManager>
     {
         coinText.text = i.ToString();
     }
+    
+    
 }

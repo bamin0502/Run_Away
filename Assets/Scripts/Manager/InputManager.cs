@@ -9,6 +9,9 @@ public class InputManager : Singleton<InputManager>
     public event StartTouch OnStartTouch;
     public delegate void EndTouch(Vector2 position, float time);
     public event EndTouch OnEndTouch;
+    
+    public delegate void BackButtonPressed();
+    public event BackButtonPressed OnBackButtonPressed;
     #endregion
     
     private PlayerControls playerControls;
@@ -32,6 +35,8 @@ public class InputManager : Singleton<InputManager>
     {
         playerControls.Touch.PrimaryContact.started += StartTouchPrimary;
         playerControls.Touch.PrimaryContact.canceled += EndTouchPrimary;
+        
+        playerControls.UI.Back.started += OnBackAction;
     }
     
     private void EndTouchPrimary(InputAction.CallbackContext context)
@@ -47,6 +52,12 @@ public class InputManager : Singleton<InputManager>
     private Vector2 PrimaryPosition()
     {
         return Utils.ScreenToWorld(mainCamera,playerControls.Touch.PrimaryPosition.ReadValue<Vector2>());
+    }
+    
+    private void OnBackAction(InputAction.CallbackContext context)
+    {
+        OnBackButtonPressed?.Invoke();
+        Debug.Log("Back button pressed");
     }
 
 }
