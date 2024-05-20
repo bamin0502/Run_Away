@@ -2,17 +2,7 @@ using UnityEngine;
 
 public class ItemType : MonoBehaviour
 {
-    public enum Type
-    {
-        Coin,
-        SpeedUp,
-        SpeedDown,
-        Shield,
-        Magnet,
-        DoubleCoin,
-        Invincible,
 
-    }
 
     [SerializeField]private int itemID;
     [SerializeField]private string itemNameEnglish;
@@ -78,8 +68,5 @@ public class ItemType : MonoBehaviour
         set => itemInformation = value;
     }
 
-    public Type GetItemType()
-    {
-        return (Type)itemType;
-    }
+    
 }

@@ -1,21 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    //ItemType 번호에 따른 효과 정의
     public enum ItemType
     {
-        Coin = 0,
-        Magnet = 1,
-        Shield = 2,
-        Boost = 3,
-        Slow = 4,
-        Jump = 5,
-        Double = 6,
-        Invincible = 7
+        Coin,
+        JumpUp,
+        Magnet,
+        Fever
     }
-    
-    
+
+    public ItemType itemType;
+    public int value;
+
+    public void Start()
+    {
+        
+    }
+
+    public void Use()
+    {
+        switch (itemType)
+        {
+            case ItemType.Coin:
+                Debug.Log("코인 획득");
+                //GameManager.Instance.AddCoin();
+                break;
+            case ItemType.JumpUp:
+                Debug.Log("점프력 증가");
+                break;
+            case ItemType.Magnet:
+                Debug.Log("자석 획득");
+                break;
+            case ItemType.Fever:
+                Debug.Log("피버모드");
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
 }

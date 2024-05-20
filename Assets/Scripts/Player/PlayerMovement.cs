@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
-
+    private ParticleSystem deadParticle;
     public float jumpForce = 3f;
     public float slideForce = -10f;
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
@@ -225,8 +225,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.collider.CompareTag("Obstacle"))
         {
-            var collisionDirection = other.contacts[0].point - transform.position;
-            var forward = transform.forward;
+            var transform1 = transform;
+            var collisionDirection = other.contacts[0].point - transform1.position;
+            var forward = transform1.forward;
             forward.y = 0;
             var angle = Vector3.Angle(forward, collisionDirection);
 
@@ -270,7 +271,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // 아이템 효과 발동 예정
             other.gameObject.SetActive(false);
-            
+            other.GetComponent<Item>().Use();
         }
     }
 
@@ -279,5 +280,6 @@ public class PlayerMovement : MonoBehaviour
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
         // 추가로 죽음 처리 로직 필요시 여기에 추가
+        deadParticle.Play();
     }
 }
