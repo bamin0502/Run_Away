@@ -11,8 +11,10 @@ public class Item : MonoBehaviour
         Magnet = 1,
         Shield = 2,
         Boost = 3,
-        Score = 4,
-        None = 5
+        Slow = 4,
+        Jump = 5,
+        Double = 6,
+        Invincible = 7
     }
     
     

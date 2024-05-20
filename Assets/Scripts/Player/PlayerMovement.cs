@@ -250,6 +250,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // 아이템 효과 발동 예정
             other.gameObject.SetActive(false);
+            
         }
     }
 

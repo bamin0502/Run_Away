@@ -10,8 +10,8 @@ public class Tile : MonoBehaviour
     public int noObstaclesInitially = 2;
     public float tileLength = 17;
     public float initialMoveSpeed = 5f;
-    public float moveSpeedIncreaseDistance = 20f; // Increase this value
-    public float moveSpeedMultiplier = 1.05f; // Decrease this value
+    public float moveSpeedIncreaseDistance = 20f; 
+    public float moveSpeedMultiplier = 1.05f; 
     
 
     private List<Transform> tiles = new List<Transform>();
