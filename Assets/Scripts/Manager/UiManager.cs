@@ -46,17 +46,16 @@ public class UiManager : MonoBehaviour
     {
         //InitializeUI();
         
-        PausePanel = GameObject.FindGameObjectWithTag("Pause").GetComponent<GameObject>();
-        homeButton = GameObject.FindGameObjectWithTag("HomeButton").GetComponent<Button>();
-        resumeButton = GameObject.FindGameObjectWithTag("ResumeButton").GetComponent<Button>();
-        quitButton = GameObject.FindGameObjectWithTag("QuitButton").GetComponent<Button>();
+        PausePanel = GameObject.FindGameObjectWithTag("Pause");
     }
 
     public void Start()
     {
+        
         homeButton.onClick.AddListener(OnHomeButtonClick);
         resumeButton.onClick.AddListener(OnResumeButtonClick);
         quitButton.onClick.AddListener(OnQuitButtonClick);
+        
     }
 
     private void InitializeUI()

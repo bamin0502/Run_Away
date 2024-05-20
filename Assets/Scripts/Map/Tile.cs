@@ -192,7 +192,7 @@ public class Tile : MonoBehaviour
 
         foreach (var spawnPoint in spawnPoints)
         {
-            var lanePosition = Mathf.FloorToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
+            var lanePosition = Mathf.RoundToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
 
             if (selectedLanes.Contains(lanePosition))
             {
