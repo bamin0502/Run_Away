@@ -110,8 +110,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.408282, y: 1.0819503, z: 0.20490646}
-  m_Center: {x: 0, y: 0.54097515, z: 2.6294937}
+  m_Size: {x: 2.1451693, y: 0.9049688, z: 0.20490646}
+  m_Center: {x: -0.04802513, y: 0.4524844, z: 2.6294937}
 --- !u!205 &-6041482979812847088
 LODGroup:
   m_ObjectHideFlags: 0
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 8387280337414970386}
   m_Layer: 0
   m_Name: wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -13,8 +13,7 @@ TagManager:
   - Pause
   - Result
   - BackGround
-  - SmallSpawnPoint
-  - TallSpawnPoint
+  - Wall
   layers:
   - Default
   - TransparentFX
