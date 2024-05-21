@@ -16,10 +16,12 @@ public class InputManager : Singleton<InputManager>
     
     private PlayerControls playerControls;
     private Camera mainCamera;
+    private UiManager uiManager;
     private new void Awake()
     {
         playerControls = new PlayerControls();
         mainCamera = Camera.main;
+        uiManager = GameObject.FindGameObjectWithTag("Manager").gameObject.GetComponent<UiManager>();
     }
 
     private void OnEnable()
@@ -58,6 +60,7 @@ public class InputManager : Singleton<InputManager>
     {
         OnBackButtonPressed?.Invoke();
         Debug.Log("Back button pressed");
+        uiManager.ShowPausePanel();
     }
 
 }

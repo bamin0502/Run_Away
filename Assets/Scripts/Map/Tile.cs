@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -44,6 +45,9 @@ public class Tile : MonoBehaviour
     
     [Header("최대 속도"),Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
     [SerializeField]public float maxMoveSpeed = 15f;
+    
+    
+
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -76,6 +80,7 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
+        
         nextTilePosition = startPoint;
         for (var i = 0; i < numberOfTiles; i++)
         {
@@ -91,7 +96,7 @@ public class Tile : MonoBehaviour
 
     private void Update()
     {
-        if (!gameManager.isGameover)
+        if (!gameManager.isGameover && !gameManager.isPaused && gameManager.isPlaying)
         {
             MoveTiles();
             if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)

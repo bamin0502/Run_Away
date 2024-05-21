@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -10,6 +9,8 @@ public class UiManager : MonoBehaviour
     [Header("UI Elements")] 
     [SerializeField] public GameObject PausePanel;
     [SerializeField] public GameObject GameOverPanel;
+    [SerializeField] public GameObject GamePanel;
+    [SerializeField] public GameObject GameMenuPanel;
     
     [Header("Pause Panel Ui Button")]
     [SerializeField] public Button homeButton;
@@ -26,36 +27,21 @@ public class UiManager : MonoBehaviour
     [Header("Game UI")]
     [SerializeField] public TextMeshProUGUI coinText;
     
+    [Header("Game Panel Ui Text")]
+    [SerializeField] public Button startButton;
     
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        InitializeUI();
-    }
-
+    
     public void Awake()
     {
-        //InitializeUI();
-        
-        PausePanel = GameObject.FindGameObjectWithTag("Pause");
+
     }
 
     public void Start()
     {
-        
         homeButton.onClick.AddListener(OnHomeButtonClick);
         resumeButton.onClick.AddListener(OnResumeButtonClick);
         quitButton.onClick.AddListener(OnQuitButtonClick);
-        
+        startButton.onClick.AddListener(StartGame);
     }
 
     private void InitializeUI()
@@ -161,5 +147,11 @@ public class UiManager : MonoBehaviour
         coinText.text = i.ToString();
     }
     
+    public void StartGame()
+    {
+        GameMenuPanel.SetActive(false);
+        GameManager.Instance.isPlaying = true;
+        GamePanel.SetActive(true);
+    }
     
 }

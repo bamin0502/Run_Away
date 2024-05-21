@@ -1,3 +1,5 @@
+using System;
+using Cinemachine;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -9,9 +11,7 @@ public class GameManager : Singleton<GameManager>
     public bool isPaused;
     public bool isPlaying = false;
     public float distanceTravelled = 0;
-
-    [SerializeField] public TextMeshProUGUI distanceText;
-
+    
     public bool isTutorialActive = true;
     
     public bool isFeverMode = false;
@@ -19,31 +19,30 @@ public class GameManager : Singleton<GameManager>
     
     private UiManager uiManager;
 
+    [Header("비활성화 시킬 오브젝트")]
+    [SerializeField] public GameObject disableObject;
+    //게임 시작전에 비출 카메라
+    [SerializeField] public CinemachineVirtualCamera MenuCamera;
+    //게임 시작후에 비출 카메라
+    [SerializeField] public CinemachineVirtualCamera InGameCamera;
+    
+    
     public override void Awake()
     {
         base.Awake();
-        SceneManager.sceneLoaded += OnSceneLoaded;
         uiManager = GetComponent<UiManager>();
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public void Start()
     {
-        InitializeGame();
+        disableObject.SetActive(false);
+        MenuCamera.enabled = false;
+        InGameCamera.enabled = true;
     }
 
     private void Update()
     {
-        if (!isGameover && !isPaused && isPlaying)
-        {
-            distanceTravelled += stageSpeed * Time.deltaTime;
-
-            distanceText.text = "Speed: " + stageSpeed.ToString("F0") + "m/s\n" + "Distance: " + distanceTravelled.ToString("F0") + "m";
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            uiManager.ShowPausePanel();
-        }
+        
     }
 
     public void GameOver()
@@ -52,6 +51,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Game Over");
 #endif
         isGameover = true;
+        isPlaying = false;
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif
@@ -59,7 +59,7 @@ public class GameManager : Singleton<GameManager>
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        
     }
 
     public void PauseGame()
@@ -72,15 +72,6 @@ public class GameManager : Singleton<GameManager>
     {
         isPaused = false;
         Time.timeScale = 1;
-    }
-
-    private void InitializeGame()
-    {
-        isGameover = false;
-        isPaused = false;
-        isPlaying = true;
-        distanceTravelled = 0;
-        stageSpeed = 5f; // 초기 속도 설정
     }
     
     public void AddCoin()

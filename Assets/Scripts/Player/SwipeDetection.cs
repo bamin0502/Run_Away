@@ -50,6 +50,7 @@ public class SwipeDetection : MonoBehaviour
 
     private void DetectSwipe()
     {
+        if(GameManager.Instance.isGameover || !GameManager.Instance.isPlaying) return;
         var swipeVector = endPos - startPos;
         var distance = Mathf.Clamp(swipeVector.magnitude, 0f, minSwipeDistancePixels);
         if (distance >= minDistance)
