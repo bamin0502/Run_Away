@@ -799,8 +799,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Run_Away
-  metroPackageVersion: 
+  metroPackageName: RunAway
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -808,7 +808,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Run_Away
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Run_Away
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
