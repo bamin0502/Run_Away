@@ -21,7 +21,7 @@ public class InputManager : Singleton<InputManager>
     {
         playerControls = new PlayerControls();
         mainCamera = Camera.main;
-        uiManager = GameObject.FindGameObjectWithTag("Manager").gameObject.GetComponent<UiManager>();
+        uiManager = GameObject.FindGameObjectWithTag("UiManager").gameObject.GetComponent<UiManager>();
     }
 
     private void OnEnable()
@@ -60,6 +60,7 @@ public class InputManager : Singleton<InputManager>
     {
         OnBackButtonPressed?.Invoke();
         Debug.Log("Back button pressed");
+        uiManager.PausePanel.SetActive(true);
         uiManager.ShowPausePanel();
     }
 

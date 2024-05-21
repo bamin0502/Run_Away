@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Cinemachine;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -10,7 +9,7 @@ public class Tile : MonoBehaviour
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
     public float tileLength = 17;
-    public float initialMoveSpeed = 5f;
+    
     public float moveSpeedIncreaseDistance = 20f; 
     public float moveSpeedMultiplier = 1.05f; 
     
@@ -42,12 +41,11 @@ public class Tile : MonoBehaviour
     private float distanceTravelled = 0f;
     [Header("일정 거리마다 속도 증가"),Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
     [SerializeField]private float nextSpeedIncreaseDistance = 20f;
-    
+    [SerializeField]public float initialMoveSpeed = 5f;
     [Header("최대 속도"),Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
     [SerializeField]public float maxMoveSpeed = 15f;
     
     
-
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -113,7 +111,7 @@ public class Tile : MonoBehaviour
             }
 
             totalDistance += moveSpeed * Time.deltaTime;
-            gameManager.stageSpeed = moveSpeed; // Update GameManager's stageSpeed
+            gameManager.stageSpeed = moveSpeed; 
         }
     }
 

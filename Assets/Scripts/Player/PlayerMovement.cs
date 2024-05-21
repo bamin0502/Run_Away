@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (vertical > 0.7f && !isJumping) // 점프 중 다시 점프 불가
+            if (vertical > 0.5f && !isJumping) // 점프 중 다시 점프 불가
             {
                 PerformJump();
             }
