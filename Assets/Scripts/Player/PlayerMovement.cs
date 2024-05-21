@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        swipeDirection = Defines.SwipeDirection.RUN;
+        swipeDirection = Defines.SwipeDirection.IDLE;
         var position = rb.position;
         targetPosition = position;
         lastPosition = position;
@@ -54,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+
         if (swipeDirection == Defines.SwipeDirection.SLIDE)
         {
             slideTimer -= Time.deltaTime;

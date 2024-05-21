@@ -23,11 +23,15 @@ public class PlayerAni : MonoBehaviour
     private void Start()
     {
         deathTrigger = false;
-        ani.SetBool(IsRun, true);
     }
     
     private void Update()
     {
+        if (!GameManager.Instance.isPlaying)
+        {
+            ani.SetBool(IsRun, false);
+        }
+        
         if (GameManager.Instance.isGameover && !deathTrigger)
         {
             SetDeathAnimation();

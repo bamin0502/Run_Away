@@ -50,6 +50,7 @@ public class GameManager : Singleton<GameManager>
 #endif
         isGameover = true;
         isPlaying = false;
+        
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif

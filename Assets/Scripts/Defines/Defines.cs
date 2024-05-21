@@ -10,7 +10,8 @@ public static class Defines
         RUN=0,
         JUMP=1,
         SLIDE=2,
-        DEAD=3
+        DEAD=3,
+        IDLE=4
     }
 }
 
