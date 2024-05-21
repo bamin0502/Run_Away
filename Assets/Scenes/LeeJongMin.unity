@@ -2765,6 +2765,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 12.16
       objectReference: {fileID: 0}
+    - target: {fileID: 9133147822608341992, guid: 818a8ecfd65c63049a58f19861fc8958, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 204718787672429158, guid: 818a8ecfd65c63049a58f19861fc8958, type: 3}
@@ -2782,6 +2786,30 @@ PrefabInstance:
     - target: {fileID: 1538939503044699280, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
       propertyPath: m_Name
       value: MD_Easy_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2495055207121790056, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2879816403459393450, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802041244103900435, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5665213235993328408, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5719554367976152337, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229203862728718751, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 6229203862728718751, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2822,6 +2850,14 @@ PrefabInstance:
     - target: {fileID: 6229203862728718751, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6875631362337500205, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9166280955728876532, guid: 1581d6a6f10a2864f95cf8b028448728, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
