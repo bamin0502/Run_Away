@@ -342,7 +342,7 @@ public class Tile : MonoBehaviour
         if (itemTypeComponent)
         {
 #if UNITY_EDITOR
-            Debug.Log($"Spawned Item: {itemTypeComponent.ItemNameEnglish}, ID: {itemTypeComponent.ItemID}, Information: {itemTypeComponent.ItemInformation}");
+            Debug.Log($"Spawned Item: {itemTypeComponent.ItemNameEnglish}, ID: {itemTypeComponent.ItemID}");
 #endif
         }
         else

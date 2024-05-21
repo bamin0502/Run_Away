@@ -33,8 +33,6 @@ public class ItemData
     [TypeConverter(typeof(Int32DefaultConverter))]
     public int ItemDuration { get; set;}  
     
-    [Name("Item_information")]
-    public string ItemInformation { get; set;}
     
     
 }

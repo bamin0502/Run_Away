@@ -36,8 +36,6 @@ public class GameManager : Singleton<GameManager>
     public void Start()
     {
         disableObject.SetActive(false);
-        MenuCamera.enabled = false;
-        InGameCamera.enabled = true;
     }
 
     private void Update()

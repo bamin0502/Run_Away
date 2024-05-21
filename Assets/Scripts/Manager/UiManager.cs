@@ -146,11 +146,13 @@ public class UiManager : MonoBehaviour
     {
         coinText.text = i.ToString();
     }
-    
-    public void StartGame()
+
+    private void StartGame()
     {
         GameMenuPanel.SetActive(false);
         GameManager.Instance.isPlaying = true;
+        GameManager.Instance.MenuCamera.enabled = false;
+        GameManager.Instance.InGameCamera.enabled = true;
         GamePanel.SetActive(true);
     }
     

@@ -12,7 +12,6 @@ public class ItemType : MonoBehaviour
     [SerializeField]private int itemPrice;
     [SerializeField]private int itemAmount;
     [SerializeField]private int itemDuration;
-    [SerializeField]private string itemInformation;
     
     public int ItemID
     {
@@ -62,11 +61,7 @@ public class ItemType : MonoBehaviour
         set => itemDuration = value;
     }
 
-    public string ItemInformation
-    {
-        get => itemInformation;
-        set => itemInformation = value;
-    }
+
 
     
 }

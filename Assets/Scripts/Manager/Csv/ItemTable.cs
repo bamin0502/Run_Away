@@ -79,9 +79,9 @@ public class ItemTable : DataTable
                 itemTypeComponent.ItemPrice = item.ItemPrice;
                 itemTypeComponent.ItemAmount = item.ItemAmount;
                 itemTypeComponent.ItemDuration = item.ItemDuration;
-                itemTypeComponent.ItemInformation = item.ItemInformation;
+
 #if UNITY_EDITOR
-                Debug.Log($"Set ItemType for {itemTypeComponent.ItemNameEnglish}: ID={itemTypeComponent.ItemID}, Type={itemTypeComponent.ItemTypeNum}, Information={itemTypeComponent.ItemInformation}");
+                Debug.Log($"Set ItemType for {itemTypeComponent.ItemNameEnglish}: ID={itemTypeComponent.ItemID}, Type={itemTypeComponent.ItemTypeNum}");
 #endif
                 loadedItems.Add(itemInstance);
             }
