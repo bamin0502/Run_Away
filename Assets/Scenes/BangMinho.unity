@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19024794, g: 0.59240067, b: 0.7727873, a: 1}
+  m_IndirectSpecularColor: {r: 0.19025388, g: 0.5924093, b: 0.771748, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1437,17 +1437,17 @@ MonoBehaviour:
   numberOfTiles: 10
   noObstaclesInitially: 2
   tileLength: 30
-  initialMoveSpeed: 5
-  moveSpeedIncreaseDistance: 10
-  moveSpeedMultiplier: 1.1
+  initialMoveSpeed: 15
+  moveSpeedIncreaseDistance: 70
+  moveSpeedMultiplier: 1.05
   specialItemSpawnDistance: 100
   initialOtherItemSpawnChance: 0.1
   maxOtherItemSpawnChance: 0.5
   distanceFactor: 0.001
   coinLineLength: 5
   coinSpacing: 3
-  nextSpeedIncreaseDistance: 20
-  maxMoveSpeed: 15
+  nextSpeedIncreaseDistance: 50
+  maxMoveSpeed: 70
 --- !u!1 &552271112
 GameObject:
   m_ObjectHideFlags: 0
