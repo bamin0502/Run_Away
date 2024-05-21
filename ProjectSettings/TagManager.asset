@@ -17,6 +17,9 @@ TagManager:
   - HomeButton
   - ResumeButton
   - QuitButton
+  - TallSpawnPoint
+  - SmallSpawnPoint
+  - UiManager
   layers:
   - Default
   - TransparentFX

@@ -2,7 +2,6 @@ using System;
 using Cinemachine;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -30,7 +29,7 @@ public class GameManager : Singleton<GameManager>
     public override void Awake()
     {
         base.Awake();
-        uiManager = GetComponent<UiManager>();
+        uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
     }
 
     public void Start()

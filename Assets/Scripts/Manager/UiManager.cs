@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class UiManager : MonoBehaviour
 {
@@ -16,9 +17,14 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button homeButton;
     [SerializeField] public Button resumeButton;
     [SerializeField] public Button quitButton;
-    [SerializeField] public ToggleGroup soundToggleGroup;
-    [SerializeField] public Toggle BgmToggle;
-    [SerializeField] public Toggle SfxToggle;
+    // [SerializeField] public ToggleGroup soundToggleGroup;
+    // [SerializeField] public Toggle BgmToggle;
+    // [SerializeField] public Toggle SfxToggle;
+    // [SerializeField] public AudioMixer audioMixer;
+    // public int BgmToggleIndex;
+    // public int SfxToggleIndex;
+    // private readonly string BgmParameter="BGM";
+    // private readonly string SfxParameter="SFX";
     
     // [Header("Game Over Panel Ui Button")]
     // [SerializeField] private Button restartButton;
@@ -37,7 +43,7 @@ public class UiManager : MonoBehaviour
     
     public void Awake()
     {
-
+        //InitializeUI();
     }
 
     public void Start()
@@ -84,10 +90,6 @@ public class UiManager : MonoBehaviour
 
     public void ShowPausePanel()
     {
-        if (!PausePanel) return;
-
-        PausePanel.SetActive(true);
-        FadeIn(PausePanel);
         Time.timeScale = 0;
     }
 
@@ -122,9 +124,10 @@ public class UiManager : MonoBehaviour
 
     public void OnHomeButtonClick()
     {
+        //진행하던걸 중지하고 다시 처음부터?
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
-        Debug.Log("Home");
+        
     }
 
     public void OnResumeButtonClick()
@@ -138,7 +141,10 @@ public class UiManager : MonoBehaviour
     public void OnQuitButtonClick()
     {
         Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
         Debug.Log("Quit");
+#endif
     }
 
     private void OnRestartButtonClick()
