@@ -21,9 +21,9 @@ public class GameManager : Singleton<GameManager>
 
     [Header("비활성화 시킬 오브젝트")]
     [SerializeField] public GameObject disableObject;
-    //게임 시작전에 비출 카메라
+    [Header("시작전에 비출 카메라")] 
     [SerializeField] public CinemachineVirtualCamera MenuCamera;
-    //게임 시작후에 비출 카메라
+    [Header("시작후에 비출 카메라")] 
     [SerializeField] public CinemachineVirtualCamera InGameCamera;
     
     

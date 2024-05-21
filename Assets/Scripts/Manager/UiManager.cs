@@ -16,6 +16,9 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button homeButton;
     [SerializeField] public Button resumeButton;
     [SerializeField] public Button quitButton;
+    [SerializeField] public ToggleGroup soundToggleGroup;
+    [SerializeField] public Toggle BgmToggle;
+    [SerializeField] public Toggle SfxToggle;
     
     // [Header("Game Over Panel Ui Button")]
     // [SerializeField] private Button restartButton;
@@ -26,6 +29,7 @@ public class UiManager : MonoBehaviour
 
     [Header("Game UI")]
     [SerializeField] public TextMeshProUGUI coinText;
+    [SerializeField] public Button optionButton;
     
     [Header("Game Panel Ui Text")]
     [SerializeField] public Button startButton;
@@ -42,6 +46,7 @@ public class UiManager : MonoBehaviour
         resumeButton.onClick.AddListener(OnResumeButtonClick);
         quitButton.onClick.AddListener(OnQuitButtonClick);
         startButton.onClick.AddListener(StartGame);
+        optionButton.onClick.AddListener(ShowPausePanel);
     }
 
     private void InitializeUI()

@@ -1,18 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+
+[Serializable]
+public class CoinData
+{
+    public int coin;
+}
 
 public class JsonData : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public CoinData coinData;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        coinData = new CoinData
+        {
+            coin = GameManager.Instance.CoinCount
+        };
+
+        string jsonData = JsonConvert.SerializeObject(coinData);
+        Debug.Log(jsonData);
+
+        CoinData loadedData = JsonConvert.DeserializeObject<CoinData>(jsonData);
+        Debug.Log(loadedData.coin);
     }
 }
