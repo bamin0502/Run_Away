@@ -3,7 +3,7 @@ using Cinemachine;
 using UnityEngine;
 using TMPro;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
     public float stageSpeed = 5f;
     public bool isGameover;
@@ -17,7 +17,7 @@ public class GameManager : Singleton<GameManager>
     public int CoinCount = 0;
     
     private UiManager uiManager;
-
+    private JsonData jsonData;
     [Header("비활성화 시킬 오브젝트")]
     [SerializeField] public GameObject disableObject;
     [Header("시작전에 비출 카메라")] 
@@ -26,15 +26,21 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] public CinemachineVirtualCamera InGameCamera;
     
     
-    public override void Awake()
+    public void Awake()
     {
-        base.Awake();
         uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
+        jsonData = GameObject.FindGameObjectWithTag("UiManager").GetComponent<JsonData>();
     }
 
     public void Start()
     {
         disableObject.SetActive(false);
+        jsonData.LoadGameData();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveGameData();
     }
 
     private void Update()
@@ -49,17 +55,16 @@ public class GameManager : Singleton<GameManager>
 #endif
         isGameover = true;
         isPlaying = false;
-        
+        SaveGameData();
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif
     }
 
-    public void RestartGame()
+    public void SaveGameData()
     {
-        
+        jsonData.SaveGameData();
     }
-
     public void PauseGame()
     {
         isPaused = true;
@@ -75,6 +80,6 @@ public class GameManager : Singleton<GameManager>
     public void AddCoin()
     {
         // 코인 획득 시 처리
-        uiManager.UpdateCoinText(++CoinCount); 
+        uiManager.UpdateCoinText(CoinCount++);
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19025037, g: 0.59239954, b: 0.7717345, a: 1}
+  m_IndirectSpecularColor: {r: 0.191991, g: 0.5946723, b: 0.7773275, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -980,6 +980,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 375623383}
   m_CullTransparentMesh: 1
+--- !u!1 &413930311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 413930313}
+  - component: {fileID: 413930312}
+  m_Layer: 0
+  m_Name: Tutorial
+  m_TagString: Tutorial
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &413930312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413930311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78f4505e04a288146952ccac17cd606d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modalPrefab: {fileID: 4111843364549295528, guid: 86c1be44717df1b4e89000b18d0a0370, type: 3}
+  canvas: {fileID: 947120100}
+  tutorialSteps:
+  - title: "\uD14C\uC2A4\uD2B8"
+    content: "\uD14C\uC2A4\uD2B8"
+    buttonText: Next
+    imagePath: Tutorial/Test
+  - title: "\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8"
+    content: "\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8"
+    buttonText: "\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8"
+    imagePath: Tutorial/Test
+  - title: "\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8"
+    content: "\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8"
+    buttonText: Next
+    imagePath: Tutorial/Test
+  - title: "\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8"
+    content: "\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8\uD14C\uC2A4\uD2B8"
+    buttonText: OK
+    imagePath: Tutorial/Test
+--- !u!4 &413930313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413930311}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 150.1767, y: 190.89249, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &449929177
 GameObject:
   m_ObjectHideFlags: 0
@@ -1351,7 +1414,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1504525081}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
         m_MethodName: OnResumeButtonClick
         m_Mode: 1
@@ -1399,7 +1462,7 @@ GameObject:
   - component: {fileID: 539059099}
   m_Layer: 0
   m_Name: TileManager
-  m_TagString: Untagged
+  m_TagString: TileManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1437,7 +1500,6 @@ MonoBehaviour:
   numberOfTiles: 10
   noObstaclesInitially: 2
   tileLength: 30
-  initialMoveSpeed: 15
   moveSpeedIncreaseDistance: 70
   moveSpeedMultiplier: 1.05
   specialItemSpawnDistance: 100
@@ -1447,6 +1509,7 @@ MonoBehaviour:
   coinLineLength: 5
   coinSpacing: 3
   nextSpeedIncreaseDistance: 50
+  initialMoveSpeed: 15
   maxMoveSpeed: 70
 --- !u!1 &552271112
 GameObject:
@@ -1713,7 +1776,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1504525081}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
         m_MethodName: OnQuitButtonClick
         m_Mode: 1
@@ -2311,6 +2374,73 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720836649}
   m_CullTransparentMesh: 1
+--- !u!1 &765534544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 765534547}
+  - component: {fileID: 765534546}
+  - component: {fileID: 765534545}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: UiManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &765534545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765534544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: affb9aff578ee734ebd7498462e00a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &765534546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765534544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81a23c7929e32ef408eea1dcf52aac37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PausePanel: {fileID: 883272745}
+  GameOverPanel: {fileID: 373016314}
+  GamePanel: {fileID: 917896652}
+  GameMenuPanel: {fileID: 1258183688}
+  homeButton: {fileID: 2077193840}
+  resumeButton: {fileID: 528785920}
+  quitButton: {fileID: 592425321}
+  coinText: {fileID: 803661594}
+  optionButton: {fileID: 2075770052}
+  startButton: {fileID: 3889460031018447794}
+--- !u!4 &765534547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765534544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 150.1767, y: 190.89249, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &768672706
 GameObject:
   m_ObjectHideFlags: 0
@@ -5065,7 +5195,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1504525080}
   - component: {fileID: 1504525079}
-  - component: {fileID: 1504525081}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Manager
@@ -5111,28 +5240,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1504525081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504525078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81a23c7929e32ef408eea1dcf52aac37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PausePanel: {fileID: 883272745}
-  GameOverPanel: {fileID: 373016314}
-  GamePanel: {fileID: 917896652}
-  GameMenuPanel: {fileID: 1258183688}
-  homeButton: {fileID: 2077193840}
-  resumeButton: {fileID: 528785920}
-  quitButton: {fileID: 592425321}
-  coinText: {fileID: 803661594}
-  optionButton: {fileID: 2075770052}
-  startButton: {fileID: 3889460031018447794}
 --- !u!1 &1523927549
 GameObject:
   m_ObjectHideFlags: 0
@@ -6652,7 +6759,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1504525081}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
         m_MethodName: OnHomeButtonClick
         m_Mode: 1
@@ -11833,6 +11940,7 @@ SceneRoots:
   - {fileID: 920857673}
   - {fileID: 929700433}
   - {fileID: 1678267275}
+  - {fileID: 413930313}
   - {fileID: 539059098}
   - {fileID: 1504525080}
   - {fileID: 3267180963829084152}
@@ -11840,3 +11948,4 @@ SceneRoots:
   - {fileID: 1832147663}
   - {fileID: 2001701950}
   - {fileID: 4305881893122355309}
+  - {fileID: 765534547}

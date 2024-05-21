@@ -242,7 +242,7 @@ public class Tile : MonoBehaviour
         {
             if (child.CompareTag("Obstacle"))
             {
-                Destroy(child.gameObject);
+                child.gameObject.SetActive(false);
             }
         }
 

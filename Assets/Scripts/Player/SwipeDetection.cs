@@ -5,7 +5,7 @@ public class SwipeDetection : MonoBehaviour
 {
     private InputManager inputManager;
     private PlayerMovement playerMovement;
-
+    private GameManager gameManager;
     [SerializeField] private float minDistance = 0.2f;
     private Vector2 startPos;
     private Vector2 endPos;
@@ -16,6 +16,7 @@ public class SwipeDetection : MonoBehaviour
     {
         inputManager = GetComponent<InputManager>();
         playerMovement = GetComponent<PlayerMovement>();
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
     }
 
     private void Start()
@@ -50,7 +51,7 @@ public class SwipeDetection : MonoBehaviour
 
     private void DetectSwipe()
     {
-        if(GameManager.Instance.isGameover || !GameManager.Instance.isPlaying) return;
+        if(gameManager.isGameover || !gameManager.isPlaying) return;
         var swipeVector = endPos - startPos;
         var distance = Mathf.Clamp(swipeVector.magnitude, 0f, minSwipeDistancePixels);
         if (distance >= minDistance)

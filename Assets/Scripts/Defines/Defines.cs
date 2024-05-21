@@ -1,3 +1,4 @@
+using System;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
@@ -25,4 +26,13 @@ public class Int32DefaultConverter:Int32Converter
         }
         return base.ConvertFromString(text, row, memberMapData);
     }
+}
+
+[Serializable]
+public class TutorialStep
+{
+    public string title;
+    public string content;
+    public string buttonText;
+    public string imagePath;
 }

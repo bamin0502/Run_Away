@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
+    private GameManager gameManager;
     //private ParticleSystem deadParticle;
     public float jumpForce = 3f;
     public float slideForce = -10f;
@@ -35,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerAni = GetComponent<PlayerAni>();
         boxCollider = GetComponent<BoxCollider>();
-
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         // 원래 콜라이더 값 저장
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
@@ -106,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateMovement(Vector2 swipeDir)
     {
-        if (GameManager.Instance.isGameover || isCollidingFront) return;
+        if (gameManager.isGameover || isCollidingFront) return;
         var horizontal = swipeDir.x;
         var vertical = swipeDir.y;
 
@@ -230,7 +231,7 @@ public class PlayerMovement : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit an obstacle, game over!");
 #endif
-            GameManager.Instance.GameOver();
+            gameManager.GameOver();
             Die();
         }
 

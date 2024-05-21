@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAni : MonoBehaviour
 {
     private Animator ani;
-
+    private GameManager gameManager;
     [Tooltip("애니메이션 관련 해쉬코드")] 
     private static readonly int IsDead = Animator.StringToHash("isDead");
     private static readonly int IsRun = Animator.StringToHash("isRun");
@@ -18,6 +18,7 @@ public class PlayerAni : MonoBehaviour
     {
         ani = GetComponent<Animator>();
         uiManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<UiManager>();
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
     }
 
     private void Start()
@@ -27,12 +28,12 @@ public class PlayerAni : MonoBehaviour
     
     private void Update()
     {
-        if (!GameManager.Instance.isPlaying)
+        if (!gameManager.isPlaying)
         {
             ani.SetBool(IsRun, false);
         }
         
-        if (GameManager.Instance.isGameover && !deathTrigger)
+        if (gameManager.isGameover && !deathTrigger)
         {
             SetDeathAnimation();
             deathTrigger = true;

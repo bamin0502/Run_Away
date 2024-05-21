@@ -7,6 +7,8 @@ using UnityEngine.Audio;
 
 public class UiManager : MonoBehaviour
 {
+    private GameManager gameManager;
+    private TutorialManager tutorialManager;
     [Header("UI Elements")] 
     [SerializeField] public GameObject PausePanel;
     [SerializeField] public GameObject GameOverPanel;
@@ -44,6 +46,8 @@ public class UiManager : MonoBehaviour
     public void Awake()
     {
         //InitializeUI();
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+        tutorialManager=GameObject.FindGameObjectWithTag("Tutorial").GetComponent<TutorialManager>();
     }
 
     public void Start()
@@ -51,41 +55,20 @@ public class UiManager : MonoBehaviour
         homeButton.onClick.AddListener(OnHomeButtonClick);
         resumeButton.onClick.AddListener(OnResumeButtonClick);
         quitButton.onClick.AddListener(OnQuitButtonClick);
-        startButton.onClick.AddListener(StartGame);
+        startButton.onClick.AddListener(OnStartButtonClick);
         optionButton.onClick.AddListener(ShowPausePanel);
     }
 
-    private void InitializeUI()
+    private void OnStartButtonClick()
     {
-        if (PausePanel != null)
-        {
-            PausePanel.SetActive(false);
-        }
-        if (GameOverPanel != null)
-        {
-            GameOverPanel.SetActive(false);
-        }
-
-        if (homeButton != null)
-        {
-            homeButton.onClick.AddListener(OnHomeButtonClick);
-        }
-        if (resumeButton != null)
-        {
-            resumeButton.onClick.AddListener(OnResumeButtonClick);
-        }
-        if (quitButton != null)
-        {
-            quitButton.onClick.AddListener(OnQuitButtonClick);
-        }
-        // if (restartButton != null)
-        // {
-        //     restartButton.onClick.AddListener(OnRestartButtonClick);
-        // }
-        // if (quitButton2 != null)
-        // {
-        //     quitButton2.onClick.AddListener(OnQuitButtonClick);
-        // }
+#if UNITY_EDITOR
+        Debug.Log("Start");
+#endif
+        
+        if(gameManager.isTutorialActive)
+            tutorialManager.StartTutorial(StartGame);
+        else
+            StartGame();
     }
 
     public void ShowPausePanel()
@@ -101,12 +84,6 @@ public class UiManager : MonoBehaviour
         FadeIn(GameOverPanel);
         Time.timeScale = 0;
     }
-
-    // public void UpdateDistanceText(float distance)
-    // {
-    //     if (distanceText != null)
-    //         distanceText.text = "Distance: " + distance.ToString("F2") + " meters";
-    // }
 
     private void FadeIn(GameObject obj)
     {
@@ -158,12 +135,12 @@ public class UiManager : MonoBehaviour
         coinText.text = i.ToString();
     }
 
-    private void StartGame()
+    public void StartGame()
     {
         GameMenuPanel.SetActive(false);
-        GameManager.Instance.isPlaying = true;
-        GameManager.Instance.MenuCamera.enabled = false;
-        GameManager.Instance.InGameCamera.enabled = true;
+        gameManager.isPlaying = true;
+        gameManager.MenuCamera.enabled = false;
+        gameManager.InGameCamera.enabled = true;
         GamePanel.SetActive(true);
     }
     
