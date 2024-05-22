@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.SceneManagement;
-using UnityEngine.Audio;
 
 public class UiManager : MonoBehaviour
 {
@@ -15,22 +14,15 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject GamePanel;
     [SerializeField] public GameObject GameMenuPanel;
     
+    
     [Header("Pause Panel Ui Button")]
     [SerializeField] public Button homeButton;
     [SerializeField] public Button resumeButton;
     [SerializeField] public Button quitButton;
-    // [SerializeField] public ToggleGroup soundToggleGroup;
-    // [SerializeField] public Toggle BgmToggle;
-    // [SerializeField] public Toggle SfxToggle;
-    // [SerializeField] public AudioMixer audioMixer;
-    // public int BgmToggleIndex;
-    // public int SfxToggleIndex;
-    // private readonly string BgmParameter="BGM";
-    // private readonly string SfxParameter="SFX";
     
-    // [Header("Game Over Panel Ui Button")]
-    // [SerializeField] private Button restartButton;
-    // [SerializeField] private Button quitButton2;
+    [Header("Game Over Panel Ui Button")]
+    [SerializeField] private Button ReviveButton;
+    [SerializeField] private Button LobbyButton;
 
     // [Header("Game Over Panel Ui Text")]
     // [SerializeField] public TextMeshProUGUI distanceText;
@@ -41,7 +33,8 @@ public class UiManager : MonoBehaviour
     
     [Header("Game Panel Ui Text")]
     [SerializeField] public Button startButton;
-    
+    [SerializeField] public TextMeshProUGUI HighScoreText;
+    [SerializeField] public TextMeshProUGUI AllCoinText;
     
     public void Awake()
     {
@@ -57,6 +50,8 @@ public class UiManager : MonoBehaviour
         quitButton.onClick.AddListener(OnQuitButtonClick);
         startButton.onClick.AddListener(OnStartButtonClick);
         optionButton.onClick.AddListener(ShowPausePanel);
+        
+        
     }
 
     private void OnStartButtonClick()
@@ -108,7 +103,6 @@ public class UiManager : MonoBehaviour
 
     public void OnHomeButtonClick()
     {
-        //진행하던걸 중지하고 다시 처음부터?
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
         
@@ -143,5 +137,16 @@ public class UiManager : MonoBehaviour
         gameManager.InGameCamera.enabled = true;
         GamePanel.SetActive(true);
     }
+    
+    public void HighScoreTextUpdate(int i)
+    {
+        HighScoreText.text = i.ToString();
+    }
+    
+    public void AllCoinTextUpdate(int i)
+    {
+        AllCoinText.text = i.ToString();
+    }
+
     
 }

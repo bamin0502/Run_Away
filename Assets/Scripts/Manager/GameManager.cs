@@ -37,18 +37,16 @@ public class GameManager : MonoBehaviour
     {
         disableObject.SetActive(false);
         jsonData.LoadGameData();
+
+        InGameCamera.enabled = false;
+        
     }
 
     private void OnApplicationQuit()
     {
         SaveGameData();
     }
-
-    private void Update()
-    {
-        
-    }
-
+    
     public void GameOver()
     {
 #if UNITY_EDITOR
@@ -66,12 +64,7 @@ public class GameManager : MonoBehaviour
     {
         jsonData.SaveGameData();
     }
-    public void PauseGame()
-    {
-        isPaused = true;
-        Time.timeScale = 0;
-    }
-
+    
     public void ResumeGame()
     {
         isPaused = false;
@@ -82,5 +75,6 @@ public class GameManager : MonoBehaviour
     {
         // 코인 획득 시 처리
         uiManager.UpdateCoinText(CoinCount++);
+        
     }
 }

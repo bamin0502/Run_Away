@@ -1,10 +1,9 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 public class BatteryManager : Singleton<BatteryManager>
 {
-    void Start()
+    private void Start()
     {
         StartCoroutine(CheckBatteryStatus());
     }

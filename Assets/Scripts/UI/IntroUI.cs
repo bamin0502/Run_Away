@@ -12,7 +12,7 @@ public class IntroUI : MonoBehaviour
     public Button startButton;
     private AsyncOperation asyncLoad;
 
-    void Start()
+    private void Start()
     {
         LoadNextSceneAsync().Forget();
         
@@ -26,13 +26,16 @@ public class IntroUI : MonoBehaviour
     private async UniTaskVoid LoadNextSceneAsync()
     {
         asyncLoad = SceneManager.LoadSceneAsync(1);
-        asyncLoad.allowSceneActivation = false;
-        
-        while (asyncLoad.progress < 0.9f)
+        if (asyncLoad != null)
         {
-            await UniTask.Yield();
+            asyncLoad.allowSceneActivation = false;
+
+            while (asyncLoad.progress < 0.9f)
+            {
+                await UniTask.Yield();
+            }
         }
-        
+
         if (text != null)
         {
             text.DOFade(1, fadeDuration).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
@@ -55,7 +58,7 @@ public class IntroUI : MonoBehaviour
 
     private async UniTask Delay(int milliseconds)
     {
-        float endTime = Time.realtimeSinceStartup + milliseconds / 1000f;
+        var endTime = Time.realtimeSinceStartup + milliseconds / 1000f;
         while (Time.realtimeSinceStartup < endTime)
         {
             await UniTask.Yield();

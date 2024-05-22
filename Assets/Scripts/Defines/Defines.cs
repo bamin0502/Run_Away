@@ -20,11 +20,7 @@ public class Int32DefaultConverter:Int32Converter
 {
     public override object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
     {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            return 0;
-        }
-        return base.ConvertFromString(text, row, memberMapData);
+        return string.IsNullOrWhiteSpace(text) ? 0 : base.ConvertFromString(text, row, memberMapData);
     }
 }
 

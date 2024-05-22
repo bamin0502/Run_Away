@@ -109,10 +109,12 @@ public class PlayerMovement : MonoBehaviour
             if (horizontal > 0.5f)
             {
                 TryMoveToLane(currentLaneIndex + 1);
+                
             }
             else if (horizontal < -0.5f)
             {
                 TryMoveToLane(currentLaneIndex - 1);
+                
             }
         }
         else
@@ -120,10 +122,12 @@ public class PlayerMovement : MonoBehaviour
             if (vertical > 0.5f) // 점프 중 다시 점프 불가
             {
                 PerformJump();
+                SoundManager.instance.PlaySfx(6);
             }
             else if (vertical < -0.5f)
             {
                 PerformSlide();
+                SoundManager.instance.PlaySfx(9);
             }
         }
     }
@@ -263,6 +267,7 @@ public class PlayerMovement : MonoBehaviour
     {
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
+        SoundManager.instance.PlaySfx(8);
         // 추가로 죽음 처리 로직 필요시 여기에 추가
         //deadParticle.Play();
     }

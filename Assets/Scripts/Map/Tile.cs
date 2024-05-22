@@ -42,12 +42,13 @@ public class Tile : MonoBehaviour
     
     private float moveSpeed;
     private float distanceTravelled = 0f;
+    
     [Header("일정 거리마다 속도 증가"),Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
     [SerializeField]private float nextSpeedIncreaseDistance = 20f;
     [SerializeField]public float initialMoveSpeed = 5f;
+    
     [Header("최대 속도"),Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
     [SerializeField]public float maxMoveSpeed = 15f;
-    
     
     void Awake()
     {

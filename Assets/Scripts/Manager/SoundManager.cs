@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
     public static SoundManager instance;
 
@@ -10,13 +8,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource SfxSource;
     public AudioClip[] BGM;
     public AudioClip[] SFX;
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-    }
+
     public void PlayBgm(int index)
     {
         BgmSource.clip = BGM[index];
