@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3926734683064073265}
   m_Layer: 0
   m_Name: ceiling
-  m_TagString: Untagged
+  m_TagString: WalkBy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 2084918038201739826}
   m_Layer: 0
   m_Name: ceiling (1)
-  m_TagString: Untagged
+  m_TagString: WalkBy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

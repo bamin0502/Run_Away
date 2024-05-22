@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2300702841596702757}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -223,8 +223,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.0320306, y: 2.9792385, z: 0.71574116}
-  m_Center: {x: 0.0020151138, y: 1.4896193, z: 3.9698005}
+  m_Size: {x: 2.0320306, y: 2.9792385, z: 8.728621}
+  m_Center: {x: 0.0020151138, y: 1.4896193, z: -0.036639452}
 --- !u!205 &5296784116002679556
 LODGroup:
   m_ObjectHideFlags: 0

@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1481485843952967925}
   m_Layer: 0
   m_Name: LorryTrailer
-  m_TagString: Wall
+  m_TagString: WalkBy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,6 +120,7 @@ Transform:
   - {fileID: 2433178247364286917}
   - {fileID: 6666319209495708649}
   - {fileID: 1196825716816815304}
+  - {fileID: 3296278470888785962}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &160486845965935494
@@ -141,8 +142,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1700497, y: 2.905154, z: 12.682824}
-  m_Center: {x: -0.014000654, y: 0.44552374, z: 0.35085726}
+  m_Size: {x: 2.1700497, y: 0.08472681, z: 12.551912}
+  m_Center: {x: -0.014000654, y: 1.8557372, z: 0.41631317}
 --- !u!205 &5253933735294873013
 LODGroup:
   m_ObjectHideFlags: 0
@@ -262,6 +263,59 @@ Transform:
   - {fileID: 2760385256504475266}
   m_Father: {fileID: 6666319209889459021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3246760542555494300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3296278470888785962}
+  - component: {fileID: 7255641904780748541}
+  m_Layer: 0
+  m_Name: Wall
+  m_TagString: Wall
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3296278470888785962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3246760542555494300}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6666319209889459021}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7255641904780748541
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3246760542555494300}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.2892008, y: 2.4123034, z: 13.101581}
+  m_Center: {x: -0.01258564, y: 0.36217448, z: 0.44882727}
 --- !u!1 &3791949240563366687
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,7 +413,7 @@ GameObject:
   - component: {fileID: 1444493780372190289}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Wall
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
