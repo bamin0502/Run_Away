@@ -64,11 +64,18 @@ public class UiManager : MonoBehaviour
 #if UNITY_EDITOR
         Debug.Log("Start");
 #endif
-        
-        if(gameManager.isTutorialActive)
+
+        if (gameManager.isTutorialActive)
+        {
             tutorialManager.StartTutorial(StartGame);
+            GameMenuPanel.SetActive(false);
+        }
         else
+        {
             StartGame();
+            GameMenuPanel.SetActive(false);
+        }
+           
     }
 
     public void ShowPausePanel()
@@ -137,7 +144,6 @@ public class UiManager : MonoBehaviour
 
     public void StartGame()
     {
-        GameMenuPanel.SetActive(false);
         gameManager.isPlaying = true;
         gameManager.MenuCamera.enabled = false;
         gameManager.InGameCamera.enabled = true;
