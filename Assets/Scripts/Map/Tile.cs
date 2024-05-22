@@ -25,6 +25,9 @@ public class Tile : MonoBehaviour
     private GameObject primaryItemPrefab;
     private List<GameObject> otherItemPrefabs;
 
+    private Queue<GameObject> itemPool = new Queue<GameObject>();
+    private Queue<GameObject> obstaclePool = new Queue<GameObject>();
+
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;
     private float totalDistance = 0f;
@@ -198,33 +201,23 @@ public class Tile : MonoBehaviour
 
             if (selectedLanes.Contains(lanePosition))
             {
-                var obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
-                var obstacleCollider = obstaclePrefab.GetComponent<Collider>();
+                GameObject obstaclePrefab;
 
-                if (!obstacleCollider)
+                if (obstaclePool.Count > 0)
                 {
-#if UNITY_EDITOR
-                    Debug.LogWarning($"Obstacle prefab {obstaclePrefab.name} does not have a Collider component.");
-#endif
-                    continue;
+                    obstaclePrefab = obstaclePool.Dequeue();
+                    obstaclePrefab.transform.position = spawnPoint.position;
+                    obstaclePrefab.transform.rotation = spawnPoint.rotation;
+                    obstaclePrefab.SetActive(true);
+                    obstaclePrefab.transform.SetParent(tile, true);
                 }
-
-                var bounds = obstacleCollider.bounds;
-                var obstacleSize = bounds.size;
-                var obstacleCenter = spawnPoint.position + bounds.center;
-
-                if (Physics.OverlapBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")).Length == 0)
+                else
                 {
+                    obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
                     var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
                     obstacle.transform.SetParent(tile, true);
 #if UNITY_EDITOR
                     Debug.Log($"Spawned obstacle: {obstacle.name} at position: {spawnPoint.position}");
-#endif
-                }
-                else
-                {
-#if UNITY_EDITOR
-                    Debug.LogWarning($"Spawn point at {spawnPoint.position} is already occupied by another obstacle.");
 #endif
                 }
             }
@@ -235,6 +228,7 @@ public class Tile : MonoBehaviour
     {
         var tile = tiles[0];
         tiles.RemoveAt(0);
+        tiles.Add(tile);
 
         // 기존 타일의 장애물 제거
         foreach (Transform child in tile)
@@ -242,8 +236,17 @@ public class Tile : MonoBehaviour
             if (child.CompareTag("Obstacle"))
             {
                 child.gameObject.SetActive(false);
+                obstaclePool.Enqueue(child.gameObject);
+            }
+            else if (child.CompareTag("Item"))
+            {
+                child.gameObject.SetActive(false);
+                itemPool.Enqueue(child.gameObject);
             }
         }
+
+        // 타일 위치 재설정
+        tile.position = tiles[^2].position + new Vector3(0, 0, tileLength);
 
         // 새로운 섹션 타입 무작위 선택
         var newSectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
@@ -251,9 +254,7 @@ public class Tile : MonoBehaviour
 
         if (newSectionTypeComponent != null)
         {
-            tile.position = tiles[^1].position + new Vector3(0, 0, tileLength);
             tile.GetComponent<SectionType>().sectionType = newSectionTypeComponent.sectionType;
-
             SpawnObstacles(tile, newSectionTypeComponent.sectionType);
         }
         else
@@ -263,7 +264,6 @@ public class Tile : MonoBehaviour
 #endif
         }
 
-        tiles.Add(tile);
         SpawnItems(tile);
     }
 
@@ -280,7 +280,14 @@ public class Tile : MonoBehaviour
 
             if (!IsObstacleAtPosition(randomPosition))
             {
-                SpawnCoinLine(randomPosition, selectedLane, tile);
+                if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
+                {
+                    SpawnSingleItem(randomPosition, tile, false);
+                }
+                else
+                {
+                    SpawnCoinLine(randomPosition, selectedLane, tile);
+                }
                 previousItemPosition = randomPosition;
                 isFirstItem = false;
                 break;
@@ -320,19 +327,22 @@ public class Tile : MonoBehaviour
             else
             {
                 float otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
-                if (Random.value < otherItemSpawnChance)
-                {
-                    itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
-                }
-                else
-                {
-                    itemPrefab = primaryItemPrefab;
-                    Vector3.Distance(previousItemPosition, position);
-                }
+                itemPrefab = Random.value < otherItemSpawnChance ? otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)] : primaryItemPrefab;
             }
         }
 
-        var item = Instantiate(itemPrefab, position, Quaternion.identity);
+        GameObject item;
+        if (itemPool.Count > 0)
+        {
+            item = itemPool.Dequeue();
+            item.transform.position = position;
+            item.transform.rotation = Quaternion.identity;
+            item.SetActive(true);
+        }
+        else
+        {
+            item = Instantiate(itemPrefab, position, Quaternion.identity);
+        }
         item.transform.SetParent(tile, true);
 
         var itemTypeComponent = item.GetComponent<ItemType>();

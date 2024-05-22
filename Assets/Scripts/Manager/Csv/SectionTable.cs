@@ -53,10 +53,21 @@ public class SectionTable : DataTable
             var sectionPrefab = Resources.Load<GameObject>(fullPath);
             if (sectionPrefab != null)
             {
-                loadedSections.Add(sectionPrefab);
+                var sectionInstance = (sectionPrefab);
+                var sectionTypeComponent = sectionInstance.GetComponent<SectionType>();
+                if (sectionTypeComponent == null)
+                {
+                    sectionTypeComponent = sectionInstance.AddComponent<SectionType>();
+                }
+                sectionTypeComponent.SectionID = section.SectionID;
+                sectionTypeComponent.SectionName = section.SectionName;
+                sectionTypeComponent.SectionTypeNum = section.SectionType;
+                sectionTypeComponent.SectionDistance = section.SectionDistance;
+                
                 #if UNITY_EDITOR
                 Debug.Log($"Successfully loaded section prefab: {fullPath}");
                 #endif
+                loadedSections.Add(sectionInstance);
             }
             else
             {
