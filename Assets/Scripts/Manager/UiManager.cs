@@ -110,7 +110,7 @@ public class UiManager : MonoBehaviour
     {
         //진행하던걸 중지하고 다시 처음부터?
         Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
         
     }
 
@@ -130,13 +130,7 @@ public class UiManager : MonoBehaviour
         Debug.Log("Quit");
 #endif
     }
-
-    private void OnRestartButtonClick()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
+    
     public void UpdateCoinText(int i)
     {
         coinText.text = i.ToString();

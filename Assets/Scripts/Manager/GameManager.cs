@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     
     public bool isFeverMode = false;
     public int CoinCount = 0;
+    public int HighScore = 0;
     
     private UiManager uiManager;
     private JsonData jsonData;

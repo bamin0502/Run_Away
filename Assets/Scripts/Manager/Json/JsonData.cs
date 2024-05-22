@@ -8,6 +8,8 @@ public class GameData
 {
     public int coin;
     public bool tutorialActive;
+    public int HighScore;
+    
 }
 
 
@@ -29,7 +31,7 @@ public class JsonData : MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         
         //데이터 초기화 함수(밑에 주석을 제거하고 실행하면 됨)
-        ResetGameData();
+        //ResetGameData();
         
         
         LoadGameData();
@@ -39,7 +41,7 @@ public class JsonData : MonoBehaviour
     {
         gameData.coin=gameManager.CoinCount;
         gameData.tutorialActive = gameManager.isTutorialActive;
-        
+        gameData.HighScore = gameManager.HighScore;
         string filePath= GetFilePath("gameData.json");
         string jsonData = JsonConvert.SerializeObject(gameData);
         File.WriteAllText(filePath,jsonData);
