@@ -38,13 +38,15 @@ public class PlayerAni : MonoBehaviour
             SetDeathAnimation();
             deathTrigger = true;
         }
+        
+        
     }
 
     public void SetRunAnimation()
     {
         ani.SetBool(IsRun, true);
-        ani.SetBool(IsJump, false);
         ani.SetBool(IsSlide, false);
+        ani.SetBool(IsJump, false);
     }
 
     public void SetJumpAnimation()

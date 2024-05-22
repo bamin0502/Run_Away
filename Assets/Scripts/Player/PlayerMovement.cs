@@ -7,7 +7,6 @@ public class PlayerMovement : MonoBehaviour
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
     private GameManager gameManager;
-    //private ParticleSystem deadParticle;
     public float jumpForce = 3f;
     public float slideForce = -10f;
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
@@ -27,7 +26,6 @@ public class PlayerMovement : MonoBehaviour
     private bool isSliding;
     private bool isCollidingFront;
 
-    // 슬라이드 전 콜라이더 원래 값 저장용
     private Vector3 originalColliderCenter;
     private Vector3 originalColliderSize;
 
@@ -37,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
         playerAni = GetComponent<PlayerAni>();
         boxCollider = GetComponent<BoxCollider>();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        // 원래 콜라이더 값 저장
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
     }
@@ -55,7 +52,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-
         if (swipeDirection == Defines.SwipeDirection.SLIDE)
         {
             slideTimer -= Time.deltaTime;
@@ -65,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
                 isSliding = false;
                 playerAni.SetRunAnimation();
 
-                // 콜라이더 원래 값으로 되돌림
                 boxCollider.center = originalColliderCenter;
                 boxCollider.size = originalColliderSize;
             }
@@ -80,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
             UpdateMovement(pendingMovement);
             pendingMovement = Vector2.zero;
         }
-
     }
 
     private void FixedUpdate()
@@ -93,8 +87,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isJumping)
         {
-            var mass = rb.mass;
-            rb.AddForce(Physics.gravity * (mass * mass), ForceMode.Force);
+            rb.AddForce(Physics.gravity * rb.mass, ForceMode.Force);
         }
     }
 
@@ -113,22 +106,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (Mathf.Abs(horizontal) > Mathf.Abs(vertical))
         {
-            if (horizontal > 0.7f)
+            if (horizontal > 0.5f)
             {
                 TryMoveToLane(currentLaneIndex + 1);
             }
-            else if (horizontal < -0.7f)
+            else if (horizontal < -0.5f)
             {
                 TryMoveToLane(currentLaneIndex - 1);
             }
         }
         else
         {
-            if (vertical > 0.5f && !isJumping) // 점프 중 다시 점프 불가
+            if (vertical > 0.5f) // 점프 중 다시 점프 불가
             {
                 PerformJump();
             }
-            else if (vertical < -0.7f)
+            else if (vertical < -0.5f)
             {
                 PerformSlide();
             }
@@ -137,6 +130,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void PerformJump()
     {
+        if (isJumping) return;
+
         var velocity = rb.velocity;
         velocity = new Vector3(velocity.x, 0, velocity.z);
         rb.velocity = velocity;
@@ -146,7 +141,6 @@ public class PlayerMovement : MonoBehaviour
         isSliding = false;
         playerAni.SetJumpAnimation();
 
-        // 콜라이더 원래 값으로 되돌림
         boxCollider.center = originalColliderCenter;
         boxCollider.size = originalColliderSize;
     }
@@ -162,13 +156,12 @@ public class PlayerMovement : MonoBehaviour
             isJumping = false;
         }
 
-        if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f)) // 슬라이드 전방 장애물 검사
+        if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f))
         {
 #if UNITY_EDITOR
             Debug.Log("Obstacle detected during slide"); 
 #endif
-            
-            Die(); // 장애물이 있으면 슬라이드 중 죽음
+            Die();
             return;
         }
 
@@ -177,14 +170,13 @@ public class PlayerMovement : MonoBehaviour
         isSliding = true;
         playerAni.SetSlideAnimation();
 
-        // 슬라이드 시 콜라이더 값 변경
         boxCollider.center = new Vector3(0, 0.45f, 0.15f);
         boxCollider.size = new Vector3(0.6f, 0.6f, 0.75f);
     }
 
     private void TryMoveToLane(int newLaneIndex)
     {
-        if (isCollidingFront) return; // 충돌 중일 때는 레인 변경을 막음
+        if (isCollidingFront) return;
 
         lastPosition = rb.position;
         lastLaneIndex = currentLaneIndex;
@@ -262,7 +254,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.CompareTag("Item"))
         {
-            // 아이템 효과 발동 예정
             other.gameObject.SetActive(false);
             other.GetComponent<Item>().Use();
         }
