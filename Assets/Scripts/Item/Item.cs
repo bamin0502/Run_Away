@@ -6,6 +6,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     private GameManager gameManager;
+
     private void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();    
@@ -28,6 +29,7 @@ public class Item : MonoBehaviour
             case ItemType.Coin:
                 Debug.Log("코인 획득");
                 gameManager.AddCoin();
+
                 break;
             case ItemType.JumpUp:
                 Debug.Log("점프력 증가");

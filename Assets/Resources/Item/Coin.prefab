@@ -139,8 +139,6 @@ MonoBehaviour:
   itemPrice: 0
   itemAmount: 1
   itemDuration: 0
-  itemInformation: "\uCF54\uC778\uC744 \uD68D\uB4DD\uD569\uB2C8\uB2E4. \uCF54\uC778
-    \uD68D\uB4DD \uC2DC \uD53C\uBC84\uAC8C\uC774\uC9C0\uB97C 1 \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4."
 --- !u!114 &-3554380048493973288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,3 +164,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77df4dc974921114eb7c2ffa0bf75119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemSound: []
+  itemType: 0

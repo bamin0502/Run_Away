@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    void Awake()
+    public static SoundManager instance;
+
+    public AudioSource BgmSource;
+    public AudioSource SfxSource;
+    public AudioClip[] BGM;
+    public AudioClip[] SFX;
+    private void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
-
-    void Start()
+    public void PlayBgm(int index)
     {
-        
+        BgmSource.clip = BGM[index];
+        BgmSource.Play();
     }
-
-
-    void Update()
+    public void PlaySfx(int index)
     {
-        
+        SfxSource.PlayOneShot(SFX[index]);
     }
 }

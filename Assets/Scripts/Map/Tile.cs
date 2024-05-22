@@ -78,7 +78,6 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
-        
         nextTilePosition = startPoint;
         for (var i = 0; i < numberOfTiles; i++)
         {
