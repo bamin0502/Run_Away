@@ -406,6 +406,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82208632}
   m_CullTransparentMesh: 1
+--- !u!198 &198499883 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7233749419796250879, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+  m_PrefabInstance: {fileID: 3267180963829084152}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &207209074
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,8 +834,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.31105, y: -45}
-  m_SizeDelta: {x: 300.6221, y: 90}
+  m_AnchoredPosition: {x: 150, y: -45}
+  m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &348817809
 MonoBehaviour:
@@ -1215,8 +1220,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.31105, y: -135}
-  m_SizeDelta: {x: 300.6221, y: 90}
+  m_AnchoredPosition: {x: 150, y: -135}
+  m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &508662437
 MonoBehaviour:
@@ -1256,6 +1261,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508662435}
   m_CullTransparentMesh: 1
+--- !u!1 &519956091 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4845182378957180857, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+  m_PrefabInstance: {fileID: 3267180963829084152}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &528785916
 GameObject:
   m_ObjectHideFlags: 0
@@ -2449,8 +2459,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.31105, y: -405}
-  m_SizeDelta: {x: 300.6221, y: 90}
+  m_AnchoredPosition: {x: 150, y: -405}
+  m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &706610792
 MonoBehaviour:
@@ -4051,8 +4061,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.31105, y: -225}
-  m_SizeDelta: {x: 300.6221, y: 90}
+  m_AnchoredPosition: {x: 150, y: -225}
+  m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068621608
 MonoBehaviour:
@@ -4477,6 +4487,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1289560688}
   m_CullTransparentMesh: 1
+--- !u!198 &1306647231 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5928308596736553316, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+  m_PrefabInstance: {fileID: 3267180963829084152}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1349700534
 GameObject:
   m_ObjectHideFlags: 0
@@ -4645,8 +4660,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.31105, y: -315}
-  m_SizeDelta: {x: 300.6221, y: 90}
+  m_AnchoredPosition: {x: 150, y: -315}
+  m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1424351532
 MonoBehaviour:
@@ -4727,6 +4742,9 @@ MonoBehaviour:
   disableObject: {fileID: 4305881893122355308}
   MenuCamera: {fileID: 2001701949}
   InGameCamera: {fileID: 929700432}
+  jumpEffect: {fileID: 198499883}
+  magnetEffect: {fileID: 1306647231}
+  feverEffect: {fileID: 2036867627}
 --- !u!4 &1504525080
 Transform:
   m_ObjectHideFlags: 0
@@ -6837,7 +6855,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200.31105, y: -400}
+  m_AnchoredPosition: {x: 200, y: -400}
   m_SizeDelta: {x: 350, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1867764506
@@ -7151,7 +7169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7176,6 +7194,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016964742}
   m_CullTransparentMesh: 1
+--- !u!198 &2036867627 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5587446418101651405, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+  m_PrefabInstance: {fileID: 3267180963829084152}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2075770048
 GameObject:
   m_ObjectHideFlags: 0
@@ -10361,7 +10384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5587446418101651405, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
       propertyPath: looping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6634526861616014009, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
       propertyPath: jumpForce
@@ -10410,7 +10433,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4845182378957180857, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+      insertIndex: 6
+      addedObject: {fileID: 4625979568379758979}
   m_SourcePrefab: {fileID: 100100000, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
 --- !u!23 &3457160155685546085
 MeshRenderer:
@@ -12281,6 +12307,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9126386466993036448, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
   m_PrefabInstance: {fileID: 3267180963829084152}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4625979568379758979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519956091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4964d4a00ed795d4ba6f1d5d588dbde8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magnetRadius: 5
+  magnetForce: 10
 --- !u!64 &4748468856889193670
 MeshCollider:
   m_ObjectHideFlags: 0

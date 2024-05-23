@@ -27,7 +27,15 @@ public class GameManager : MonoBehaviour
     [Header("시작후에 비출 카메라")] 
     [SerializeField] public CinemachineVirtualCamera InGameCamera;
 
-    private IDisposable currentEffect;
+    [Header("아이템 이펙트 관련")]
+    private IDisposable currentJumpEffect;
+    private IDisposable currentMagnetEffect;
+    private IDisposable currentFeverEffect;
+    public ParticleSystem jumpEffect;
+    public ParticleSystem magnetEffect;
+    public ParticleSystem feverEffect;
+    private IDisposable blinkSubscription;
+    
     private PlayerMovement playerMovement;
 
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
@@ -82,14 +90,31 @@ public class GameManager : MonoBehaviour
     {
         // 코인 획득 시 처리
         uiManager.UpdateCoinText(CoinCount++);
-        
     }
     
     public void IncreaseJumpPower(float amount, float duration)
     {
-        currentEffect?.Dispose();
+        currentJumpEffect?.Dispose();
+        blinkSubscription?.Dispose();
+        
+        jumpEffect.Play();
+        
+        blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
+            .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
+            .Subscribe(t =>
+            {
+                if (jumpEffect.isPlaying)
+                {
+                    jumpEffect.Stop();
+                }
+                else
+                {
+                    jumpEffect.Play();
+                }
+            });
+
         playerMovement.AdjustJumpPower(amount);
-        currentEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
+        currentJumpEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
             .Subscribe(_ => ResetJumpPower(amount));
     }
 
@@ -100,17 +125,51 @@ public class GameManager : MonoBehaviour
 
     public void ActivateMagnetEffect(float duration)
     {
-        currentEffect?.Dispose();
+        currentMagnetEffect?.Dispose();
+        blinkSubscription?.Dispose();
+        
         IsMagnetEffectActive.Value = true;
-        currentEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
+        magnetEffect.Play();
+        
+        blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
+            .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
+            .Subscribe(t =>
+            {
+                if (magnetEffect.isPlaying)
+                {
+                    magnetEffect.Stop();
+                }
+                else
+                {
+                    magnetEffect.Play();
+                }
+            });
+        currentMagnetEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
             .Subscribe(_ => IsMagnetEffectActive.Value = false);
     }
     
     public void ActivateFeverMode(float duration)
     {
-        currentEffect?.Dispose();
+        currentFeverEffect?.Dispose();
+        blinkSubscription?.Dispose();
+        
         IsFeverModeActive.Value = true;
-        currentEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
+        feverEffect.Play();
+        
+        blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
+            .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
+            .Subscribe(t =>
+            {
+                if (feverEffect.isPlaying)
+                {
+                    feverEffect.Stop();
+                }
+                else
+                {
+                    feverEffect.Play();
+                }
+            });
+        currentFeverEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
             .Subscribe(_ => IsFeverModeActive.Value = false);
     }
 }

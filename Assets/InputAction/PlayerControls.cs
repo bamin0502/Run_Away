@@ -105,6 +105,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Home"",
+                    ""type"": ""Button"",
+                    ""id"": ""8d58b734-2536-4ba9-8277-f2af00a1fdfd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -127,6 +136,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Mobile"",
                     ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""419882c7-8133-4e8b-b1b3-cc566c1ad503"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Home"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -165,6 +185,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
+        m_UI_Home = m_UI.FindAction("Home", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -281,11 +302,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_Back;
+    private readonly InputAction m_UI_Home;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
         public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Back => m_Wrapper.m_UI_Back;
+        public InputAction @Home => m_Wrapper.m_UI_Home;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -298,6 +321,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Back.started += instance.OnBack;
             @Back.performed += instance.OnBack;
             @Back.canceled += instance.OnBack;
+            @Home.started += instance.OnHome;
+            @Home.performed += instance.OnHome;
+            @Home.canceled += instance.OnHome;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -305,6 +331,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Back.started -= instance.OnBack;
             @Back.performed -= instance.OnBack;
             @Back.canceled -= instance.OnBack;
+            @Home.started -= instance.OnHome;
+            @Home.performed -= instance.OnHome;
+            @Home.canceled -= instance.OnHome;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -348,5 +377,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnBack(InputAction.CallbackContext context);
+        void OnHome(InputAction.CallbackContext context);
     }
 }

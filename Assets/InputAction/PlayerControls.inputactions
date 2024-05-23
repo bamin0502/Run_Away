@@ -83,6 +83,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Home",
+                    "type": "Button",
+                    "id": "8d58b734-2536-4ba9-8277-f2af00a1fdfd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -105,6 +114,17 @@
                     "processors": "",
                     "groups": "Mobile",
                     "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "419882c7-8133-4e8b-b1b3-cc566c1ad503",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Home",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
     private GameObject primaryItemPrefab;
     private List<GameObject> otherItemPrefabs;
 
-    private Queue<GameObject> itemPool = new Queue<GameObject>();
+    public Queue<GameObject> itemPool = new Queue<GameObject>();
     private Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
     private Vector3 previousItemPosition = Vector3.zero;
@@ -123,7 +123,7 @@ public class Tile : MonoBehaviour
             if (itemSpawnTimer >= itemSpawnInterval)
             {
                 itemSpawnTimer = 0f;
-                SpawnItems(null); // 모든 아이템을 생성합니다.
+                SpawnItems(tiles[^1]); // 마지막 타일에 아이템을 생성합니다.
             }
         }
     }
@@ -241,7 +241,7 @@ public class Tile : MonoBehaviour
         tiles.RemoveAt(0);
         tiles.Add(tile);
 
-        // 기존 타일의 장애물 제거
+        // 기존 타일의 장애물 및 아이템 제거
         foreach (Transform child in tile)
         {
             if (child.CompareTag("Obstacle"))
@@ -275,12 +275,17 @@ public class Tile : MonoBehaviour
 #endif
         }
 
-        SpawnItems(tile);
+        SpawnItems(tile); // 재사용 타일에 아이템을 생성합니다.
     }
 
     private void SpawnItems(Transform tile)
     {
-        var bounds = tile ? tile.GetComponentInChildren<Collider>().bounds : new Bounds(Vector3.zero, Vector3.one * 50f); // 기본 bounds 설정
+        if (tile == null)
+        {
+            return;
+        }
+
+        var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
         foreach (var lane in lanePositions)
