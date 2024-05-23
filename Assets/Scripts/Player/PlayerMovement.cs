@@ -224,8 +224,16 @@ public class PlayerMovement : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit an obstacle, game over!");
 #endif
-            gameManager.GameOver();
-            Die();
+            if(gameManager.IsFeverModeActive.Value)
+            {
+                other.gameObject.SetActive(false);
+                return;
+            }
+            else
+            {
+                gameManager.GameOver();
+                Die();
+            }
         }
 
         if (other.collider.CompareTag("Wall"))
@@ -267,5 +275,32 @@ public class PlayerMovement : MonoBehaviour
         //SoundManager.instance.PlaySfx(8);
         // 추가로 죽음 처리 로직 필요시 여기에 추가
         //deadParticle.Play();
+    }
+    
+    public void AdjustJumpPower(float amount)
+    {
+        jumpForce += amount;
+    }
+
+    public void ResetJumpPower(float originalJumpForce)
+    {
+        jumpForce = originalJumpForce;
+    }
+    
+    public void Revive()
+    {
+        playerAni.SetRunAnimation();
+        swipeDirection = Defines.SwipeDirection.RUN;
+        isJumping = false;
+        isSliding = false;
+        isCollidingFront = false;
+        rb.position = new Vector3(0, 0.5f, 0);
+        rb.velocity = Vector3.zero;
+        currentLaneIndex = 1;
+        targetPosition = new Vector3(0, 0.5f, 0);
+        lastPosition = targetPosition;
+        lastLaneIndex = currentLaneIndex;
+        boxCollider.center = originalColliderCenter;
+        boxCollider.size = originalColliderSize;
     }
 }

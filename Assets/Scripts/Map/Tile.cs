@@ -12,7 +12,6 @@ public class Tile : MonoBehaviour
     
     public float moveSpeedIncreaseDistance = 20f; 
     public float moveSpeedMultiplier = 1.05f; 
-    
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
@@ -42,14 +41,17 @@ public class Tile : MonoBehaviour
     
     private float moveSpeed;
     private float distanceTravelled = 0f;
+
+    [Header("일정 거리마다 속도 증가"), Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
+    [SerializeField] private float nextSpeedIncreaseDistance = 20f;
+    [SerializeField] public float initialMoveSpeed = 5f;
     
-    [Header("일정 거리마다 속도 증가"),Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
-    [SerializeField]private float nextSpeedIncreaseDistance = 20f;
-    [SerializeField]public float initialMoveSpeed = 5f;
-    
-    [Header("최대 속도"),Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
-    [SerializeField]public float maxMoveSpeed = 15f;
-    
+    [Header("최대 속도"), Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
+    [SerializeField] public float maxMoveSpeed = 15f;
+
+    private float itemSpawnInterval = 2f; // 2 seconds interval for testing
+    private float itemSpawnTimer = 0f;
+
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -115,6 +117,14 @@ public class Tile : MonoBehaviour
 
             totalDistance += moveSpeed * Time.deltaTime;
             gameManager.stageSpeed = moveSpeed; 
+
+            // 아이템 주기적으로 생성
+            itemSpawnTimer += Time.deltaTime;
+            if (itemSpawnTimer >= itemSpawnInterval)
+            {
+                itemSpawnTimer = 0f;
+                SpawnItems(null); // 모든 아이템을 생성합니다.
+            }
         }
     }
 
@@ -270,28 +280,29 @@ public class Tile : MonoBehaviour
 
     private void SpawnItems(Transform tile)
     {
-        var bounds = tile.GetComponentInChildren<Collider>().bounds;
+        var bounds = tile ? tile.GetComponentInChildren<Collider>().bounds : new Bounds(Vector3.zero, Vector3.one * 50f); // 기본 bounds 설정
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
-        float selectedLane = lanePositions[Random.Range(0, lanePositions.Length)];
-
-        for (int attempts = 0; attempts < 10; attempts++)
+        foreach (var lane in lanePositions)
         {
-            var randomPosition = new Vector3(selectedLane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
-
-            if (!IsObstacleAtPosition(randomPosition))
+            for (int attempts = 0; attempts < 10; attempts++)
             {
-                if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
+                var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+
+                if (!IsObstacleAtPosition(randomPosition))
                 {
-                    SpawnSingleItem(randomPosition, tile, false);
+                    if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
+                    {
+                        SpawnSingleItem(randomPosition, tile, false);
+                    }
+                    else
+                    {
+                        SpawnCoinLine(randomPosition, lane, tile);
+                    }
+                    previousItemPosition = randomPosition;
+                    isFirstItem = false;
+                    break;
                 }
-                else
-                {
-                    SpawnCoinLine(randomPosition, selectedLane, tile);
-                }
-                previousItemPosition = randomPosition;
-                isFirstItem = false;
-                break;
             }
         }
     }
@@ -318,18 +329,7 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            float currentDistance = Vector3.Distance(Vector3.zero, position);
-
-            if (totalDistance >= specialItemSpawnDistance)
-            {
-                itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
-                totalDistance = 0f;
-            }
-            else
-            {
-                float otherItemSpawnChance = Mathf.Clamp(initialOtherItemSpawnChance + (currentDistance * distanceFactor), initialOtherItemSpawnChance, maxOtherItemSpawnChance);
-                itemPrefab = Random.value < otherItemSpawnChance ? otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)] : primaryItemPrefab;
-            }
+            itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
         }
 
         GameObject item;
@@ -344,7 +344,10 @@ public class Tile : MonoBehaviour
         {
             item = Instantiate(itemPrefab, position, Quaternion.identity);
         }
-        item.transform.SetParent(tile, true);
+        if (tile != null)
+        {
+            item.transform.SetParent(tile, true);
+        }
 
         var itemTypeComponent = item.GetComponent<ItemType>();
         if (itemTypeComponent)
