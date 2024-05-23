@@ -30,9 +30,7 @@ public class Item : MonoBehaviour
 #if UNITY_EDITOR
                 Debug.Log("코인 획득");  
 #endif
-                
                 gameManager.AddCoin();
-                
                 break;
             case ItemType.JumpUp:
 #if UNITY_EDITOR

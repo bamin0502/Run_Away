@@ -68,7 +68,6 @@ public class GameManager : MonoBehaviour
         else
         {
             isPaused = false;
-            Time.timeScale = 1;
         }
     }
 
