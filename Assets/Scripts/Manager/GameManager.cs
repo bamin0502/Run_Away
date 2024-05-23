@@ -1,9 +1,9 @@
 using System;
 using Cinemachine;
 using UnityEngine;
-using TMPro;
 using UniRx;
 using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
         InGameCamera.enabled = false;
         CurrentScore = 0;
         uiManager.UpdateScoreText(CurrentScore);
+        SoundManager.Instance.PlayBgm(0);
     }
 
     private void OnApplicationQuit()
@@ -91,9 +92,8 @@ public class GameManager : MonoBehaviour
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif
-        uiManager.UpdateResultCoinText(CurrentGameCoins);
-        uiManager.UpdateResultScoreText(CurrentScore);
-        uiManager.ShowGameOverPanel();
+        // 2초 동안 기다리는 로직 구현
+        
     }
     public void OnHomeButtonClick()
     {
@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
         // 로비로 돌아갈 때 총 코인 업데이트
         uiManager.UpdateAllCoinText(TotalCoins);
+        
     }
     public void SaveGameData()
     {
@@ -210,6 +211,7 @@ public class GameManager : MonoBehaviour
             CurrentScore = (int) distanceTravelled * scorePerDistance;
             uiManager.UpdateScoreText(CurrentScore);
         }
+
     }
 
 

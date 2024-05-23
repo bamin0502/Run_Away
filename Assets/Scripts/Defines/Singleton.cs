@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static T instance = null;
+    public static T instance = null;
 
     public static T Instance
     {
@@ -24,7 +24,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
-    public virtual void Awake()
+    protected virtual void Awake()
     {
         if (instance == null)
         {

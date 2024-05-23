@@ -272,7 +272,7 @@ public class PlayerMovement : MonoBehaviour
     {
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
-        //SoundManager.instance.PlaySfx(8);
+        SoundManager.instance.PlaySfx(1);
         // 추가로 죽음 처리 로직 필요시 여기에 추가
         //deadParticle.Play();
     }
