@@ -231,11 +231,10 @@ public class PlayerMovement : MonoBehaviour
                 other.gameObject.SetActive(false);
                 return;
             }
-            else
-            {
-                gameManager.GameOver();
-                Die();
-            }
+
+            gameManager.GameOver();
+            Die();
+            
         }
 
         if (other.collider.CompareTag("Wall"))
@@ -243,9 +242,23 @@ public class PlayerMovement : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit a wall, returning to last position.");
 #endif
+            if(gameManager.IsFeverModeActive.Value)
+            {
+                other.gameObject.SetActive(false);
+                return;
+            }
+            
             targetPosition = lastPosition;
             rb.position = lastPosition;
             currentLaneIndex = lastLaneIndex;
+        }
+
+        if (other.collider.CompareTag("WalkBy"))
+        {
+            if(gameManager.IsFeverModeActive.Value)
+            {
+                other.gameObject.SetActive(false);
+            }
         }
     }
 
