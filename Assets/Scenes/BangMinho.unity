@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19024575, g: 0.59238213, b: 0.7717469, a: 1}
+  m_IndirectSpecularColor: {r: 0.19025037, g: 0.59239954, b: 0.7717345, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5725,8 +5725,8 @@ MonoBehaviour:
   disableObject: {fileID: 4305881893122355308}
   MenuCamera: {fileID: 2001701949}
   InGameCamera: {fileID: 929700432}
-  jumpEffect: {fileID: 198499883}
-  magnetEffect: {fileID: 1306647231}
+  jumpEffect: {fileID: 1306647231}
+  magnetEffect: {fileID: 198499883}
   feverEffect: {fileID: 2036867627}
 --- !u!4 &1504525080
 Transform:
