@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 965219467811725285}
   - component: {fileID: 3087104669195027299}
   - component: {fileID: 2460773650140814214}
+  - component: {fileID: 526407879103966501}
   m_Layer: 0
   m_Name: Bus_3
   m_TagString: Obstacle
@@ -107,8 +108,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9347457, y: 2.9792385, z: 0.38908958}
-  m_Center: {x: -0.019009411, y: 1.4896193, z: -4.0011234}
+  m_Size: {x: 1.9347457, y: 2.9792385, z: 0.29076123}
+  m_Center: {x: -0.019009411, y: 1.4896193, z: -4.0502877}
 --- !u!205 &3087104669195027299
 LODGroup:
   m_ObjectHideFlags: 0
@@ -151,6 +152,27 @@ MonoBehaviour:
   obstacleType: 3
   obstacleSpeed: 0
   obstacleSection: 2
+--- !u!65 &526407879103966501
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4460023217449692128}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.5221791, y: 2.9792385, z: 0.19309711}
+  m_Center: {x: 0, y: 1.4896193, z: 4.3145976}
 --- !u!1 &6039721870542474635
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,8 +224,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.5073104, y: 0.2685275, z: 8.065039}
-  m_Center: {x: -0.0033972263, y: 1.5956216, z: 0.12122941}
+  m_Size: {x: 2.5073104, y: 0.2685275, z: 7.8925943}
+  m_Center: {x: -0.0033972263, y: 1.5956216, z: 0.20745134}
 --- !u!1 &8217687102773977814
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,5 +277,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.5073104, y: 2.8733778, z: 7.931557}
-  m_Center: {x: -0.0033972263, y: 0.04395032, z: 0.18370175}
+  m_Size: {x: 2.5073104, y: 2.8261929, z: 7.8756056}
+  m_Center: {x: -0.0033972263, y: 0.020357847, z: 0.15572596}
