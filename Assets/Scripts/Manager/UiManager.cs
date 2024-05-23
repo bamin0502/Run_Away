@@ -8,12 +8,12 @@ public class UiManager : MonoBehaviour
 {
     private GameManager gameManager;
     private TutorialManager tutorialManager;
+    
     [Header("UI Elements")] 
     [SerializeField] public GameObject PausePanel;
     [SerializeField] public GameObject GameOverPanel;
     [SerializeField] public GameObject GamePanel;
     [SerializeField] public GameObject GameMenuPanel;
-    
     
     [Header("Pause Panel Ui Button")]
     [SerializeField] public Button homeButton;
@@ -24,8 +24,9 @@ public class UiManager : MonoBehaviour
     [SerializeField] private Button ReviveButton;
     [SerializeField] private Button LobbyButton;
 
-    // [Header("Game Over Panel Ui Text")]
-    // [SerializeField] public TextMeshProUGUI distanceText;
+    [Header("Game Over Panel Ui Text")]
+    [SerializeField] public TextMeshProUGUI scoreText;
+    [SerializeField] public TextMeshProUGUI resultCoinText;
 
     [Header("Game UI")]
     [SerializeField] public TextMeshProUGUI coinText;
@@ -50,8 +51,10 @@ public class UiManager : MonoBehaviour
         quitButton.onClick.AddListener(OnQuitButtonClick);
         startButton.onClick.AddListener(OnStartButtonClick);
         optionButton.onClick.AddListener(ShowPausePanel);
+        ReviveButton.onClick.AddListener(Revive);
+        LobbyButton.onClick.AddListener(OnHomeButtonClick);
         
-        
+        UpdateAllCoinText(gameManager.TotalCoins);
     }
 
     private void OnStartButtonClick()
@@ -83,35 +86,20 @@ public class UiManager : MonoBehaviour
         if (GameOverPanel == null) return;
 
         GameOverPanel.SetActive(true);
-        FadeIn(GameOverPanel);
         Time.timeScale = 0;
     }
-
-    private void FadeIn(GameObject obj)
-    {
-        CanvasGroup canvasGroup = obj.GetComponent<CanvasGroup>();
-        if (canvasGroup)
-            canvasGroup.DOFade(1, 0.5f);
-    }
-
-    private void FadeOut(GameObject obj)
-    {
-        CanvasGroup canvasGroup = obj.GetComponent<CanvasGroup>();
-        if (canvasGroup != null)
-            canvasGroup.DOFade(0, 0.5f);
-    }
+    
 
     public void OnHomeButtonClick()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
-        
+
     }
 
     public void OnResumeButtonClick()
     {
         Time.timeScale = 1;
-        FadeOut(PausePanel);
         PausePanel.SetActive(false);
         Debug.Log("Resume");
     }
@@ -124,11 +112,6 @@ public class UiManager : MonoBehaviour
         Debug.Log("Quit");
 #endif
     }
-    
-    public void UpdateCoinText(int i)
-    {
-        coinText.text = i.ToString();
-    }
 
     public void StartGame()
     {
@@ -138,15 +121,23 @@ public class UiManager : MonoBehaviour
         GamePanel.SetActive(true);
     }
     
-    public void HighScoreTextUpdate(int i)
+    public void UpdateCoinText(int coin)
     {
-        HighScoreText.text = i.ToString();
-    }
-    
-    public void AllCoinTextUpdate(int i)
-    {
-        AllCoinText.text = i.ToString();
+        coinText.text = coin.ToString();
     }
 
+    public void UpdateResultCoinText(int coin)
+    {
+        resultCoinText.text = "COIN:" + coin.ToString("00000");
+    }
+
+    public void UpdateAllCoinText(int coin)
+    {
+        AllCoinText.text = coin.ToString();
+    }
     
+    public void Revive()
+    {
+        return;
+    }
 }

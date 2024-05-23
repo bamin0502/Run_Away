@@ -39,7 +39,7 @@ public class JsonData : MonoBehaviour
 
     public void SaveGameData()
     {
-        gameData.coin=gameManager.CoinCount;
+        gameData.coin=gameManager.TotalCoins;
         gameData.tutorialActive = gameManager.isTutorialActive;
         gameData.HighScore = gameManager.HighScore;
         string filePath= GetFilePath("gameData.json");
@@ -60,7 +60,7 @@ public class JsonData : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Data Loaded: "+jsonData);
 #endif
-            gameManager.CoinCount = gameData.coin;
+            gameManager.TotalCoins = gameData.coin;
             gameManager.isTutorialActive = gameData.tutorialActive;
             
         }
@@ -76,7 +76,7 @@ public class JsonData : MonoBehaviour
     private void ResetGameData()
     {
         gameData = new GameData { coin = 0, tutorialActive = true };
-        gameManager.CoinCount = gameData.coin;
+        gameManager.TotalCoins = gameData.coin;
         gameManager.isTutorialActive = gameData.tutorialActive;
         SaveGameData();
 #if UNITY_EDITOR

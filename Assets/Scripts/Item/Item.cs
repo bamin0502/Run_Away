@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
 
 
 public class Item : MonoBehaviour
@@ -41,7 +38,6 @@ public class Item : MonoBehaviour
 #if UNITY_EDITOR
                 Debug.Log("점프력 증가");
 #endif
-               
                 gameManager.IncreaseJumpPower(5f,10f);
                 break;
             case ItemType.Magnet:
@@ -49,14 +45,12 @@ public class Item : MonoBehaviour
                 Debug.Log("자석 획득");
 #endif
                 gameManager.ActivateMagnetEffect(10f);
-                
                 break;
             case ItemType.Fever:
 #if UNITY_EDITOR
                 Debug.Log("피버 모드");
 #endif
                 gameManager.ActivateFeverMode(10f);
-                
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

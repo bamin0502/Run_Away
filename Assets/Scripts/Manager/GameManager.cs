@@ -3,6 +3,7 @@ using Cinemachine;
 using UnityEngine;
 using TMPro;
 using UniRx;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,8 +16,15 @@ public class GameManager : MonoBehaviour
     public bool isTutorialActive = true;
     
     public bool isFeverMode = false;
-    public int CoinCount = 0;
+    
     public int HighScore = 0;
+
+
+    [Header("코인 관련 필드")] 
+    public int CurrentGameCoins = 0;
+    public int TotalCoins  = 0;
+    
+    
     
     private UiManager uiManager;
     private JsonData jsonData;
@@ -73,8 +81,16 @@ public class GameManager : MonoBehaviour
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif
+        uiManager.UpdateResultCoinText(CurrentGameCoins);
+        uiManager.ShowGameOverPanel();
     }
-
+    public void OnHomeButtonClick()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(1);
+        // 로비로 돌아갈 때 총 코인 업데이트
+        uiManager.UpdateAllCoinText(TotalCoins);
+    }
     public void SaveGameData()
     {
         jsonData.SaveGameData();
@@ -89,7 +105,9 @@ public class GameManager : MonoBehaviour
     public void AddCoin()
     {
         // 코인 획득 시 처리
-        uiManager.UpdateCoinText(CoinCount++);
+        CurrentGameCoins++;
+        TotalCoins++;
+        uiManager.UpdateCoinText(CurrentGameCoins);
     }
     
     public void IncreaseJumpPower(float amount, float duration)
