@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
     private GameManager gameManager;
+    private Tile tile;
     public float jumpForce = 3f;
     public float slideForce = -10f;
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         playerAni = GetComponent<PlayerAni>();
         boxCollider = GetComponent<BoxCollider>();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
+        tile = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Tile>();
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
     }
@@ -263,7 +265,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.CompareTag("Item"))
         {
-            other.gameObject.SetActive(false);
+            GameObject o;
+            (o = other.gameObject).SetActive(false);
+            tile.itemPool.Enqueue(o);
             other.GetComponent<Item>().Use();
         }
     }

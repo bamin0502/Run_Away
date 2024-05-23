@@ -40,7 +40,6 @@ public class UiManager : MonoBehaviour
     
     public void Awake()
     {
-        //InitializeUI();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         tutorialManager=GameObject.FindGameObjectWithTag("Tutorial").GetComponent<TutorialManager>();
     }
@@ -80,12 +79,13 @@ public class UiManager : MonoBehaviour
 
     public void ShowPausePanel()
     {
+        PausePanel.SetActive(true);
         Time.timeScale = 0;
     }
 
     public void ShowGameOverPanel()
     {
-        if (GameOverPanel == null) return;
+        if (!GameOverPanel) return;
 
         GameOverPanel.SetActive(true);
         Time.timeScale = 0;

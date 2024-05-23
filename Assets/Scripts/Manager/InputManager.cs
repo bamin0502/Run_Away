@@ -60,7 +60,6 @@ public class InputManager : Singleton<InputManager>
     {
         OnBackButtonPressed?.Invoke();
         Debug.Log("Back button pressed");
-        uiManager.PausePanel.SetActive(true);
         uiManager.ShowPausePanel();
     }
 

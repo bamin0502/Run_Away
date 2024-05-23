@@ -8,10 +8,11 @@ public class Tile : MonoBehaviour
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
+    public int noItemsInitially = 2; // 새 변수 선언
     public float tileLength = 17;
-    
-    public float moveSpeedIncreaseDistance = 20f; 
-    public float moveSpeedMultiplier = 1.05f; 
+
+    public float moveSpeedIncreaseDistance = 20f;
+    public float moveSpeedMultiplier = 1.05f;
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
@@ -38,14 +39,14 @@ public class Tile : MonoBehaviour
     public float coinSpacing = 3.0f;
 
     private Collider[] overlapResults = new Collider[10];
-    
+
     private float moveSpeed;
     private float distanceTravelled = 0f;
 
     [Header("일정 거리마다 속도 증가"), Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
     [SerializeField] private float nextSpeedIncreaseDistance = 20f;
     [SerializeField] public float initialMoveSpeed = 5f;
-    
+
     [Header("최대 속도"), Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
     [SerializeField] public float maxMoveSpeed = 15f;
 
@@ -90,7 +91,11 @@ public class Tile : MonoBehaviour
             var tile = SpawnTile(i >= noObstaclesInitially);
             if (tile != null)
             {
-                SpawnItems(tile);
+                // 처음 noItemsInitially 개의 타일에 대해서는 아이템을 스폰하지 않음
+                if (i >= noItemsInitially)
+                {
+                    SpawnItems(tile);
+                }
             }
         }
 
@@ -111,12 +116,12 @@ public class Tile : MonoBehaviour
 
             if (distanceTravelled > nextSpeedIncreaseDistance)
             {
-                moveSpeed = Mathf.Min(moveSpeed * moveSpeedMultiplier, maxMoveSpeed); 
+                moveSpeed = Mathf.Min(moveSpeed * moveSpeedMultiplier, maxMoveSpeed);
                 nextSpeedIncreaseDistance += moveSpeedIncreaseDistance;
             }
 
             totalDistance += moveSpeed * Time.deltaTime;
-            gameManager.stageSpeed = moveSpeed; 
+            gameManager.stageSpeed = moveSpeed;
 
             // 아이템 주기적으로 생성
             itemSpawnTimer += Time.deltaTime;
@@ -246,13 +251,15 @@ public class Tile : MonoBehaviour
         {
             if (child.CompareTag("Obstacle"))
             {
-                child.gameObject.SetActive(false);
-                obstaclePool.Enqueue(child.gameObject);
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                obstaclePool.Enqueue(o);
             }
             else if (child.CompareTag("Item"))
             {
-                child.gameObject.SetActive(false);
-                itemPool.Enqueue(child.gameObject);
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                itemPool.Enqueue(o);
             }
         }
 
@@ -275,7 +282,11 @@ public class Tile : MonoBehaviour
 #endif
         }
 
-        SpawnItems(tile); // 재사용 타일에 아이템을 생성합니다.
+        // 처음 noItemsInitially 개의 타일을 넘어간 경우에만 아이템을 스폰
+        if (tiles.IndexOf(tile) >= noItemsInitially)
+        {
+            SpawnItems(tile);
+        }
     }
 
     private void SpawnItems(Transform tile)
@@ -298,7 +309,7 @@ public class Tile : MonoBehaviour
                 {
                     if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
                     {
-                        SpawnSingleItem(randomPosition, tile, false);
+                        SpawnSingleItem(randomPosition, tile);
                     }
                     else
                     {
@@ -326,16 +337,7 @@ public class Tile : MonoBehaviour
 
     private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin = false)
     {
-        GameObject itemPrefab;
-
-        if (isCoin)
-        {
-            itemPrefab = primaryItemPrefab;
-        }
-        else
-        {
-            itemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
-        }
+        var itemPrefab = isCoin ? primaryItemPrefab : otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
 
         GameObject item;
         if (itemPool.Count > 0)

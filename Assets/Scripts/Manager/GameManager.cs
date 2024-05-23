@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Cinemachine;
 using UnityEngine;
 using UniRx;
@@ -28,7 +29,6 @@ public class GameManager : MonoBehaviour
     public int CurrentScore = 0;
     public int scorePerDistance = 10;
     
-    
     private UiManager uiManager;
     private JsonData jsonData;
     [Header("비활성화 시킬 오브젝트")]
@@ -48,7 +48,6 @@ public class GameManager : MonoBehaviour
     private IDisposable blinkSubscription;
     
     private PlayerMovement playerMovement;
-
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();
     
@@ -57,6 +56,20 @@ public class GameManager : MonoBehaviour
         uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
         jsonData = GameObject.FindGameObjectWithTag("UiManager").GetComponent<JsonData>();
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            isPaused = true;
+            uiManager.ShowPausePanel();
+        }
+        else
+        {
+            isPaused = false;
+            Time.timeScale = 1;
+        }
     }
 
     public void Start()
@@ -69,6 +82,7 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateScoreText(CurrentScore);
         SoundManager.Instance.PlayBgm(0);
     }
+    
 
     private void OnApplicationQuit()
     {
@@ -93,7 +107,16 @@ public class GameManager : MonoBehaviour
         Handheld.Vibrate();
 #endif
         // 2초 동안 기다리는 로직 구현
-        
+        StartCoroutine(ShowGameOverPanelAfterDelay(2f));
+       
+    }
+    
+    private IEnumerator ShowGameOverPanelAfterDelay(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        uiManager.UpdateResultCoinText(CurrentGameCoins);
+        uiManager.UpdateResultScoreText(CurrentScore);
+        uiManager.ShowGameOverPanel();
     }
     public void OnHomeButtonClick()
     {
@@ -146,6 +169,7 @@ public class GameManager : MonoBehaviour
         playerMovement.AdjustJumpPower(amount);
         currentJumpEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
             .Subscribe(_ => ResetJumpPower(amount));
+            
     }
 
     private void ResetJumpPower(float amount)
@@ -176,6 +200,7 @@ public class GameManager : MonoBehaviour
             });
         currentMagnetEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
             .Subscribe(_ => IsMagnetEffectActive.Value = false);
+            
     }
     
     public void ActivateFeverMode(float duration)

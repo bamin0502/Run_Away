@@ -7,7 +7,17 @@ public class BatteryManager : Singleton<BatteryManager>
     {
         StartCoroutine(CheckBatteryStatus());
     }
-
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            SetGameSettings(5, 0, 1);
+        }
+        else
+        {
+            StartCoroutine(CheckBatteryStatus());
+        }
+    }
     private IEnumerator CheckBatteryStatus()
     {
         while (true)
@@ -19,28 +29,24 @@ public class BatteryManager : Singleton<BatteryManager>
 
     private void AdjustSettingsBasedOnBattery(BatteryStatus status, float level)
     {
-        if (status is BatteryStatus.Charging or BatteryStatus.Full)
+        switch (status)
         {
-            SetGameSettings(60, 1, 5);
-        }
-        else if (status == BatteryStatus.Discharging)
-        {
-            if (level < 0.2f)
-            {
+            case BatteryStatus.Charging or BatteryStatus.Full:
+                SetGameSettings(60, 1, 5);
+                break;
+            case BatteryStatus.Discharging when level < 0.2f:
                 SetGameSettings(15, 0, 1);
-            }
-            else
-            {
+                break;
+            case BatteryStatus.Discharging:
                 SetGameSettings(30, 0, 3);
-            }
-        }
-        else
-        {
-            SetGameSettings(30, 0, 3);
+                break;
+            default:
+                SetGameSettings(30, 0, 3);
+                break;
         }
     }
 
-    private void SetGameSettings(int frameRate, int vSyncCount, int qualityLevel)
+    private static void SetGameSettings(int frameRate, int vSyncCount, int qualityLevel)
     {
         Application.targetFrameRate = frameRate;
         QualitySettings.vSyncCount = vSyncCount;
