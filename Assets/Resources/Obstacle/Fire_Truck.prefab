@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3811584, y: 0.0777483, z: 7.991892}
-  m_Center: {x: 0.012985468, y: 2.2478433, z: -0.15290928}
+  m_Size: {x: 2.3811584, y: 0.0777483, z: 8.262695}
+  m_Center: {x: 0.012985468, y: 2.2478433, z: -0.017507792}
 --- !u!1 &3359157217230402108
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,6 +63,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8669603218834258572}
   - component: {fileID: 6299704368776987136}
+  - component: {fileID: 93596815606558046}
   m_Layer: 0
   m_Name: wall
   m_TagString: Wall
@@ -104,8 +105,29 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.7548494, y: 2.7867172, z: 7.9685774}
-  m_Center: {x: 0.0313704, y: 0.8933586, z: -0.16456652}
+  m_Size: {x: 0.2536261, y: 2.6219368, z: 8.1535}
+  m_Center: {x: -1.2192413, y: 0.8109684, z: -0.07210541}
+--- !u!65 &93596815606558046
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3359157217230402108}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.3954072, y: 2.514474, z: 8.148808}
+  m_Center: {x: 1.0928428, y: 0.75723696, z: -0.01237011}
 --- !u!1 &7235495544061757970
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,6 +142,7 @@ GameObject:
   - component: {fileID: 4804701844224758257}
   - component: {fileID: -6455854095001393157}
   - component: {fileID: 4434563641790446327}
+  - component: {fileID: 8876945893096263128}
   m_Layer: 0
   m_Name: Fire_Truck
   m_TagString: Obstacle
@@ -213,8 +236,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.501432, y: 2.995031, z: 8.476337}
-  m_Center: {x: -0, y: 1.4975156, z: -0.07668424}
+  m_Size: {x: 2.0850124, y: 2.6410031, z: 0.6193094}
+  m_Center: {x: 0.01569295, y: 1.3205016, z: 3.85183}
 --- !u!205 &-6455854095001393157
 LODGroup:
   m_ObjectHideFlags: 0
@@ -257,3 +280,24 @@ MonoBehaviour:
   obstacleType: 4
   obstacleSpeed: 15
   obstacleSection: 3
+--- !u!65 &8876945893096263128
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7235495544061757970}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.0775619, y: 2.7250025, z: 0.41116428}
+  m_Center: {x: -0.047959805, y: 1.4108108, z: -3.9559026}

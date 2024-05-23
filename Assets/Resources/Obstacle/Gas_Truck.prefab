@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 8053208678941943469}
   - component: {fileID: -2511631734765776650}
   - component: {fileID: 2575615551445064574}
+  - component: {fileID: 8224948504959468151}
   m_Layer: 0
   m_Name: Gas_Truck
   m_TagString: Obstacle
@@ -214,8 +215,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.098541, y: 2.8531911, z: 8.040183}
-  m_Center: {x: -0.028274417, y: 1.4265956, z: 0.085303664}
+  m_Size: {x: 2.098541, y: 2.7153146, z: 0.18937302}
+  m_Center: {x: -0.028274417, y: 1.3576573, z: 4.010709}
 --- !u!205 &-2511631734765776650
 LODGroup:
   m_ObjectHideFlags: 0
@@ -258,6 +259,27 @@ MonoBehaviour:
   obstacleType: 4
   obstacleSpeed: 10
   obstacleSection: 3
+--- !u!65 &8224948504959468151
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2915879132325717256}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8702886, y: 2.3508334, z: 0.34323454}
+  m_Center: {x: -0.04002142, y: 1.5016356, z: -3.933778}
 --- !u!1 &4850423543071835066
 GameObject:
   m_ObjectHideFlags: 0

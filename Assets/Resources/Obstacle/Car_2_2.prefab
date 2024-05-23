@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 8824349367838515}
   - component: {fileID: 4012850375080978582}
   - component: {fileID: 1176694519524908124}
-  - component: {fileID: 3818726398641630081}
   - component: {fileID: -8618396109541863388}
+  - component: {fileID: 5768450064166165769}
+  - component: {fileID: 3157894444219997943}
   m_Layer: 0
   m_Name: Car_2_2
   m_TagString: Obstacle
@@ -87,27 +88,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3818726398641630081
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 816428196210802057}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.2272494, y: 1.2295455, z: 5.744439}
-  m_Center: {x: 0, y: 0.4113236, z: -0.09321034}
 --- !u!114 &-8618396109541863388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +106,48 @@ MonoBehaviour:
   obstacleType: 2
   obstacleSpeed: 10
   obstacleSection: 1
+--- !u!65 &5768450064166165769
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816428196210802057}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.2272494, y: 1.1978742, z: 0.46215248}
+  m_Center: {x: 0, y: 0.5989371, z: 2.341877}
+--- !u!65 &3157894444219997943
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816428196210802057}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.2272494, y: 1.2542764, z: 0.277992}
+  m_Center: {x: 0, y: 0.6271382, z: -2.6400127}
 --- !u!1 &2340979276472084966
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,5 +252,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2442093, y: 1.3238415, z: 5.3270473}
-  m_Center: {x: 0.025382519, y: 0.16192085, z: -0.14543009}
+  m_Size: {x: 2.2442093, y: 1.0634818, z: 4.575101}
+  m_Center: {x: 0.025382519, y: 0.29210067, z: -0.19084358}

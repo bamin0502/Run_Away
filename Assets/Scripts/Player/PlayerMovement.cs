@@ -69,12 +69,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
         rb.MovePosition(newPosition);
-
-        if (pendingMovement != Vector2.zero)
-        {
-            UpdateMovement(pendingMovement);
-            pendingMovement = Vector2.zero;
-        }
+        
     }
 
     private void FixedUpdate()
@@ -82,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         if (pendingMovement != Vector2.zero)
         {
             UpdateMovement(pendingMovement);
-            pendingMovement = Vector2.zero;
+            
         }
 
         if (isJumping)
@@ -109,12 +104,12 @@ public class PlayerMovement : MonoBehaviour
             if (horizontal > 0.5f)
             {
                 TryMoveToLane(currentLaneIndex + 1);
-                
+                pendingMovement = Vector2.zero;
             }
             else if (horizontal < -0.5f)
             {
                 TryMoveToLane(currentLaneIndex - 1);
-                
+                pendingMovement = Vector2.zero;
             }
         }
         else
@@ -147,6 +142,7 @@ public class PlayerMovement : MonoBehaviour
 
         boxCollider.center = originalColliderCenter;
         boxCollider.size = originalColliderSize;
+        pendingMovement = Vector2.zero;
     }
 
     private void PerformSlide()

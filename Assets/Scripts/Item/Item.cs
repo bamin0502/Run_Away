@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+
 
 public class Item : MonoBehaviour
 {
@@ -12,6 +14,10 @@ public class Item : MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();    
     }
 
+    private void Start()
+    {
+        
+    }
     public enum ItemType
     {
         Coin,
