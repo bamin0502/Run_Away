@@ -65,7 +65,7 @@ public class JsonData : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("No Save Data");
 #endif
-            gameData = new GameData { coin = 0, tutorialActive = true, HighScore = 0};
+            gameData = new GameData { coin = 1000, tutorialActive = true, HighScore = 0};
         }
     }
 

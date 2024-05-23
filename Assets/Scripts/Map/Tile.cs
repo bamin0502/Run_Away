@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    [Header("Player and Tile Manager"), Tooltip("플레이어와 타일 매니저 오브젝트")]
     public Transform playerTransform;
     public Transform tileManagerTransform;
     public Vector3 startPoint = new Vector3(0, 0, 17);
@@ -122,13 +123,12 @@ public class Tile : MonoBehaviour
 
             totalDistance += moveSpeed * Time.deltaTime;
             gameManager.stageSpeed = moveSpeed;
-
-            // 아이템 주기적으로 생성
+            
             itemSpawnTimer += Time.deltaTime;
             if (itemSpawnTimer >= itemSpawnInterval)
             {
                 itemSpawnTimer = 0f;
-                SpawnItems(tiles[^1]); // 마지막 타일에 아이템을 생성합니다.
+                SpawnItems(tiles[^1]); 
             }
         }
     }
@@ -270,7 +270,7 @@ public class Tile : MonoBehaviour
         var newSectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
         var newSectionTypeComponent = newSectionPrefab.GetComponent<SectionType>();
 
-        if (newSectionTypeComponent != null)
+        if (newSectionTypeComponent)
         {
             tile.GetComponent<SectionType>().sectionType = newSectionTypeComponent.sectionType;
             SpawnObstacles(tile, newSectionTypeComponent.sectionType);

@@ -4,23 +4,29 @@ using Cinemachine;
 using UnityEngine;
 using UniRx;
 using UnityEngine.SceneManagement;
-using Cysharp.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("불러올 스크립트")]
+    private UiManager uiManager;
+    private JsonData jsonData;
+    private PlayerMovement playerMovement;
+    
+    [Header("게임 속도 관련 필드")]
     public float stageSpeed = 5f;
+    public float distanceTravelled = 0;
+    
+    [Header("게임 상태 관련 필드")]
     public bool isGameover;
     public bool isPaused;
     public bool isPlaying = false;
-    public float distanceTravelled = 0;
     
+    [Header("튜토리얼 관련 진행여부 필드")]
     public bool isTutorialActive = true;
     
+    [Header("피버모드 관련 필드")]
     public bool isFeverMode = false;
     
-    public int HighScore = 0;
-
-
     [Header("코인 관련 필드")] 
     public int CurrentGameCoins = 0;
     public int TotalCoins  = 0;
@@ -28,9 +34,11 @@ public class GameManager : MonoBehaviour
     [Header("게임 점수 관련 필드")]
     public int CurrentScore = 0;
     public int scorePerDistance = 10;
+    public int HighScore = 0;
     
-    private UiManager uiManager;
-    private JsonData jsonData;
+    [Header("부활 관련 무적 시간")]
+    public float invincibilityDuration = 2f;
+    
     [Header("비활성화 시킬 오브젝트")]
     [SerializeField] public GameObject disableObject;
     [Header("시작전에 비출 카메라")] 
@@ -46,8 +54,6 @@ public class GameManager : MonoBehaviour
     public ParticleSystem magnetEffect;
     public ParticleSystem feverEffect;
     private IDisposable blinkSubscription;
-    
-    private PlayerMovement playerMovement;
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();
     
@@ -235,8 +241,56 @@ public class GameManager : MonoBehaviour
             CurrentScore = (int) distanceTravelled * scorePerDistance;
             uiManager.UpdateScoreText(CurrentScore);
         }
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            ActivateCheat();
+        } 
+#endif
+        
 
     }
 
+    public void RevivePlayer()
+    {
+        if (TotalCoins >= 300)
+        {
+            TotalCoins -= 300;
+            uiManager.UpdateAllCoinText(TotalCoins);
+            
+            playerMovement.Revive();
+            
+            uiManager.HideRevivePanel();
+            uiManager.GameOverPanel.SetActive(false);
+            isGameover = false;
+            isPlaying = true;
+            
+            StartCoroutine(StartInvincibility());
+            
+            Time.timeScale = 1;
+        }
+    }
 
+    private IEnumerator StartInvincibility()
+    {
+        playerMovement.SetInvincible(true);
+        yield return new WaitForSeconds(invincibilityDuration);
+        playerMovement.SetInvincible(false);    
+    }
+#if UNITY_EDITOR
+    private void ActivateCheat()
+    {
+        int coinsToAdd = 1000; // Number of coins to add
+        AddCheatCoins(coinsToAdd);
+
+        Debug.Log("Cheat activated! Coins added: " + coinsToAdd);
+    }
+
+    private void AddCheatCoins(int coinsToAdd)
+    {
+        TotalCoins += coinsToAdd;
+        uiManager.UpdateAllCoinText(TotalCoins);
+    }
+#endif
+    
 }

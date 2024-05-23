@@ -6,38 +6,45 @@ using UnityEngine.SceneManagement;
 
 public class UiManager : MonoBehaviour
 {
+    [Header("Game Manager"),Tooltip("게임 매니저 오브젝트")]
     private GameManager gameManager;
+    [Header("Tutorial Manager"),Tooltip("튜토리얼 매니저 오브젝트")]
     private TutorialManager tutorialManager;
     
-    [Header("UI Elements")] 
+    [Header("UI Elements"),Tooltip("패널 관련 오브젝트들")] 
     [SerializeField] public GameObject PausePanel;
     [SerializeField] public GameObject GameOverPanel;
     [SerializeField] public GameObject GamePanel;
     [SerializeField] public GameObject GameMenuPanel;
+    [SerializeField] public GameObject RevivePanel;
     
-    [Header("Pause Panel Ui Button")]
+    [Header("Pause Panel Ui Button"),Tooltip("일시정지 패널 버튼들")]
     [SerializeField] public Button homeButton;
     [SerializeField] public Button resumeButton;
     [SerializeField] public Button quitButton;
     
-    [Header("Game Over Panel Ui Button")]
+    [Header("Game Over Panel Ui Button"),Tooltip("게임오버 패널 버튼들")]
     [SerializeField] private Button ReviveButton;
     [SerializeField] private Button LobbyButton;
 
-    [Header("Game Over Panel Ui Text")]
+    [Header("Game Over Panel Ui Text"),Tooltip("게임오버 패널 텍스트들")]
     [SerializeField] public TextMeshProUGUI scoreText;
     [SerializeField] public TextMeshProUGUI resultCoinText;
 
-    [Header("Game UI")]
+    [Header("Game UI"),Tooltip("게임 패널 텍스트들")]
     [SerializeField] public TextMeshProUGUI coinText;
     [SerializeField] public Button optionButton;
     [SerializeField] public TextMeshProUGUI GameScoreText;
     
-    [Header("Game Panel Ui Text")]
+    [Header("Game Panel Ui Text"),Tooltip("게임 패널 텍스트들")]
     [SerializeField] public Button startButton;
     [SerializeField] public TextMeshProUGUI HighScoreText;
     [SerializeField] public TextMeshProUGUI AllCoinText;
     
+    [Header("Revive Panel Ui"),Tooltip("부활 패널 UI들")]
+    [SerializeField] public Button ReviveCheckButton;
+    [SerializeField] public Button BackButton;
+    [SerializeField] public TextMeshProUGUI ReviveCoinText;
     public void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -53,9 +60,17 @@ public class UiManager : MonoBehaviour
         optionButton.onClick.AddListener(ShowPausePanel);
         ReviveButton.onClick.AddListener(Revive);
         LobbyButton.onClick.AddListener(OnHomeButtonClick);
+        BackButton.onClick.AddListener(HideRevivePanel);
+        ReviveCheckButton.onClick.AddListener(OnReviveButtonClick);
         
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
+        UpdateReviveCoinText(gameManager.TotalCoins);
+        
+        RevivePanel.SetActive(false);
+        PausePanel.SetActive(false);
+        GameOverPanel.SetActive(false);
+        GamePanel.SetActive(false);
     }
 
     private void OnStartButtonClick()
@@ -141,7 +156,13 @@ public class UiManager : MonoBehaviour
     
     public void Revive()
     {
-        return;
+        RevivePanel.SetActive(true);
+        UpdateReviveButtonState(gameManager.TotalCoins);
+        UpdateReviveCoinText(gameManager.TotalCoins);
+    }
+    public void HideRevivePanel()
+    {
+        RevivePanel.SetActive(false);
     }
 
     public void UpdateScoreText(int currentScore)
@@ -156,6 +177,21 @@ public class UiManager : MonoBehaviour
 
     public void UpdateHighScoreText(int highScore)
     {
-        HighScoreText.text =highScore.ToString("00000");
+        HighScoreText.text = highScore.ToString("00000");
     }
+    
+    public void UpdateReviveCoinText(int coin)
+    {
+        ReviveCoinText.text = coin.ToString();
+    }
+
+    public void UpdateReviveButtonState(int coin)
+    {
+        ReviveCheckButton.interactable = coin >= 300;
+    }
+    private void OnReviveButtonClick()
+    {
+        gameManager.RevivePlayer();
+    }
+    
 }
