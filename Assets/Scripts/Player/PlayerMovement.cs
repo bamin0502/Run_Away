@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -37,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     
     private bool isInvincible;
 
+    
+    private Collider[] overlapResults = new Collider[10];
     private void Awake()
     {
         rb = GetComponentInChildren<Rigidbody>();
@@ -235,7 +238,7 @@ public class PlayerMovement : MonoBehaviour
 #endif
             if(gameManager.IsFeverModeActive.Value)
             {
-                other.gameObject.SetActive(false);
+                LaunchObstacle(other.gameObject);
                 return;
             }
 
@@ -251,7 +254,7 @@ public class PlayerMovement : MonoBehaviour
 #endif
             if(gameManager.IsFeverModeActive.Value)
             {
-                other.gameObject.SetActive(false);
+                LaunchObstacle(other.gameObject);
                 return;
             }
             
@@ -264,7 +267,8 @@ public class PlayerMovement : MonoBehaviour
         {
             if(gameManager.IsFeverModeActive.Value)
             {
-                other.gameObject.SetActive(false);
+                LaunchObstacle(other.gameObject);
+
             }
         }
     }
@@ -328,7 +332,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float[] lanes = new float[] { -3.8f, 0, 3.8f };
         Vector3 currentPosition = transform.position;
-        float bufferDistance = 10.0f; // Distance to check in front of the potential position
+        float bufferDistance = 10.0f; 
         Vector3 forwardPosition = new Vector3(currentPosition.x, currentPosition.y, currentPosition.z + bufferDistance);
 
         foreach (float lane in lanes)
@@ -340,8 +344,7 @@ public class PlayerMovement : MonoBehaviour
                 return potentialPosition;
             }
         }
-
-        // If no safe lane is found, move forward in the current lane
+        
         return forwardPosition;
     }
     private bool IsSafePosition(Vector3 position, float bufferDistance)
@@ -370,6 +373,91 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             playerAni.StopInvincibleAnimation();
+        }
+    }
+    
+    private void LaunchObstacle(GameObject obstacle)
+    {
+        Rigidbody obstacleRb = obstacle.GetComponent<Rigidbody>();
+        if (obstacleRb == null)
+        {
+            obstacleRb = obstacle.AddComponent<Rigidbody>();
+        }
+
+        // 원래 위치와 회전 저장
+        Vector3 originalPosition = obstacle.transform.position;
+        Quaternion originalRotation = obstacle.transform.rotation;
+
+        // 장애물을 옆쪽으로 날리는 힘을 가합니다.
+        Vector3 forceDirection = (transform.right + Vector3.up) * 10f + Vector3.back * 5f;
+        obstacleRb.AddForce(forceDirection, ForceMode.Impulse);
+
+        // 장애물과 플레이어의 충돌 무시
+        Collider obstacleCollider = obstacle.GetComponent<Collider>();
+        Physics.IgnoreCollision(obstacleCollider, GetComponent<Collider>(), true);
+
+        // 장애물 주변의 모든 장애물과의 충돌 무시
+        int numObstacles = Physics.OverlapSphereNonAlloc(obstacle.transform.position, 2f, overlapResults);
+        for (int i = 0; i < numObstacles; i++)
+        {
+            Collider col = overlapResults[i];
+            if (col.CompareTag("Obstacle"))
+            {
+                Physics.IgnoreCollision(obstacleCollider, col, true);
+            }
+
+            if (col.CompareTag("Wall"))
+            {
+                Physics.IgnoreCollision(obstacleCollider, col, true);
+            }
+            
+            if(col.CompareTag("WalkBy"))
+            {
+                Physics.IgnoreCollision(obstacleCollider, col, true);
+            }
+        }
+
+        // 일정 시간 후 장애물을 비활성화하고 원래 위치와 회전으로 복원하는 코루틴 시작
+        StartCoroutine(DisableAndResetObstacle(obstacle, 2f, overlapResults, numObstacles, originalPosition, originalRotation));
+    }
+
+    private IEnumerator DisableAndResetObstacle(GameObject obstacle, float delay, Collider[] nearbyObstacles, int numObstacles, Vector3 originalPosition, Quaternion originalRotation)
+    {
+        yield return new WaitForSeconds(delay);
+        obstacle.SetActive(false);
+
+        // 원래 위치와 회전으로 복원
+        obstacle.transform.position = originalPosition;
+        obstacle.transform.rotation = originalRotation;
+
+        Rigidbody obstacleRb = obstacle.GetComponent<Rigidbody>();
+        if (obstacleRb != null)
+        {
+            obstacleRb.velocity = Vector3.zero;
+            obstacleRb.angularVelocity = Vector3.zero;
+            obstacleRb.isKinematic = true;
+        }
+        
+        // 장애물과 플레이어의 충돌 복원
+        Collider obstacleCollider = obstacle.GetComponent<Collider>();
+        Physics.IgnoreCollision(obstacleCollider, GetComponent<Collider>(), false);
+
+        // 장애물 주변의 모든 장애물과의 충돌 복원
+        for (int i = 0; i < numObstacles; i++)
+        {
+            Collider col = nearbyObstacles[i];
+            if (col && col.CompareTag("Obstacle"))
+            {
+                Physics.IgnoreCollision(obstacleCollider, col, false);
+            }
+            if(col && col.CompareTag("Wall"))
+            {
+                Physics.IgnoreCollision(obstacleCollider, col, false);
+            }
+            if(col && col.CompareTag("WalkBy"))
+            {
+                Physics.IgnoreCollision(obstacleCollider, col, false);
+            }
         }
     }
 }
