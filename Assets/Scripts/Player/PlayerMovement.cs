@@ -154,6 +154,7 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = velocity;
             rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
             isJumping = false;
+            pendingMovement = Vector2.zero;
         }
 
         if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f))
@@ -169,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
         slideTimer = slideDuration;
         isSliding = true;
         playerAni.SetSlideAnimation();
-
+        pendingMovement = Vector2.zero;
         boxCollider.center = new Vector3(0, 0.45f, 0.15f);
         boxCollider.size = new Vector3(0.6f, 0.6f, 0.75f);
     }
