@@ -8,19 +8,24 @@ public partial class MagnetEffect : MonoBehaviour
 
     private Collider[] itemBuffer = new Collider[15];
     private GameManager gameManager;
-    private Transform playerTransform;
+    public Transform playerTransform;
     private BoxCollider playerCollider;
     private Tile tile;
-    
+
     private void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         playerCollider = playerTransform.GetComponent<BoxCollider>();
         tile = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Tile>();
+
         if (playerCollider == null)
         {
+            return;
+#if UNITY_EDITOR
             Debug.LogError("Player BoxCollider not found!");
+#endif
+            
+            
         }
     }
 
@@ -34,7 +39,7 @@ public partial class MagnetEffect : MonoBehaviour
 
     private void AttractItems()
     {
-        int numItems = Physics.OverlapSphereNonAlloc(transform.position, magnetRadius, itemBuffer);
+        int numItems = Physics.OverlapSphereNonAlloc(playerTransform.position, magnetRadius, itemBuffer);
         for (int i = 0; i < numItems; i++)
         {
             var item = itemBuffer[i].GetComponent<Item>();
@@ -44,23 +49,20 @@ public partial class MagnetEffect : MonoBehaviour
                 Vector3 targetPosition = playerCollider.bounds.center;
                 var position = itemTransform.position;
                 Vector3 direction = (targetPosition - position).normalized;
-
-                // 이동 거리 계산
+                
                 float distanceThisFrame = magnetForce * Time.deltaTime;
                 float distanceToTarget = Vector3.Distance(position, targetPosition);
-
-                // 아이템이 플레이어와 너무 가까워지면 아이템을 먹음
+                
                 if (distanceToTarget < distanceThisFrame)
                 {
-                    gameManager.AddCoin(); // 코인 획득 처리 (혹은 적절한 아이템 획득 처리)
+                    item.Use();
                     GameObject o;
-                    (o = item.gameObject).SetActive(false); // 아이템 비활성화
-                    tile.itemPool.Enqueue(o); // 아이템을 풀에 반환
+                    (o = item.gameObject).SetActive(false);
+                    tile.itemPool.Enqueue(o);
                 }
                 else
                 {
-                    // 타일의 움직임 보정
-                    Vector3 tileMovement = Vector3.back * (gameManager.stageSpeed * Time.deltaTime);
+                    Vector3 tileMovement = -Vector3.forward * (gameManager.stageSpeed * Time.deltaTime);
                     itemTransform.position += direction * distanceThisFrame + tileMovement;
                 }
             }
@@ -70,8 +72,11 @@ public partial class MagnetEffect : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, magnetRadius);
+        if (playerTransform != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(playerTransform.position, magnetRadius);
+        }
     }
 #endif
 }
