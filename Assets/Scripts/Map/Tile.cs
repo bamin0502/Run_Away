@@ -349,7 +349,7 @@ public class Tile : MonoBehaviour
         {
             item = Instantiate(itemPrefab, position, Quaternion.identity);
         }
-        if (tile != null)
+        if (tile)
         {
             item.transform.SetParent(tile, true);
         }

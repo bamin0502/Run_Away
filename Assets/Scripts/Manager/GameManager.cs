@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     public int CurrentGameCoins = 0;
     public int TotalCoins  = 0;
     
+    [Header("게임 점수 관련 필드")]
+    public int CurrentScore = 0;
+    public int scorePerDistance = 10;
     
     
     private UiManager uiManager;
@@ -62,7 +65,8 @@ public class GameManager : MonoBehaviour
         jsonData.LoadGameData();
 
         InGameCamera.enabled = false;
-        
+        CurrentScore = 0;
+        uiManager.UpdateScoreText(CurrentScore);
     }
 
     private void OnApplicationQuit()
@@ -77,11 +81,18 @@ public class GameManager : MonoBehaviour
 #endif
         isGameover = true;
         isPlaying = false;
+        if(CurrentScore > HighScore)
+        {
+            HighScore = CurrentScore;
+            uiManager.UpdateHighScoreText(HighScore);
+        }
+        
         SaveGameData();
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif
         uiManager.UpdateResultCoinText(CurrentGameCoins);
+        uiManager.UpdateResultScoreText(CurrentScore);
         uiManager.ShowGameOverPanel();
     }
     public void OnHomeButtonClick()
@@ -190,4 +201,16 @@ public class GameManager : MonoBehaviour
         currentFeverEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
             .Subscribe(_ => IsFeverModeActive.Value = false);
     }
+    
+    private void Update()
+    {
+        if (isPlaying)
+        {
+            distanceTravelled += stageSpeed * Time.deltaTime;
+            CurrentScore = (int) distanceTravelled * scorePerDistance;
+            uiManager.UpdateScoreText(CurrentScore);
+        }
+    }
+
+
 }

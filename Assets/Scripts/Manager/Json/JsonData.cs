@@ -21,11 +21,7 @@ public class JsonData : MonoBehaviour
     {
         return Path.Combine(Application.persistentDataPath, fileName);
     }
-    private void Start()
-    {
-
-    }
-
+    
     private void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -62,22 +58,23 @@ public class JsonData : MonoBehaviour
 #endif
             gameManager.TotalCoins = gameData.coin;
             gameManager.isTutorialActive = gameData.tutorialActive;
-            
+            gameManager.HighScore = gameData.HighScore;
         }
         else
         {
 #if UNITY_EDITOR
             Debug.Log("No Save Data");
 #endif
-            gameData = new GameData { coin = 0, tutorialActive = true };
+            gameData = new GameData { coin = 0, tutorialActive = true, HighScore = 0};
         }
     }
 
     private void ResetGameData()
     {
-        gameData = new GameData { coin = 0, tutorialActive = true };
+        gameData = new GameData { coin = 0, tutorialActive = true, HighScore = 0};
         gameManager.TotalCoins = gameData.coin;
         gameManager.isTutorialActive = gameData.tutorialActive;
+        gameManager.HighScore = gameData.HighScore;
         SaveGameData();
 #if UNITY_EDITOR
         Debug.Log("Game Data Reset");

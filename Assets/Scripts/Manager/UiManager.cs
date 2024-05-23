@@ -31,6 +31,7 @@ public class UiManager : MonoBehaviour
     [Header("Game UI")]
     [SerializeField] public TextMeshProUGUI coinText;
     [SerializeField] public Button optionButton;
+    [SerializeField] public TextMeshProUGUI GameScoreText;
     
     [Header("Game Panel Ui Text")]
     [SerializeField] public Button startButton;
@@ -55,6 +56,7 @@ public class UiManager : MonoBehaviour
         LobbyButton.onClick.AddListener(OnHomeButtonClick);
         
         UpdateAllCoinText(gameManager.TotalCoins);
+        UpdateHighScoreText(gameManager.HighScore);
     }
 
     private void OnStartButtonClick()
@@ -123,12 +125,12 @@ public class UiManager : MonoBehaviour
     
     public void UpdateCoinText(int coin)
     {
-        coinText.text = coin.ToString();
+        coinText.text = coin.ToString("0000");
     }
 
     public void UpdateResultCoinText(int coin)
     {
-        resultCoinText.text = "COIN:" + coin.ToString("00000");
+        resultCoinText.text = "COIN:" + coin.ToString("0000");
     }
 
     public void UpdateAllCoinText(int coin)
@@ -139,5 +141,20 @@ public class UiManager : MonoBehaviour
     public void Revive()
     {
         return;
+    }
+
+    public void UpdateScoreText(int currentScore)
+    {
+        GameScoreText.text = currentScore.ToString("00000");
+    }
+    
+    public void UpdateResultScoreText(int currentScore)
+    {
+        scoreText.text = "SCORE: " + currentScore.ToString("00000");
+    }
+
+    public void UpdateHighScoreText(int highScore)
+    {
+        HighScoreText.text =highScore.ToString("00000");
     }
 }
