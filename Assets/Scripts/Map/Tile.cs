@@ -3,192 +3,239 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [Header("Transforms"), Tooltip("The transforms of the tile, obstacle, and player.")]
-    public Transform tilePrefab;
+    [Header("Player and Tile Manager"), Tooltip("플레이어와 타일 매니저 오브젝트")]
     public Transform playerTransform;
-
-    [Header("BackGround"), Tooltip("The transforms of the ground and background.")]
-    public Transform[] groundPrefabs;
-    public Transform[] backgroundPrefabs;
-
-    [Header("Tile Settings"), Tooltip("The tile prefab to spawn.")]
+    public Transform tileManagerTransform;
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
-    public float tileLength = 30.0f;
-    public float moveSpeed;
+    public int noItemsInitially = 2; // 새 변수 선언
+    public float tileLength = 17;
+
+    public float moveSpeedIncreaseDistance = 20f;
+    public float moveSpeedMultiplier = 1.05f;
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
-
     private GameManager gameManager;
-    
-    private List<Transform> groundPool = new List<Transform>();
-    private List<Transform> backgroundPool = new List<Transform>();
 
-    private List<GameObject> obstaclePrefabs;
+    private List<GameObject> itemPrefabs;
+    private List<GameObject> sectionPrefabs;
+    private Dictionary<int, List<GameObject>> obstaclePrefabsBySection;
+
+    private GameObject primaryItemPrefab;
+    private List<GameObject> otherItemPrefabs;
+
+    public Queue<GameObject> itemPool = new Queue<GameObject>();
+    private Queue<GameObject> obstaclePool = new Queue<GameObject>();
+
+    private Vector3 previousItemPosition = Vector3.zero;
+    private bool isFirstItem = true;
+    private float totalDistance = 0f;
+    public float specialItemSpawnDistance = 100f;
+    public float initialOtherItemSpawnChance = 0.05f;
+    public float maxOtherItemSpawnChance = 0.2f;
+    public float distanceFactor = 0.0005f;
+    public int coinLineLength = 5;
+    public float coinSpacing = 3.0f;
+
+    private Collider[] overlapResults = new Collider[10];
+
+    private float moveSpeed;
+    private float distanceTravelled = 0f;
+
+    [Header("일정 거리마다 속도 증가"), Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
+    [SerializeField] private float nextSpeedIncreaseDistance = 20f;
+    [SerializeField] public float initialMoveSpeed = 5f;
+
+    [Header("최대 속도"), Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
+    [SerializeField] public float maxMoveSpeed = 15f;
+
+    private float itemSpawnInterval = 2f; // 2 seconds interval for testing
+    private float itemSpawnTimer = 0f;
 
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        
-        InitializeObjectPool(groundPrefabs, groundPool, 10);
-        InitializeObjectPool(backgroundPrefabs, backgroundPool, 10);
 
-        // DataManager를 통해 장애물 로드
-        var obstacleTable = DataManager.GetObstacleTable();
-        obstaclePrefabs = obstacleTable.GetLoadedObstacles();
+        itemPrefabs = DataManager.GetItemTable().GetLoadedItems("Item");
+        sectionPrefabs = DataManager.GetSectionTable().GetLoadedSections("Tile");
+        obstaclePrefabsBySection = DataManager.GetObstacleTable().GetObstaclesBySection();
+
+        primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
+
+#if UNITY_EDITOR
+        if (primaryItemPrefab == null)
+        {
+            Debug.LogError("Primary item prefab (Coin) not found!");
+        }
+        else
+        {
+            Debug.Log($"Primary Item Prefab: {primaryItemPrefab.name}");
+        }
+#endif
+
+        otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
+#if UNITY_EDITOR
+        foreach (var item in otherItemPrefabs)
+        {
+            Debug.Log($"Other Item Prefab: {item.name}");
+        }
+#endif
     }
 
-    void Start()
+    private void Start()
     {
         nextTilePosition = startPoint;
         for (var i = 0; i < numberOfTiles; i++)
         {
-            SpawnTile(i >= noObstaclesInitially);
+            var tile = SpawnTile(i >= noObstaclesInitially);
+            if (tile != null)
+            {
+                // 처음 noItemsInitially 개의 타일에 대해서는 아이템을 스폰하지 않음
+                if (i >= noItemsInitially)
+                {
+                    SpawnItems(tile);
+                }
+            }
         }
-                   
 
+        moveSpeed = initialMoveSpeed;
     }
- 
-    void Update()
+
+    private void Update()
     {
-        if (!gameManager.isGameover || !gameManager.isPaused)
+        if (!gameManager.isGameover && !gameManager.isPaused && gameManager.isPlaying)
         {
-            moveSpeed = gameManager.stageSpeed;
             MoveTiles();
             if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
             {
                 ReuseTile();
+            }
+
+            distanceTravelled += moveSpeed * Time.deltaTime;
+
+            if (distanceTravelled > nextSpeedIncreaseDistance)
+            {
+                moveSpeed = Mathf.Min(moveSpeed * moveSpeedMultiplier, maxMoveSpeed);
+                nextSpeedIncreaseDistance += moveSpeedIncreaseDistance;
+            }
+
+            totalDistance += moveSpeed * Time.deltaTime;
+            gameManager.stageSpeed = moveSpeed;
+            
+            itemSpawnTimer += Time.deltaTime;
+            if (itemSpawnTimer >= itemSpawnInterval)
+            {
+                itemSpawnTimer = 0f;
+                SpawnItems(tiles[^1]); 
             }
         }
     }
 
     private void MoveTiles()
     {
-        if(gameManager.isPaused || gameManager.isGameover) return;
         foreach (var tile in tiles)
         {
             tile.Translate(-Vector3.forward * (moveSpeed * Time.deltaTime), Space.World);
         }
     }
 
-    private void SpawnTile(bool spawnObstacles)
+    private Transform SpawnTile(bool spawnObstacles)
     {
-        if (tilePrefab == null)
+        if (sectionPrefabs.Count == 0)
         {
-            Debug.LogWarning("Tile prefab is not assigned.");
-            return;
+#if UNITY_EDITOR
+            Debug.LogWarning("Section prefabs are not assigned.");
+#endif
+            return null;
         }
 
-        var newTile = Instantiate(tilePrefab, nextTilePosition, Quaternion.identity, transform);
+        var sectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
+        var newTile = Instantiate(sectionPrefab, nextTilePosition, Quaternion.identity, tileManagerTransform).transform;
         if (newTile == null)
         {
-            Debug.LogWarning("Failed to instantiate tile prefab.");
-            return;
+#if UNITY_EDITOR
+            Debug.LogWarning("Failed to instantiate section prefab.");
+#endif
+            return null;
         }
 
-        var tileEndPoint = newTile.GetComponent<TileEndPoint>();
-        if (tileEndPoint == null)
-        {
-            Debug.LogWarning("TileEndPoint component is missing on the tile prefab.");
-            return;
-        }
-
-        if (tileEndPoint.endPoint == null)
-        {
-            Debug.LogWarning("EndPoint is not assigned in TileEndPoint component.");
-            return;
-        }
-
-        nextTilePosition = tileEndPoint.endPoint.position;
+        nextTilePosition += new Vector3(0, 0, tileLength);
         tiles.Add(newTile);
 
         if (spawnObstacles)
         {
-            SpawnObstacles(newTile);
-        }
-
-        SpawnGroundElements(newTile);
-        SpawnBackgroundElements(newTile);
-    }
-
-    private void SpawnObstacles(Transform tile)
-    {
-        var spawnPoints = new List<Transform>();
-        foreach (Transform child in tile)
-        {
-            if (child.CompareTag("ObstacleSpawnPoint"))
+            var sectionTypeComponent = newTile.GetComponent<SectionType>();
+            if (sectionTypeComponent != null)
             {
-                spawnPoints.Add(child);
+                SpawnObstacles(newTile, sectionTypeComponent.sectionType);
+            }
+            else
+            {
+#if UNITY_EDITOR
+                Debug.LogWarning("SectionType component not found on the section prefab.");
+#endif
             }
         }
 
-        var emptyIndex = Random.Range(0, spawnPoints.Count);
+        return newTile;
+    }
 
-        for (var i = 0; i < spawnPoints.Count; i++)
+    private void SpawnObstacles(Transform tile, int sectionType)
+    {
+        var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
+
+        if (spawnPoints.Count == 0)
         {
-            if (i != emptyIndex && obstaclePrefabs.Count > 0)
+#if UNITY_EDITOR
+            Debug.LogWarning("No ObstacleSpawnPoint found in the tile.");
+#endif
+            return;
+        }
+
+        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"No obstacles found for section type: {sectionType}");
+#endif
+            return;
+        }
+#if UNITY_EDITOR
+        Debug.Log($"Spawn points found: {spawnPoints.Count}, filtered obstacles: {filteredObstacles.Count}");
+#endif
+
+        var selectedLanes = new HashSet<int>();
+        while (selectedLanes.Count < Random.Range(1, 3))
+        {
+            selectedLanes.Add(Random.Range(0, 3));
+        }
+
+        foreach (var spawnPoint in spawnPoints)
+        {
+            var lanePosition = Mathf.RoundToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
+
+            if (selectedLanes.Contains(lanePosition))
             {
-                var spawnPoint = spawnPoints[i];
-                if (Random.Range(0, 2) == 0)
+                GameObject obstaclePrefab;
+
+                if (obstaclePool.Count > 0)
                 {
-                    var obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
-                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, Quaternion.identity);
-                    Vector3 originalScale = obstacle.transform.localScale;
-                    obstacle.transform.SetParent(spawnPoint);
-                    var lossyScale = spawnPoint.lossyScale;
-                    obstacle.transform.localScale = Vector3.Scale(originalScale, 
-                        new Vector3(1 / lossyScale.x, 1 / lossyScale.y, 1 / lossyScale.z));
+                    obstaclePrefab = obstaclePool.Dequeue();
+                    obstaclePrefab.transform.position = spawnPoint.position;
+                    obstaclePrefab.transform.rotation = spawnPoint.rotation;
+                    obstaclePrefab.SetActive(true);
+                    obstaclePrefab.transform.SetParent(tile, true);
                 }
-            }
-        }
-    }
-
-    private void SpawnGroundElements(Transform tile)
-    {
-        var groundPoints = new List<Transform>();
-        foreach (Transform child in tile)
-        {
-            if (child.CompareTag("SmallSpawnPoint"))
-            {
-                groundPoints.Add(child);
-            }
-        }
-
-        foreach (var point in groundPoints)
-        {
-            if (groundPrefabs.Length > 0 && Random.Range(0f, 1f) <= 0.7f)
-            {
-                var groundElement = GetRandomPooledObject(groundPool, groundPrefabs);
-                groundElement.position = point.position;
-                groundElement.rotation = point.rotation;
-                groundElement.gameObject.SetActive(true);
-                groundElement.SetParent(point);
-            }
-        }
-    }
-
-    private void SpawnBackgroundElements(Transform tile)
-    {
-        var backgroundPoints = new List<Transform>();
-        foreach (Transform child in tile)
-        {
-            if (child.CompareTag("TallSpawnPoint"))
-            {
-                backgroundPoints.Add(child);
-            }
-        }
-
-        foreach (var point in backgroundPoints)
-        {
-            if (backgroundPrefabs.Length > 0 && Random.Range(0f, 1f) <= 0.7f)
-            {
-                var backgroundElement = GetRandomPooledObject(backgroundPool, backgroundPrefabs);
-                backgroundElement.position = point.position;
-                backgroundElement.rotation = point.rotation;
-                backgroundElement.gameObject.SetActive(true);
-                backgroundElement.SetParent(point);
+                else
+                {
+                    obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
+                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
+                    obstacle.transform.SetParent(tile, true);
+#if UNITY_EDITOR
+                    Debug.Log($"Spawned obstacle: {obstacle.name} at position: {spawnPoint.position}");
+#endif
+                }
             }
         }
     }
@@ -197,59 +244,167 @@ public class Tile : MonoBehaviour
     {
         var tile = tiles[0];
         tiles.RemoveAt(0);
-        var endPoint = tiles[^1].GetComponent<TileEndPoint>().endPoint.position;
-        tile.position = endPoint;
         tiles.Add(tile);
 
-        DeactivateAndEnqueue(tile, "SmallSpawnPoint", groundPool);
-        DeactivateAndEnqueue(tile, "TallSpawnPoint", backgroundPool);
-        
-        SpawnGroundElements(tile);
-        SpawnBackgroundElements(tile);
-    }
-
-    private void DeactivateAndEnqueue(Transform tile, string spawnPointTag, List<Transform> pool)
-    {
+        // 기존 타일의 장애물 및 아이템 제거
         foreach (Transform child in tile)
         {
-            if (child.CompareTag(spawnPointTag))
+            if (child.CompareTag("Obstacle"))
             {
-                foreach (Transform element in child)
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                obstaclePool.Enqueue(o);
+            }
+            else if (child.CompareTag("Item"))
+            {
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                itemPool.Enqueue(o);
+            }
+        }
+
+        // 타일 위치 재설정
+        tile.position = tiles[^2].position + new Vector3(0, 0, tileLength);
+
+        // 새로운 섹션 타입 무작위 선택
+        var newSectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
+        var newSectionTypeComponent = newSectionPrefab.GetComponent<SectionType>();
+
+        if (newSectionTypeComponent)
+        {
+            tile.GetComponent<SectionType>().sectionType = newSectionTypeComponent.sectionType;
+            SpawnObstacles(tile, newSectionTypeComponent.sectionType);
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("SectionType component not found on the new section prefab.");
+#endif
+        }
+
+        // 처음 noItemsInitially 개의 타일을 넘어간 경우에만 아이템을 스폰
+        if (tiles.IndexOf(tile) >= noItemsInitially)
+        {
+            SpawnItems(tile);
+        }
+    }
+
+    private void SpawnItems(Transform tile)
+    {
+        if (tile == null)
+        {
+            return;
+        }
+
+        var bounds = tile.GetComponentInChildren<Collider>().bounds;
+        float[] lanePositions = { -3.8f, 0f, 3.8f };
+
+        foreach (var lane in lanePositions)
+        {
+            for (int attempts = 0; attempts < 10; attempts++)
+            {
+                var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+
+                if (!IsObstacleAtPosition(randomPosition))
                 {
-                    element.gameObject.SetActive(false);
-                    pool.Add(element);
+                    if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
+                    {
+                        SpawnSingleItem(randomPosition, tile);
+                    }
+                    else
+                    {
+                        SpawnCoinLine(randomPosition, lane, tile);
+                    }
+                    previousItemPosition = randomPosition;
+                    isFirstItem = false;
+                    break;
                 }
             }
         }
     }
 
-    private void InitializeObjectPool(Transform[] prefabs, List<Transform> pool, int initialSize)
+    private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile)
     {
-        foreach (var prefab in prefabs)
+        for (int i = 0; i < coinLineLength; i++)
         {
-            for (var i = 0; i < initialSize; i++)
+            Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
+            if (!IsObstacleAtPosition(position))
             {
-                var instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-                instance.gameObject.SetActive(false);
-                pool.Add(instance);
+                SpawnSingleItem(position, tile, true);
             }
         }
     }
 
-    private Transform GetRandomPooledObject(List<Transform> pool, Transform[] prefabs)
+    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin = false)
     {
-        if (pool.Count > 0)
+        var itemPrefab = isCoin ? primaryItemPrefab : otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+
+        GameObject item;
+        if (itemPool.Count > 0)
         {
-            var randomIndex = Random.Range(0, pool.Count);
-            var obj = pool[randomIndex];
-            pool.RemoveAt(randomIndex);
-            return obj;
+            item = itemPool.Dequeue();
+            item.transform.position = position;
+            item.transform.rotation = Quaternion.identity;
+            item.SetActive(true);
         }
         else
         {
-            var prefab = prefabs[Random.Range(0, prefabs.Length)];
-            var instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-            return instance;
+            item = Instantiate(itemPrefab, position, Quaternion.identity);
         }
+        if (tile)
+        {
+            item.transform.SetParent(tile, true);
+        }
+
+        var itemTypeComponent = item.GetComponent<ItemType>();
+        if (itemTypeComponent)
+        {
+#if UNITY_EDITOR
+            Debug.Log($"Spawned Item: {itemTypeComponent.ItemNameEnglish}, ID: {itemTypeComponent.ItemID}");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("ItemType component not found on the spawned item.");
+#endif
+        }
+    }
+
+    private bool IsObstacleAtPosition(Vector3 position)
+    {
+        int numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
+        for (int i = 0; i < numColliders; i++)
+        {
+            if (overlapResults[i].CompareTag("Obstacle"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<Transform> GetAllChildTransforms(Transform parent, string tag)
+    {
+        var result = new List<Transform>();
+        var queue = new Queue<Transform>();
+
+        queue.Enqueue(parent);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+
+            foreach (Transform child in current)
+            {
+                if (child.CompareTag(tag))
+                {
+                    result.Add(child);
+                }
+                queue.Enqueue(child);
+            }
+        }
+
+        return result;
     }
 }

@@ -1,83 +1,319 @@
+using System;
+using System.Collections;
+using Cinemachine;
 using UnityEngine;
-using TMPro;
+using UniRx;
 using UnityEngine.SceneManagement;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
+    [Header("불러올 스크립트")]
+    private UiManager uiManager;
+    private JsonData jsonData;
+    private PlayerMovement playerMovement;
+    
+    [Header("게임 속도 관련 필드")]
     public float stageSpeed = 5f;
+    public float distanceTravelled = 0;
+    
+    [Header("게임 상태 관련 필드")]
     public bool isGameover;
     public bool isPaused;
     public bool isPlaying = false;
-    public float distanceTravelled = 0;
-    public float speedIncreaseMilestone = 10;
-    public float speedMultiplier = 1.1f;
+    
+    [Header("튜토리얼 관련 진행여부 필드")]
+    public bool isTutorialActive = true;
+    
+    [Header("피버모드 관련 필드")]
+    public bool isFeverMode = false;
+    
+    [Header("코인 관련 필드")] 
+    public int CurrentGameCoins = 0;
+    public int TotalCoins  = 1000;
+    
+    [Header("게임 점수 관련 필드")]
+    public int CurrentScore = 0;
+    public int scorePerDistance = 10;
+    public int HighScore = 0;
+    
+    [Header("부활 관련 무적 시간")]
+    public float invincibilityDuration = 2f;
+    
+    [Header("비활성화 시킬 오브젝트")]
+    [SerializeField] public GameObject disableObject;
+    [Header("시작전에 비출 카메라")] 
+    [SerializeField] public CinemachineVirtualCamera MenuCamera;
+    [Header("시작후에 비출 카메라")] 
+    [SerializeField] public CinemachineVirtualCamera InGameCamera;
 
-    [SerializeField] public TextMeshProUGUI distanceText;
+    [Header("아이템 이펙트 관련")]
+    private IDisposable currentJumpEffect;
+    private IDisposable currentMagnetEffect;
+    private IDisposable currentFeverEffect;
+    public ParticleSystem jumpEffect;
+    public ParticleSystem magnetEffect;
+    public ParticleSystem feverEffect;
+    private IDisposable blinkSubscription;
+    public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
+    public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();
+    private float initialJumpPower;
+    private float maxJumpPower = 20f;
+    public void Awake()
+    {
+        uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
+        jsonData = GameObject.FindGameObjectWithTag("UiManager").GetComponent<JsonData>();
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        initialJumpPower = playerMovement.jumpForce;
+    }
 
-    public override void Awake()
+    private void OnApplicationPause(bool pauseStatus)
     {
-        base.Awake();
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-    private void Start()
-    {
-        InitializeGame();   
-    }
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        InitializeGame(); // 씬이 로드될 때마다 게임 상태 초기화
-    }
-    private void Update()
-    {
-        if (!isGameover || !isPaused && isPlaying)
+        if (pauseStatus)
         {
-            distanceTravelled += stageSpeed * Time.deltaTime;
-
-            if (distanceTravelled > speedIncreaseMilestone)
-            {
-                stageSpeed *= speedMultiplier;
-                speedIncreaseMilestone *= speedMultiplier;
-            }
-            distanceText.text = "Distance: " + distanceTravelled.ToString("F2") + " meters";
+            isPaused = true;
+            uiManager.ShowPausePanel();
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
+        else
         {
-            UiManager.Instance.ShowPausePanel();
+            isPaused = false;
         }
     }
 
+    public void Start()
+    {
+        disableObject.SetActive(false);
+        jsonData.LoadGameData();
+
+        InGameCamera.enabled = false;
+        CurrentScore = 0;
+        uiManager.UpdateScoreText(CurrentScore);
+        SoundManager.Instance.PlayBgm(0);
+    }
+    
+
+    private void OnApplicationQuit()
+    {
+        SaveGameData();
+    }
+    
     public void GameOver()
     {
+#if UNITY_EDITOR
         Debug.Log("Game Over");
+#endif
         isGameover = true;
+        isPlaying = false;
+        if(CurrentScore > HighScore)
+        {
+            HighScore = CurrentScore;
+            uiManager.UpdateHighScoreText(HighScore);
+        }
+        
+        SaveGameData();
+#if UNITY_ANDROID
         Handheld.Vibrate();
+#endif
+        // 2초 동안 기다리는 로직 구현
+        StartCoroutine(ShowGameOverPanelAfterDelay(2f));
+       
     }
-
-    public void RestartGame()
+    
+    private IEnumerator ShowGameOverPanelAfterDelay(float delay)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        yield return new WaitForSecondsRealtime(delay);
+        uiManager.UpdateResultCoinText(CurrentGameCoins);
+        uiManager.UpdateResultScoreText(CurrentScore);
+        uiManager.ShowGameOverPanel();
     }
-
-    public void PauseGame()
+    public void OnHomeButtonClick()
     {
-        isPaused = true;
-        Time.timeScale = 0;
+        Time.timeScale = 1;
+        SceneManager.LoadScene(1);
+        // 로비로 돌아갈 때 총 코인 업데이트
+        uiManager.UpdateAllCoinText(TotalCoins);
+        
     }
-
+    public void SaveGameData()
+    {
+        jsonData.SaveGameData();
+    }
+    
     public void ResumeGame()
     {
         isPaused = false;
         Time.timeScale = 1;
     }
-
-    private void InitializeGame()
+    
+    public void AddCoin()
     {
-        isGameover = false;
-        isPaused = false;
-        isPlaying = true;
-        distanceTravelled = 0;
-        stageSpeed = 5f;
-        speedIncreaseMilestone = 10;
+        // 코인 획득 시 처리
+        CurrentGameCoins++;
+        TotalCoins++;
+        uiManager.UpdateCoinText(CurrentGameCoins);
     }
+    
+    public void IncreaseJumpPower(float amount, float duration)
+    {
+        if (playerMovement.jumpForce >= maxJumpPower)
+        {
+            return; 
+        }
+        
+        currentJumpEffect?.Dispose();
+        blinkSubscription?.Dispose();
+        
+        jumpEffect.Play();
+        
+        blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
+            .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
+            .Subscribe(t =>
+            {
+                if (jumpEffect.isPlaying)
+                {
+                    jumpEffect.Stop();
+                }
+                else
+                {
+                    jumpEffect.Play();
+                }
+            });
+
+        playerMovement.AdjustJumpPower(amount);
+        currentJumpEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
+            .Subscribe(_ => ResetJumpPower(amount));
+            
+    }
+
+    private void ResetJumpPower(float amount)
+    {
+        playerMovement.AdjustJumpPower(-amount);
+    }
+
+    public void ActivateMagnetEffect(float duration)
+    {
+        if (IsMagnetEffectActive.Value)
+        {
+            return;
+        }
+        
+        currentMagnetEffect?.Dispose();
+        blinkSubscription?.Dispose();
+        
+        IsMagnetEffectActive.Value = true;
+        magnetEffect.Play();
+        
+        blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
+            .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
+            .Subscribe(t =>
+            {
+                if (magnetEffect.isPlaying)
+                {
+                    magnetEffect.Stop();
+                }
+                else
+                {
+                    magnetEffect.Play();
+                }
+            });
+        currentMagnetEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
+            .Subscribe(_ => IsMagnetEffectActive.Value = false);
+            
+    }
+    
+    public void ActivateFeverMode(float duration)
+    {
+        if (IsFeverModeActive.Value)
+        {
+            return;
+        }
+        
+        currentFeverEffect?.Dispose();
+        blinkSubscription?.Dispose();
+        
+        IsFeverModeActive.Value = true;
+        feverEffect.Play();
+        
+        blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
+            .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
+            .Subscribe(t =>
+            {
+                if (feverEffect.isPlaying)
+                {
+                    feverEffect.Stop();
+                }
+                else
+                {
+                    feverEffect.Play();
+                }
+            });
+        currentFeverEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
+            .Subscribe(_ => IsFeverModeActive.Value = false);
+    }
+    
+    private void Update()
+    {
+        if (isPlaying)
+        {
+            distanceTravelled += stageSpeed * Time.deltaTime;
+            CurrentScore = (int) distanceTravelled * scorePerDistance;
+            uiManager.UpdateScoreText(CurrentScore);
+        }
+        
+        if(CurrentScore > HighScore)
+        {
+            HighScore = CurrentScore;
+            uiManager.UpdateHighScoreText(HighScore);
+        }
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            ActivateCheat();
+        } 
+#endif
+        
+
+    }
+
+    public void RevivePlayer()
+    {
+        if (TotalCoins >= 300)
+        {
+            TotalCoins -= 300;
+            uiManager.UpdateAllCoinText(TotalCoins);
+            
+            playerMovement.Revive();
+            
+            uiManager.HideRevivePanel();
+            uiManager.GameOverPanel.SetActive(false);
+            isGameover = false;
+            isPlaying = true;
+            
+            StartCoroutine(StartInvincibility());
+            
+            Time.timeScale = 1;
+        }
+    }
+
+    private IEnumerator StartInvincibility()
+    {
+        playerMovement.SetInvincible(true);
+        yield return new WaitForSeconds(invincibilityDuration);
+        playerMovement.SetInvincible(false);    
+    }
+#if UNITY_EDITOR
+    private void ActivateCheat()
+    {
+        int coinsToAdd = 1000; // Number of coins to add
+        AddCheatCoins(coinsToAdd);
+
+        Debug.Log("Cheat activated! Coins added: " + coinsToAdd);
+    }
+
+    private void AddCheatCoins(int coinsToAdd)
+    {
+        TotalCoins += coinsToAdd;
+        uiManager.UpdateAllCoinText(TotalCoins);
+    }
+#endif
+    
 }

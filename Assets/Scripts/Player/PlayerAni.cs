@@ -1,14 +1,21 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public class PlayerAni : MonoBehaviour
 {
+    [Tooltip("플레이어 애니메이터")]
     private Animator ani;
-    private SwipeDetection swipeDetection;
-
+    [Tooltip("게임 매니저")]
+    private GameManager gameManager;
+    [Tooltip("UI 매니저")]
+    private UiManager uiManager;
+    
+    [SerializeField]private SkinnedMeshRenderer playerRenderer;
+    private Color originalColor;
+    private bool isFlashing;
+    
     [Tooltip("애니메이션 관련 해쉬코드")] 
     private static readonly int IsDead = Animator.StringToHash("isDead");
     private static readonly int IsRun = Animator.StringToHash("isRun");
@@ -16,50 +23,92 @@ public class PlayerAni : MonoBehaviour
     private static readonly int IsSlide = Animator.StringToHash("isSlide");
 
     private bool deathTrigger;
-
+    
     private void Awake()
     {
+        playerRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        originalColor = playerRenderer.material.color;
         ani = GetComponent<Animator>();
-        swipeDetection = GetComponent<SwipeDetection>();
+        uiManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<UiManager>();
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
     }
-
+    public void SetInvincibleAnimation()
+    {
+        if (!isFlashing)
+        {
+            StartCoroutine(Flash());
+        }
+    }
+    
+    private IEnumerator Flash()
+    {
+        isFlashing = true;
+        while (isFlashing)
+        {
+            playerRenderer.material.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            playerRenderer.material.color = originalColor;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+    public void StopInvincibleAnimation()
+    {
+        isFlashing = false;
+        playerRenderer.material.color = originalColor;
+    }
+    
     private void Start()
     {
         deathTrigger = false;
-        ani.SetBool(IsRun, true);
     }
     
     private void Update()
     {
-        if (GameManager.Instance.isGameover && !deathTrigger)
+        if (!gameManager.isPlaying)
         {
-            ani.SetTrigger(IsDead);
             ani.SetBool(IsRun, false);
-            ani.SetBool(IsJump, false);
-            ani.SetBool(IsSlide, false);
+        }
+        
+        if (gameManager.isGameover && !deathTrigger)
+        {
+            SetDeathAnimation();
             deathTrigger = true;
-            GameManager.Instance.isGameover = false;
-            return;
         }
+        
+        
+    }
 
-        if (deathTrigger) return;
+    public void SetRunAnimation()
+    {
+        ani.SetBool(IsRun, true);
+        ani.SetBool(IsSlide, false);
+        ani.SetBool(IsJump, false);
+    }
 
-        if (swipeDetection.isGrounded)
-        {
-            ani.SetBool(IsJump, false);
-            ani.SetBool(IsRun, true);
-        }
-        else
-        {
-            ani.SetBool(IsJump, true);
-            ani.SetBool(IsRun, false);
-        }
+    public void SetJumpAnimation()
+    {
+        ani.SetBool(IsRun, false);
+        ani.SetBool(IsJump, true);
+        ani.SetBool(IsSlide, false);
+    }
 
-        ani.SetBool(IsSlide, swipeDetection.swipeDirection == Defines.SwipeDirection.SLIDE);
+    public void SetSlideAnimation()
+    {
+        ani.SetBool(IsRun, false);
+        ani.SetBool(IsJump, false);
+        ani.SetBool(IsSlide, true);
+    }
+
+    public void SetDeathAnimation()
+    {
+        ani.SetTrigger(IsDead);
+        ani.SetBool(IsRun, false);
+        ani.SetBool(IsJump, false);
+        ani.SetBool(IsSlide, false);
     }
 
     public void EndResult()
     {
-        UiManager.Instance.ShowGameOverPanel();
+        uiManager.ShowGameOverPanel();
     }
 }

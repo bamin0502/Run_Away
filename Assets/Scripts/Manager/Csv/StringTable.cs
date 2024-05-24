@@ -1,9 +1,7 @@
 using CsvHelper;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 public class StringTable : DataTable
@@ -26,7 +24,7 @@ public class StringTable : DataTable
         //var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         //Debug.Log(textAsset.text);
 
-        using (var reader = new StringReader(textAsset.text))
+        using (var reader = new StreamReader(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(textAsset.text)), System.Text.Encoding.UTF8))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var records = csvReader.GetRecords<Data>();

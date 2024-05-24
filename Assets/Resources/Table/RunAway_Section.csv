@@ -1,0 +1,5 @@
+section_ID,section_name,section_type,section_distance
+201,Normal_1,0,0
+202,Move_1,1,0
+203,Duplex_1,2,0
+204,MD_1,3,0
