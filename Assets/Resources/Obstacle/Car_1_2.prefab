@@ -81,8 +81,8 @@ Transform:
   m_GameObject: {fileID: 3097549892276978274}
   serializedVersion: 2
   m_LocalRotation: {x: 0.18989128, y: -0.003924396, z: -0.00056742114, w: 0.98179716}
-  m_LocalPosition: {x: -0, y: 0.73, z: 1.493}
-  m_LocalScale: {x: 0.16765633, y: 1, z: 0.30022}
+  m_LocalPosition: {x: -0, y: 1.016, z: 1.608}
+  m_LocalScale: {x: 0.16765633, y: 0.36943, z: 0.30022}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4220482055806942248}
@@ -210,8 +210,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.18505383, y: 1.7491243, z: 4.759106}
-  m_Center: {x: -1.5301652, y: 0.20292175, z: 1.2540185}
+  m_Size: {x: 0.20529366, y: 1.3608626, z: 4.800679}
+  m_Center: {x: -1.4326143, y: 0.3970526, z: 1.233232}
 --- !u!1 &3592177867728365202
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,8 +225,7 @@ GameObject:
   - component: {fileID: 3087506498039285575}
   - component: {fileID: 1490419434462627210}
   - component: {fileID: -6222090303434684979}
-  - component: {fileID: 6287735531678583994}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Car_1_2
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -321,8 +320,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2377975, y: 1.506578, z: 0.3629985}
-  m_Center: {x: 0, y: 0.753289, z: -2.5814288}
+  m_Size: {x: 2.1005974, y: 1.2193333, z: 0.3629985}
+  m_Center: {x: 0.009701431, y: 0.8969113, z: -2.5814288}
 --- !u!114 &-6222090303434684979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,33 +340,6 @@ MonoBehaviour:
   obstacleType: 1
   obstacleSpeed: 0
   obstacleSection: 0
---- !u!54 &6287735531678583994
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3592177867728365202}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &6840951594690212286
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,5 +391,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1282512, y: 1.7498859, z: 4.7976694}
-  m_Center: {x: 0.9027985, y: 0.20330244, z: 0.09437227}
+  m_Size: {x: 0.15522242, y: 1.4631755, z: 4.825867}
+  m_Center: {x: 0.8054261, y: 0.34665763, z: 0.08027339}

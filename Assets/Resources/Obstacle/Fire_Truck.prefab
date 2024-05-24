@@ -105,8 +105,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.17382836, y: 2.6219368, z: 8.1535}
-  m_Center: {x: -1.3375167, y: 0.8109684, z: -0.07210541}
+  m_Size: {x: 0.13999891, y: 2.147051, z: 8.1535}
+  m_Center: {x: -1.2529857, y: 1.0484113, z: -0.07210541}
 --- !u!65 &93596815606558046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -126,8 +126,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.12571394, y: 2.514474, z: 8.148808}
-  m_Center: {x: 1.3346102, y: 0.75723696, z: -0.01237011}
+  m_Size: {x: 0.114350796, y: 2.0374236, z: 8.148808}
+  m_Center: {x: 1.2742176, y: 1.0369787, z: -0.01237011}
 --- !u!1 &7235495544061757970
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,8 +142,7 @@ GameObject:
   - component: {fileID: 4804701844224758257}
   - component: {fileID: -6455854095001393157}
   - component: {fileID: 4434563641790446327}
-  - component: {fileID: 3882456297123535617}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fire_Truck
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -236,8 +235,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.0850124, y: 2.6410031, z: 8.409957}
-  m_Center: {x: 0.01569295, y: 1.3205016, z: -0.043493748}
+  m_Size: {x: 2.0850124, y: 2.1575859, z: 8.409957}
+  m_Center: {x: 0.01569295, y: 1.5622102, z: -0.043493748}
 --- !u!205 &-6455854095001393157
 LODGroup:
   m_ObjectHideFlags: 0
@@ -280,30 +279,3 @@ MonoBehaviour:
   obstacleType: 4
   obstacleSpeed: 15
   obstacleSection: 3
---- !u!54 &3882456297123535617
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7235495544061757970}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0

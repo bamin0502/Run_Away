@@ -27,7 +27,7 @@ public class Tile : MonoBehaviour
     private List<GameObject> otherItemPrefabs;
 
     public Queue<GameObject> itemPool = new Queue<GameObject>();
-    private Queue<GameObject> obstaclePool = new Queue<GameObject>();
+    public Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
     private Vector3 previousItemPosition = Vector3.zero;
     private bool isFirstItem = true;

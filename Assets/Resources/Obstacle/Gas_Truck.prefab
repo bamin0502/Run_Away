@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3685412, y: 2.7583196, z: 7.5260143}
-  m_Center: {x: -0.028656006, y: 0.78036606, z: 0.06755352}
+  m_Size: {x: 2.3685412, y: 2.225211, z: 7.5260143}
+  m_Center: {x: -0.028656006, y: 1.0469204, z: 0.06755352}
 --- !u!1 &1254613933909251734
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,8 +121,7 @@ GameObject:
   - component: {fileID: -2511631734765776650}
   - component: {fileID: 2575615551445064574}
   - component: {fileID: 8224948504959468151}
-  - component: {fileID: 7144415264650768642}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Gas_Truck
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -215,8 +214,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.098541, y: 2.7153146, z: 0.18937302}
-  m_Center: {x: -0.028274417, y: 1.3576573, z: 4.010709}
+  m_Size: {x: 2.098541, y: 2.457247, z: 0.18937302}
+  m_Center: {x: -0.028274417, y: 1.4866911, z: 4.010709}
 --- !u!205 &-2511631734765776650
 LODGroup:
   m_ObjectHideFlags: 0
@@ -278,32 +277,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8702886, y: 2.3508334, z: 0.34323454}
-  m_Center: {x: -0.04002142, y: 1.5016356, z: -3.933778}
---- !u!54 &7144415264650768642
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2915879132325717256}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Size: {x: 1.8702886, y: 2.1978302, z: 0.36608553}
+  m_Center: {x: -0.04002142, y: 1.5781372, z: -3.9223526}

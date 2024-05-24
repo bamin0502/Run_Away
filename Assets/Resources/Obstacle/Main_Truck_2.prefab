@@ -66,8 +66,7 @@ GameObject:
   - component: {fileID: 509980107235132358}
   - component: {fileID: 8563611560361278862}
   - component: {fileID: 6084123837281516916}
-  - component: {fileID: -3684239908607308200}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main_Truck_2
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -161,8 +160,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2935534, y: 2.8199978, z: 0.44226575}
-  m_Center: {x: -0.028030157, y: 1.4099989, z: -3.4459743}
+  m_Size: {x: 2.2935534, y: 2.309511, z: 0.22229052}
+  m_Center: {x: -0.028030157, y: 1.3837718, z: -3.263437}
 --- !u!114 &6084123837281516916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,33 +180,6 @@ MonoBehaviour:
   obstacleType: 3
   obstacleSpeed: 0
   obstacleSection: 2
---- !u!54 &-3684239908607308200
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023009331022897683}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &2623039173632705545
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,5 +284,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.0065534, y: 1.7331451, z: 6.726322}
-  m_Center: {x: 0.005940795, y: 0.36657244, z: 0.350541}
+  m_Size: {x: 2.675704, y: 1.2618732, z: 6.3152466}
+  m_Center: {x: 0.036411285, y: 0.6022084, z: 0.14500344}

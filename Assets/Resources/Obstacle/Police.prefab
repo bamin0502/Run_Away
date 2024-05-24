@@ -16,8 +16,7 @@ GameObject:
   - component: {fileID: 5434746434499117696}
   - component: {fileID: 7020828326860514582}
   - component: {fileID: 4588730930063413688}
-  - component: {fileID: 4470152203751454623}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Police
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -113,8 +112,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1451693, y: 0.9049688, z: 0.093116045}
-  m_Center: {x: -0.04802513, y: 0.4524844, z: 2.7674613}
+  m_Size: {x: 2.1451693, y: 0.8997959, z: 0.09311581}
+  m_Center: {x: -0.04802513, y: 0.60921377, z: 2.7674613}
 --- !u!205 &-6041482979812847088
 LODGroup:
   m_ObjectHideFlags: 0
@@ -194,35 +193,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1451693, y: 1.0570289, z: 0.18133783}
-  m_Center: {x: -0.04802513, y: 0.52851444, z: -2.8993533}
---- !u!54 &4470152203751454623
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1412363122834768907}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Size: {x: 2.1451693, y: 0.9308921, z: 0.13867807}
+  m_Center: {x: -0.04802513, y: 0.6659369, z: -2.8221204}
 --- !u!1 &3577089475253267887
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,8 +352,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1293087, y: 1.8679072, z: 5.1746907}
-  m_Center: {x: -1.2457013, y: 0.43395358, z: -0.13236594}
+  m_Size: {x: 0.14033675, y: 1.443179, z: 5.202388}
+  m_Center: {x: -1.0605204, y: 0.64631766, z: -0.07471132}
 --- !u!1 &6764268063720464529
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,5 +511,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1293087, y: 1.8679072, z: 5.1746907}
-  m_Center: {x: -1.2457013, y: 0.43395358, z: -0.13236594}
+  m_Size: {x: 0.10986376, y: 1.5238004, z: 5.2111635}
+  m_Center: {x: -1.3289881, y: 0.606007, z: 0.011397243}

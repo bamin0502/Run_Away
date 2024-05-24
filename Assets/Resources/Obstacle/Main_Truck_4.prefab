@@ -14,8 +14,7 @@ GameObject:
   - component: {fileID: 492856858549156629}
   - component: {fileID: 7275889169750623390}
   - component: {fileID: -321402708197286621}
-  - component: {fileID: -2254516654509602681}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main_Truck_4
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
@@ -109,8 +108,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.5082543, y: 2.7936735, z: 0.45396852}
-  m_Center: {x: 0.011199594, y: 1.3968368, z: -3.5855453}
+  m_Size: {x: 2.5082543, y: 2.2851834, z: 0.23352003}
+  m_Center: {x: 0.011199594, y: 1.515887, z: -3.322582}
 --- !u!114 &7275889169750623390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,33 +146,6 @@ MonoBehaviour:
   obstacleType: 4
   obstacleSpeed: 10
   obstacleSection: 3
---- !u!54 &-2254516654509602681
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 111833268559281957}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &2984993093677225962
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,8 +197,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3978362, y: 0.093462706, z: 1.180141}
-  m_Center: {x: -0.012192488, y: 0.3685664, z: 1.2171926}
+  m_Size: {x: 2.3978362, y: 0.093462706, z: 1.3437314}
+  m_Center: {x: -0.012192488, y: 0.3685664, z: 1.2989879}
 --- !u!1 &4396005441857908413
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,8 +250,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.9229794, y: 1.9628866, z: 6.5929947}
-  m_Center: {x: 0.008578777, y: 0.4814433, z: 0.098531365}
+  m_Size: {x: 2.567608, y: 1.3532233, z: 6.5929947}
+  m_Center: {x: -0.01461947, y: 0.7862749, z: 0.098531246}
 --- !u!1 &5372396783698649502
 GameObject:
   m_ObjectHideFlags: 0
