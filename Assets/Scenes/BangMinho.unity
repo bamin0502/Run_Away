@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19025037, g: 0.59239954, b: 0.7717345, a: 1}
+  m_IndirectSpecularColor: {r: 0.18688516, g: 0.59175617, b: 0.77288216, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5065,6 +5065,7 @@ MonoBehaviour:
   coinText: {fileID: 803661594}
   optionButton: {fileID: 2075770052}
   GameScoreText: {fileID: 954112786}
+  HighGameScoreText: {fileID: 1349700536}
   startButton: {fileID: 2371140901040707386}
   HighScoreText: {fileID: 8418371560651319797}
   AllCoinText: {fileID: 10814084}
@@ -8075,6 +8076,7 @@ MonoBehaviour:
   CurrentScore: 0
   scorePerDistance: 10
   HighScore: 0
+  invincibilityDuration: 2
   disableObject: {fileID: 4305881893122355308}
   MenuCamera: {fileID: 2001701949}
   InGameCamera: {fileID: 929700432}
