@@ -62,7 +62,7 @@ public partial class MagnetEffect : MonoBehaviour
                 }
                 else
                 {
-                    Vector3 tileMovement = -Vector3.forward * (gameManager.stageSpeed * Time.deltaTime);
+                    Vector3 tileMovement = - Vector3.forward * (gameManager.stageSpeed * Time.deltaTime);
                     itemTransform.position += direction * distanceThisFrame + tileMovement;
                 }
             }

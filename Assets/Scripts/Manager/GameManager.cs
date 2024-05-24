@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     
     [Header("코인 관련 필드")] 
     public int CurrentGameCoins = 0;
-    public int TotalCoins  = 0;
+    public int TotalCoins  = 1000;
     
     [Header("게임 점수 관련 필드")]
     public int CurrentScore = 0;
@@ -56,12 +56,14 @@ public class GameManager : MonoBehaviour
     private IDisposable blinkSubscription;
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();
-    
+    private float initialJumpPower;
+    private float maxJumpPower = 20f;
     public void Awake()
     {
         uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
         jsonData = GameObject.FindGameObjectWithTag("UiManager").GetComponent<JsonData>();
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        initialJumpPower = playerMovement.jumpForce;
     }
 
     private void OnApplicationPause(bool pauseStatus)
@@ -152,6 +154,11 @@ public class GameManager : MonoBehaviour
     
     public void IncreaseJumpPower(float amount, float duration)
     {
+        if (playerMovement.jumpForce >= maxJumpPower)
+        {
+            return; 
+        }
+        
         currentJumpEffect?.Dispose();
         blinkSubscription?.Dispose();
         
@@ -184,6 +191,11 @@ public class GameManager : MonoBehaviour
 
     public void ActivateMagnetEffect(float duration)
     {
+        if (IsMagnetEffectActive.Value)
+        {
+            return;
+        }
+        
         currentMagnetEffect?.Dispose();
         blinkSubscription?.Dispose();
         
@@ -210,6 +222,11 @@ public class GameManager : MonoBehaviour
     
     public void ActivateFeverMode(float duration)
     {
+        if (IsFeverModeActive.Value)
+        {
+            return;
+        }
+        
         currentFeverEffect?.Dispose();
         blinkSubscription?.Dispose();
         
@@ -240,6 +257,12 @@ public class GameManager : MonoBehaviour
             distanceTravelled += stageSpeed * Time.deltaTime;
             CurrentScore = (int) distanceTravelled * scorePerDistance;
             uiManager.UpdateScoreText(CurrentScore);
+        }
+        
+        if(CurrentScore > HighScore)
+        {
+            HighScore = CurrentScore;
+            uiManager.UpdateHighScoreText(HighScore);
         }
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F1))

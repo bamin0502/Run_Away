@@ -39,11 +39,9 @@ public class SoundManager : Singleton<SoundManager>
         }
         else
         {
-            return;
 #if UNITY_EDITOR
             Debug.LogWarning("Invalid SFX index.");
 #endif
-            
         }
     }
     

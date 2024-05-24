@@ -35,6 +35,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public TextMeshProUGUI coinText;
     [SerializeField] public Button optionButton;
     [SerializeField] public TextMeshProUGUI GameScoreText;
+    [SerializeField] public TextMeshProUGUI HighGameScoreText;
     
     [Header("Game Panel Ui Text"),Tooltip("게임 패널 텍스트들")]
     [SerializeField] public Button startButton;
@@ -168,6 +169,11 @@ public class UiManager : MonoBehaviour
     public void UpdateScoreText(int currentScore)
     {
         GameScoreText.text = currentScore.ToString("00000");
+        
+        if(currentScore > gameManager.HighScore)
+        {
+            HighGameScoreText.text = currentScore.ToString("00000");
+        }
     }
     
     public void UpdateResultScoreText(int currentScore)
@@ -178,6 +184,7 @@ public class UiManager : MonoBehaviour
     public void UpdateHighScoreText(int highScore)
     {
         HighScoreText.text = highScore.ToString("00000");
+        HighGameScoreText.text = highScore.ToString("00000");
     }
     
     public void UpdateReviveCoinText(int coin)

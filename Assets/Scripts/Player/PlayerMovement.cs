@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private Tile tile;
     
     [Header("Player Movement Parameters")]
-    public float jumpForce = 3f;
+    public float jumpForce = 10f;
     public float slideForce = -10f;
     
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 originalColliderSize;
     
     private bool isInvincible;
-
+    private float maxJumpPower = 15f;
     
     private Collider[] overlapResults = new Collider[10];
     private void Awake()
@@ -385,7 +385,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // 원래 위치와 회전 저장
-        Vector3 originalPosition = obstacle.transform.position;
+        var position = obstacle.transform.position;
+        Vector3 originalPosition = position;
         Quaternion originalRotation = obstacle.transform.rotation;
 
         // 장애물을 옆쪽으로 날리는 힘을 가합니다.
@@ -397,7 +398,7 @@ public class PlayerMovement : MonoBehaviour
         Physics.IgnoreCollision(obstacleCollider, GetComponent<Collider>(), true);
 
         // 장애물 주변의 모든 장애물과의 충돌 무시
-        int numObstacles = Physics.OverlapSphereNonAlloc(obstacle.transform.position, 2f, overlapResults);
+        int numObstacles = Physics.OverlapSphereNonAlloc(position, 2f, overlapResults);
         for (int i = 0; i < numObstacles; i++)
         {
             Collider col = overlapResults[i];
@@ -431,11 +432,10 @@ public class PlayerMovement : MonoBehaviour
         obstacle.transform.rotation = originalRotation;
 
         Rigidbody obstacleRb = obstacle.GetComponent<Rigidbody>();
-        if (obstacleRb != null)
+        if (obstacleRb)
         {
             obstacleRb.velocity = Vector3.zero;
             obstacleRb.angularVelocity = Vector3.zero;
-            obstacleRb.isKinematic = true;
         }
         
         // 장애물과 플레이어의 충돌 복원

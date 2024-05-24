@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.191991, g: 0.5946723, b: 0.7773275, a: 1}
+  m_IndirectSpecularColor: {r: 0.18688516, g: 0.59175617, b: 0.77288216, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -636,7 +636,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -100, y: -500}
+  m_SizeDelta: {x: -160, y: -500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &70696866
 MonoBehaviour:
@@ -5065,6 +5065,7 @@ MonoBehaviour:
   coinText: {fileID: 803661594}
   optionButton: {fileID: 2075770052}
   GameScoreText: {fileID: 954112786}
+  HighGameScoreText: {fileID: 1349700536}
   startButton: {fileID: 2371140901040707386}
   HighScoreText: {fileID: 8418371560651319797}
   AllCoinText: {fileID: 10814084}
@@ -8075,6 +8076,7 @@ MonoBehaviour:
   CurrentScore: 0
   scorePerDistance: 10
   HighScore: 0
+  invincibilityDuration: 2
   disableObject: {fileID: 4305881893122355308}
   MenuCamera: {fileID: 2001701949}
   InGameCamera: {fileID: 929700432}
@@ -14195,17 +14197,33 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 112
       objectReference: {fileID: 0}
+    - target: {fileID: 725116909893212457, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4845182378957180857, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4928768734995856962, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5587446418101651405, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5928308596736553316, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
       propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6634526861616014009, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
       propertyPath: jumpForce
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233749419796250879, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+      propertyPath: looping
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9126386466993036448, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
       propertyPath: m_LocalPosition.x
