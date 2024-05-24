@@ -131,7 +131,7 @@ public class UiManager : MonoBehaviour
 #endif
     }
 
-    public void StartGame()
+    private void StartGame()
     {
         gameManager.isPlaying = true;
         gameManager.MenuCamera.enabled = false;
@@ -154,8 +154,8 @@ public class UiManager : MonoBehaviour
     {
         AllCoinText.text = coin.ToString();
     }
-    
-    public void Revive()
+
+    private void Revive()
     {
         RevivePanel.SetActive(true);
         UpdateReviveButtonState(gameManager.TotalCoins);
@@ -186,13 +186,13 @@ public class UiManager : MonoBehaviour
         HighScoreText.text = highScore.ToString("00000");
         HighGameScoreText.text = highScore.ToString("00000");
     }
-    
-    public void UpdateReviveCoinText(int coin)
+
+    private void UpdateReviveCoinText(int coin)
     {
         ReviveCoinText.text = coin.ToString();
     }
 
-    public void UpdateReviveButtonState(int coin)
+    private void UpdateReviveButtonState(int coin)
     {
         ReviveCheckButton.interactable = coin >= 300;
     }
