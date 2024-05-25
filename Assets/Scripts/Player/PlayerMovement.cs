@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -235,11 +236,11 @@ public class PlayerMovement : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit an obstacle, game over!");
 #endif
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-                return;
-            }
+            // if(gameManager.IsFeverModeActive.Value)
+            // {
+            //     LaunchObstacle(other.gameObject);
+            //     return;
+            // }
 
             gameManager.GameOver();
             Die();
@@ -251,11 +252,11 @@ public class PlayerMovement : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit a wall, returning to last position.");
 #endif
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-                return;
-            }
+            // if(gameManager.IsFeverModeActive.Value)
+            // {
+            //     LaunchObstacle(other.gameObject);
+            //     return;
+            // }
             
             targetPosition = lastPosition;
             rb.position = lastPosition;
@@ -264,14 +265,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.collider.CompareTag("WalkBy"))
         {
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-
-            }
+            // if(gameManager.IsFeverModeActive.Value)
+            // {
+            //     LaunchObstacle(other.gameObject);
+            //
+            // }
         }
     }
-
+    
     private void OnCollisionExit(Collision other)
     {
         if (other.collider.CompareTag("Ground"))
@@ -293,6 +294,7 @@ public class PlayerMovement : MonoBehaviour
             tile.itemPool.Enqueue(o);
             other.GetComponent<Item>().Use();
         }
+        
     }
 
     private void Die()
@@ -377,9 +379,12 @@ public class PlayerMovement : MonoBehaviour
     
     private void LaunchObstacle(GameObject obstacle)
     {
-
+        StartCoroutine(LaunchObstacleCoroutine(obstacle));
     }
-    
 
+    private IEnumerator LaunchObstacleCoroutine(GameObject obstacle)
+    {
+        yield return new WaitForSeconds(1.0f);
+    }
     
 }
