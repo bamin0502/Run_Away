@@ -4,68 +4,100 @@ using UnityEngine;
 public class ObstacleManager : MonoBehaviour
 {
     private Dictionary<int, List<GameObject>> obstaclePrefabsBySection;
+    private List<GameObject> sectionPrefabs;
+    public Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
-    private void Awake()
+    void Awake()
     {
-        var obstacleTable = DataManager.GetObstacleTable();
-        obstaclePrefabsBySection = obstacleTable.GetObstaclesBySection();
+        sectionPrefabs = DataManager.GetSectionTable().GetLoadedSections("Tile");
+        obstaclePrefabsBySection = DataManager.GetObstacleTable().GetObstaclesBySection();
     }
 
-    public void SpawnObstacles(Transform tile, int sectionType)
+    public GameObject GetRandomSectionPrefab()
     {
-        var spawnPoints = GetChildTransformsWithTag(tile, "ObstacleSpawnPoint");
+        return sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
+    }
 
-        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
+    public void SpawnObstacles(Transform tile)
+    {
+        var sectionTypeComponent = tile.GetComponent<SectionType>();
+        if (sectionTypeComponent == null) return;
+
+        var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
+        var filteredObstacles = obstaclePrefabsBySection[sectionTypeComponent.sectionType];
+        var selectedLanes = new HashSet<int>();
+
+        while (selectedLanes.Count < Random.Range(1, 3))
         {
-#if UNITY_EDITOR
-            Debug.LogWarning($"No obstacles found for section type: {sectionType}");
-#endif
-            return;
+            selectedLanes.Add(Random.Range(0, 3));
         }
 
         foreach (var spawnPoint in spawnPoints)
         {
-            if (filteredObstacles.Count > 0)
+            var lanePosition = Mathf.RoundToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
+            if (selectedLanes.Contains(lanePosition))
             {
-                var obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
-                var obstacleCollider = obstaclePrefab.GetComponent<Collider>();
+                GameObject obstaclePrefab;
 
-                if (obstacleCollider == null)
+                if (obstaclePool.Count > 0)
                 {
-#if UNITY_EDITOR
-                    Debug.LogWarning($"Obstacle prefab {obstaclePrefab.name} does not have a Collider component.");
-#endif
-                    continue;
-                }
-
-                var obstacleSize = obstacleCollider.bounds.size;
-                var obstacleCenter = spawnPoint.position + obstacleCollider.bounds.center;
-
-                if (!Physics.CheckBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")))
-                {
-                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
-                    obstacle.transform.SetParent(tile, true);
+                    obstaclePrefab = obstaclePool.Dequeue();
+                    obstaclePrefab.transform.position = spawnPoint.position;
+                    obstaclePrefab.transform.rotation = spawnPoint.rotation;
+                    obstaclePrefab.SetActive(true);
+                    obstaclePrefab.transform.SetParent(tile, true);
                 }
                 else
                 {
-#if UNITY_EDITOR
-                    Debug.LogWarning($"Spawn point at {spawnPoint.position} is already occupied by another obstacle.");
-#endif
+                    obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
+                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
+                    obstacle.transform.SetParent(tile, true);
                 }
             }
         }
     }
 
-    private List<Transform> GetChildTransformsWithTag(Transform parent, string tag)
+    public void ResetTileObstacles(Transform tile)
     {
-        var result = new List<Transform>();
-        foreach (Transform child in parent)
+        foreach (Transform child in tile)
         {
-            if (child.CompareTag(tag))
+            if (child.CompareTag("Obstacle"))
             {
-                result.Add(child);
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                obstaclePool.Enqueue(o);
             }
         }
+
+        var newSectionPrefab = GetRandomSectionPrefab();
+        var newSectionTypeComponent = newSectionPrefab.GetComponent<SectionType>();
+
+        if (newSectionTypeComponent)
+        {
+            tile.GetComponent<SectionType>().sectionType = newSectionTypeComponent.sectionType;
+            SpawnObstacles(tile);
+        }
+    }
+
+    private List<Transform> GetAllChildTransforms(Transform parent, string tag)
+    {
+        var result = new List<Transform>();
+        var queue = new Queue<Transform>();
+        queue.Enqueue(parent);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            foreach (Transform child in current)
+            {
+                if (child.CompareTag(tag))
+                {
+                    result.Add(child);
+                }
+                queue.Enqueue(child);
+            }
+        }
+
         return result;
     }
 }

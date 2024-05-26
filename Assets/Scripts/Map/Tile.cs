@@ -9,7 +9,7 @@ public class Tile : MonoBehaviour
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
-    public int noItemsInitially = 2; // 새 변수 선언
+    public int noItemsInitially = 2;
     public float tileLength = 17;
 
     public float moveSpeedIncreaseDistance = 20f;
@@ -33,8 +33,8 @@ public class Tile : MonoBehaviour
     private bool isFirstItem = true;
     private float totalDistance = 0f;
     public float specialItemSpawnDistance = 100f;
-    public float initialOtherItemSpawnChance = 0.05f;
-    public float maxOtherItemSpawnChance = 0.2f;
+    public float initialOtherItemSpawnChance = 0.02f;
+    public float maxOtherItemSpawnChance = 0.1f;
     public float distanceFactor = 0.0005f;
     public int coinLineLength = 5;
     public float coinSpacing = 3.0f;
@@ -51,8 +51,11 @@ public class Tile : MonoBehaviour
     [Header("최대 속도"), Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
     [SerializeField] public float maxMoveSpeed = 15f;
 
-    private float itemSpawnInterval = 2f; // 2 seconds interval for testing
+    private float itemSpawnInterval = 2f;
     private float itemSpawnTimer = 0f;
+
+    private float lastSpecialItemSpawnDistance = 0f;
+    public int minObstaclesPerTile = 3;  // 최소 장애물 개수
 
     void Awake()
     {
@@ -92,7 +95,6 @@ public class Tile : MonoBehaviour
             var tile = SpawnTile(i >= noObstaclesInitially);
             if (tile != null)
             {
-                // 처음 noItemsInitially 개의 타일에 대해서는 아이템을 스폰하지 않음
                 if (i >= noItemsInitially)
                 {
                     SpawnItems(tile);
@@ -123,12 +125,12 @@ public class Tile : MonoBehaviour
 
             totalDistance += moveSpeed * Time.deltaTime;
             gameManager.stageSpeed = moveSpeed;
-            
+
             itemSpawnTimer += Time.deltaTime;
             if (itemSpawnTimer >= itemSpawnInterval)
             {
                 itemSpawnTimer = 0f;
-                SpawnItems(tiles[^1]); 
+                SpawnItems(tiles[^1]);
             }
         }
     }
@@ -205,11 +207,7 @@ public class Tile : MonoBehaviour
         Debug.Log($"Spawn points found: {spawnPoints.Count}, filtered obstacles: {filteredObstacles.Count}");
 #endif
 
-        var selectedLanes = new HashSet<int>();
-        while (selectedLanes.Count < Random.Range(1, 3))
-        {
-            selectedLanes.Add(Random.Range(0, 3));
-        }
+        var selectedLanes = GetTwoUniqueRandomLanes();
 
         foreach (var spawnPoint in spawnPoints)
         {
@@ -240,13 +238,22 @@ public class Tile : MonoBehaviour
         }
     }
 
+    private HashSet<int> GetTwoUniqueRandomLanes()
+    {
+        var lanes = new HashSet<int>();
+        while (lanes.Count < 2)
+        {
+            lanes.Add(Random.Range(0, 3));
+        }
+        return lanes;
+    }
+
     private void ReuseTile()
     {
         var tile = tiles[0];
         tiles.RemoveAt(0);
         tiles.Add(tile);
 
-        // 기존 타일의 장애물 및 아이템 제거
         foreach (Transform child in tile)
         {
             if (child.CompareTag("Obstacle"))
@@ -263,10 +270,8 @@ public class Tile : MonoBehaviour
             }
         }
 
-        // 타일 위치 재설정
         tile.position = tiles[^2].position + new Vector3(0, 0, tileLength);
 
-        // 새로운 섹션 타입 무작위 선택
         var newSectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
         var newSectionTypeComponent = newSectionPrefab.GetComponent<SectionType>();
 
@@ -282,7 +287,6 @@ public class Tile : MonoBehaviour
 #endif
         }
 
-        // 처음 noItemsInitially 개의 타일을 넘어간 경우에만 아이템을 스폰
         if (tiles.IndexOf(tile) >= noItemsInitially)
         {
             SpawnItems(tile);
@@ -301,24 +305,20 @@ public class Tile : MonoBehaviour
 
         foreach (var lane in lanePositions)
         {
-            for (int attempts = 0; attempts < 10; attempts++)
+            Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z));
+            if (!IsObstacleAtPosition(startPosition))
             {
-                var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+                SpawnCoinLine(startPosition, lane, tile);
+            }
+        }
 
-                if (!IsObstacleAtPosition(randomPosition))
-                {
-                    if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
-                    {
-                        SpawnSingleItem(randomPosition, tile);
-                    }
-                    else
-                    {
-                        SpawnCoinLine(randomPosition, lane, tile);
-                    }
-                    previousItemPosition = randomPosition;
-                    isFirstItem = false;
-                    break;
-                }
+        if (totalDistance - lastSpecialItemSpawnDistance > specialItemSpawnDistance)
+        {
+            Vector3 randomPosition = new Vector3(lanePositions[Random.Range(0, lanePositions.Length)], bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+            if (!IsObstacleAtPosition(randomPosition))
+            {
+                SpawnSingleItem(randomPosition, tile, false);
+                lastSpecialItemSpawnDistance = totalDistance;
             }
         }
     }
@@ -335,7 +335,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin = false)
+    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
     {
         var itemPrefab = isCoin ? primaryItemPrefab : otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
 
