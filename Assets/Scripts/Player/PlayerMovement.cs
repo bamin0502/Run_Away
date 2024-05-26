@@ -128,11 +128,13 @@ public class PlayerMovement : MonoBehaviour
             if (vertical > 0.5f) // 점프 중 다시 점프 불가
             {
                 PerformJump();
+                pendingMovement = Vector2.zero;
                 //SoundManager.instance.PlaySfx(6);
             }
             else if (vertical < -0.5f)
             {
                 PerformSlide();
+                pendingMovement = Vector2.zero;
                 //SoundManager.instance.PlaySfx(9);
             }
         }
@@ -153,7 +155,6 @@ public class PlayerMovement : MonoBehaviour
 
         boxCollider.center = originalColliderCenter;
         boxCollider.size = originalColliderSize;
-        pendingMovement = Vector2.zero;
     }
 
     private void PerformSlide()
@@ -165,7 +166,6 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = velocity;
             rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
             isJumping = false;
-            pendingMovement = Vector2.zero;
         }
 
         if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f))
@@ -181,7 +181,6 @@ public class PlayerMovement : MonoBehaviour
         slideTimer = slideDuration;
         isSliding = true;
         playerAni.SetSlideAnimation();
-        pendingMovement = Vector2.zero;
         boxCollider.center = new Vector3(0, 0.45f, 0.15f);
         boxCollider.size = new Vector3(0.6f, 0.6f, 0.75f);
     }

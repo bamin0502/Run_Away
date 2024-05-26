@@ -14,7 +14,7 @@ public class SwipeDetection : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = GetComponent<InputManager>();
+        inputManager = InputManager.Instance;
         playerMovement = GetComponent<PlayerMovement>();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
     }
