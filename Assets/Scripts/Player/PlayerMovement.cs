@@ -89,7 +89,6 @@ public class PlayerMovement : MonoBehaviour
         if (pendingMovement != Vector2.zero)
         {
             UpdateMovement(pendingMovement);
-            
         }
 
         if (isJumping)
@@ -231,7 +230,7 @@ public class PlayerMovement : MonoBehaviour
             if (!isSliding) playerAni.SetRunAnimation();
         }
 
-        if (other.collider.CompareTag("Obstacle"))
+        if (other.collider.CompareTag("Obstacle") && !isInvincible)
         {
 #if UNITY_EDITOR
             Debug.Log("Hit an obstacle, game over!");
@@ -318,52 +317,18 @@ public class PlayerMovement : MonoBehaviour
     
     public void Revive()
     {
-        Vector3 SafePosition= FindSafePosition();
-        transform.position = SafePosition;
         rb.velocity = Vector3.zero;
-        
+
         isJumping = false;
         isSliding = false;
         isCollidingFront = false;
         swipeDirection = Defines.SwipeDirection.RUN;
         playerAni.SetRunAnimation();
+
+        SetInvincible(true);
+        StartCoroutine(RemoveInvincibilityAfter(2.0f)); // 2초 동안 무적 유지
     }
 
-    private Vector3 FindSafePosition()
-    {
-        float[] lanes = new float[] { -3.8f, 0, 3.8f };
-        Vector3 currentPosition = transform.position;
-        float bufferDistance = 10.0f; 
-        Vector3 forwardPosition = new Vector3(currentPosition.x, currentPosition.y, currentPosition.z + bufferDistance);
-
-        foreach (float lane in lanes)
-        {
-            Vector3 potentialPosition = new Vector3(lane, currentPosition.y, forwardPosition.z);
-
-            if (IsSafePosition(potentialPosition, bufferDistance))
-            {
-                return potentialPosition;
-            }
-        }
-        
-        return forwardPosition;
-    }
-    private bool IsSafePosition(Vector3 position, float bufferDistance)
-    {
-        Vector3 checkStart = position;
-        Vector3 checkEnd = new Vector3(position.x, position.y, position.z + bufferDistance);
-
-        if (Physics.Linecast(checkStart, checkEnd, out var hit))
-        {
-            if (hit.collider.CompareTag("Obstacle"))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    
     public void SetInvincible(bool invincible)
     {
         isInvincible = invincible;
@@ -376,7 +341,13 @@ public class PlayerMovement : MonoBehaviour
             playerAni.StopInvincibleAnimation();
         }
     }
-    
+
+    private IEnumerator RemoveInvincibilityAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SetInvincible(false);
+    }
+
     private void LaunchObstacle(GameObject obstacle)
     {
         StartCoroutine(LaunchObstacleCoroutine(obstacle));
@@ -386,5 +357,4 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
     }
-    
 }

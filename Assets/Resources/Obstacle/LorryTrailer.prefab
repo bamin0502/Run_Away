@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1481485843952967925}
   m_Layer: 6
   m_Name: LorryTrailer
-  m_TagString: Obstacle
+  m_TagString: WalkBy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
