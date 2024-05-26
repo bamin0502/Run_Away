@@ -92,12 +92,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6666319209889459021}
-  - component: {fileID: 160486845965935494}
   - component: {fileID: 5253933735294873013}
   - component: {fileID: 1481485843952967925}
   m_Layer: 6
   m_Name: LorryTrailer
-  m_TagString: WalkBy
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121,29 +120,9 @@ Transform:
   - {fileID: 6666319209495708649}
   - {fileID: 1196825716816815304}
   - {fileID: 3296278470888785962}
+  - {fileID: 9063318300189374782}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &160486845965935494
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1168204003002679852}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.1700497, y: 0.08472681, z: 12.109242}
-  m_Center: {x: -0.014000654, y: 1.8557372, z: 0.6376481}
 --- !u!205 &5253933735294873013
 LODGroup:
   m_ObjectHideFlags: 0
@@ -314,8 +293,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.102159, y: 1.3480835, z: 12.235331}
-  m_Center: {x: -0.010259628, y: 0.11847854, z: 0.5636921}
+  m_Size: {x: 2.102159, y: 1.7200942, z: 12.235331}
+  m_Center: {x: -0.010259628, y: 0.3044839, z: 0.5636921}
 --- !u!1 &3791949240563366687
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +392,7 @@ GameObject:
   - component: {fileID: 1444493780372190289}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: WalkBy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -623,6 +602,59 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5286382355753727341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9063318300189374782}
+  - component: {fileID: 4786181725006281242}
+  m_Layer: 6
+  m_Name: WalkBy
+  m_TagString: WalkBy
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9063318300189374782
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5286382355753727341}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6666319209889459021}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4786181725006281242
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5286382355753727341}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.790142, y: 0.19311452, z: 11.854813}
+  m_Center: {x: 0.01530242, y: 1.929175, z: 0.69693446}
 --- !u!1 &6206162703313669911
 GameObject:
   m_ObjectHideFlags: 0

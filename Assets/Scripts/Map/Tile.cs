@@ -317,7 +317,7 @@ public class Tile : MonoBehaviour
             Vector3 randomPosition = new Vector3(lanePositions[Random.Range(0, lanePositions.Length)], bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
             if (!IsObstacleAtPosition(randomPosition))
             {
-                SpawnSingleItem(randomPosition, tile, false);
+                ReplaceCoinWithSpecialItem(tile);
                 lastSpecialItemSpawnDistance = totalDistance;
             }
         }
@@ -368,6 +368,21 @@ public class Tile : MonoBehaviour
 #if UNITY_EDITOR
             Debug.LogWarning("ItemType component not found on the spawned item.");
 #endif
+        }
+    }
+
+    private void ReplaceCoinWithSpecialItem(Transform tile)
+    {
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Item") && child.gameObject.name.Contains("Coin"))
+            {
+                var specialItemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+                child.GetComponent<Item>().Use();
+                var specialItem = Instantiate(specialItemPrefab, child.position, Quaternion.identity);
+                specialItem.transform.SetParent(tile, true);
+                break;
+            }
         }
     }
 
