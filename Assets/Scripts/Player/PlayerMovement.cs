@@ -128,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
             if (vertical > 0.5f) // 점프 중 다시 점프 불가
             {
                 PerformJump();
-                pendingMovement = Vector2.zero;
+                
                 //SoundManager.instance.PlaySfx(6);
             }
             else if (vertical < -0.5f)
@@ -152,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
         isJumping = true;
         isSliding = false;
         playerAni.SetJumpAnimation();
-
+        pendingMovement = Vector2.zero;
         boxCollider.center = originalColliderCenter;
         boxCollider.size = originalColliderSize;
     }
@@ -223,7 +223,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.collider.CompareTag("Ground"))
+        if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
         {
             isJumping = false;
             if (!isSliding) playerAni.SetRunAnimation();
@@ -273,7 +273,7 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnCollisionExit(Collision other)
     {
-        if (other.collider.CompareTag("Ground"))
+        if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
         {
             isJumping = true;
         }
