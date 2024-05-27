@@ -32,8 +32,6 @@ public class Tile : MonoBehaviour
     public Queue<GameObject> itemPool = new Queue<GameObject>();
     public Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
-    public Dictionary<GameObject, int> originalLayers = new Dictionary<GameObject, int>(); // 원래 레이어 저장용 사전
-
     private float totalDistance = 0f;
     public float specialItemSpawnDistance = 100f;
     public int coinLineLength = 5;
@@ -184,18 +182,15 @@ public class Tile : MonoBehaviour
                     obstaclePrefab.SetActive(true);
                     obstaclePrefab.transform.SetParent(tile, true);
 
-                    // 레이어 복원
-                    if (originalLayers.ContainsKey(obstaclePrefab))
-                    {
-                        obstaclePrefab.layer = originalLayers[obstaclePrefab];
-                    }
-
                     Rigidbody rb = obstaclePrefab.GetComponent<Rigidbody>();
-                    if (rb != null)
+                    if (rb)
                     {
                         rb.velocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;
+                        rb.isKinematic = true;
                     }
+                    
+                    obstaclePrefab.layer = LayerMask.NameToLayer("Obstacle");
                 }
                 else
                 {
@@ -231,18 +226,15 @@ public class Tile : MonoBehaviour
                 (o = child.gameObject).SetActive(false);
                 obstaclePool.Enqueue(o);
 
-                // 원래 레이어로 복원
-                if (originalLayers.ContainsKey(o))
-                {
-                    o.layer = originalLayers[o];
-                }
-
                 Rigidbody rb = o.GetComponent<Rigidbody>();
-                if (rb != null)
+                if (rb)
                 {
                     rb.velocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
+                    rb.isKinematic = true; 
                 }
+                
+                o.layer = LayerMask.NameToLayer("Obstacle");
             }
             else if (child.CompareTag("Item"))
             {

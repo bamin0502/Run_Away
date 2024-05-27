@@ -124,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (vertical > 0.5f) // 점프 중 다시 점프 불가
+            if (vertical > 0.5f)
             {
                 PerformJump();
                 
@@ -243,7 +243,6 @@ public class PlayerMovement : MonoBehaviour
 #endif
             if(gameManager.IsFeverModeActive.Value)
             {
-                ChangeObstacleLayer(other.gameObject);
                 LaunchObstacle(other.gameObject);
                 return;
             }
@@ -252,6 +251,8 @@ public class PlayerMovement : MonoBehaviour
                 gameManager.GameOver();
                 Die();
             }
+           
+            
         }
 
         if (other.collider.CompareTag("Wall"))
@@ -261,7 +262,6 @@ public class PlayerMovement : MonoBehaviour
 #endif
             if(gameManager.IsFeverModeActive.Value)
             {
-                ChangeObstacleLayer(other.gameObject);
                 LaunchObstacle(other.gameObject);
                 return;
             }
@@ -271,6 +271,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.position = lastPosition;
                 currentLaneIndex = lastLaneIndex;
             }
+            
         }
 
         if (other.collider.CompareTag("WalkBy"))
@@ -281,22 +282,11 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                ChangeObstacleLayer(other.gameObject);
                 LaunchObstacle(other.gameObject);
             }
         }
     }
-
-    private void ChangeObstacleLayer(GameObject obstacle)
-    {
-        // 원래 레이어를 저장하고 피버 상태 동안 충돌하지 않는 레이어로 변경
-        if (!tile.originalLayers.ContainsKey(obstacle))
-        {
-            tile.originalLayers[obstacle] = obstacle.layer;
-        }
-        obstacle.layer = LayerMask.NameToLayer("IgnorePlayerCollision"); // 충돌하지 않는 레이어로 변경
-    }
-
+    
     private void OnCollisionExit(Collision other)
     {
         if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
@@ -400,10 +390,11 @@ public class PlayerMovement : MonoBehaviour
         Rigidbody obstacleRigidbody = obstacle.GetComponent<Rigidbody>();
         if (obstacleRigidbody != null)
         {
-            Vector3 launchDirection = (obstacle.transform.position - transform.position).normalized;
-            launchDirection += Vector3.up;
-            float launchForce = 500f;
+            obstacle.layer = LayerMask.NameToLayer("IgnorePlayerCollision");
             
+            Vector3 launchDirection = (obstacle.transform.position - transform.position).normalized + Vector3.up;
+            float launchForce = 500f;
+            obstacleRigidbody.isKinematic = false; 
             obstacleRigidbody.AddForce(launchDirection * launchForce);
         }
     }
