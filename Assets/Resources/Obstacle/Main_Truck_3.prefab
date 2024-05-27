@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7719134092455136019}
   - component: {fileID: 3926734683064073265}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling
   m_TagString: WalkBy
   m_Icon: {fileID: 0}
@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: -958529083741663076}
   - component: {fileID: 5955639456323699683}
   - component: {fileID: 4399422176924577296}
+  - component: {fileID: -5101129602074256586}
   m_Layer: 6
   m_Name: Main_Truck_3
   m_TagString: Obstacle
@@ -271,6 +272,33 @@ MonoBehaviour:
   obstacleType: 4
   obstacleSpeed: 10
   obstacleSection: 3
+--- !u!54 &-5101129602074256586
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8207002681667545729}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &8350026899429958285
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,7 +309,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6447846446837166311}
   - component: {fileID: 2084918038201739826}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling (1)
   m_TagString: WalkBy
   m_Icon: {fileID: 0}

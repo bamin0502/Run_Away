@@ -12,8 +12,11 @@ public class Tile : MonoBehaviour
     public int noItemsInitially = 2;
     public float tileLength = 17;
 
+    [Header("Speed Settings")]
     public float moveSpeedIncreaseDistance = 20f;
     public float moveSpeedMultiplier = 1.05f;
+    public float initialMoveSpeed = 5f;
+    public float maxMoveSpeed = 30f;
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
@@ -29,13 +32,10 @@ public class Tile : MonoBehaviour
     public Queue<GameObject> itemPool = new Queue<GameObject>();
     public Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
-    private Vector3 previousItemPosition = Vector3.zero;
-    private bool isFirstItem = true;
+    public Dictionary<GameObject, int> originalLayers = new Dictionary<GameObject, int>(); // 원래 레이어 저장용 사전
+
     private float totalDistance = 0f;
     public float specialItemSpawnDistance = 100f;
-    public float initialOtherItemSpawnChance = 0.02f;
-    public float maxOtherItemSpawnChance = 0.1f;
-    public float distanceFactor = 0.0005f;
     public int coinLineLength = 5;
     public float coinSpacing = 3.0f;
 
@@ -43,19 +43,10 @@ public class Tile : MonoBehaviour
 
     private float moveSpeed;
     private float distanceTravelled = 0f;
-
-    [Header("일정 거리마다 속도 증가"), Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
-    [SerializeField] private float nextSpeedIncreaseDistance = 20f;
-    [SerializeField] public float initialMoveSpeed = 5f;
-
-    [Header("최대 속도"), Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
-    [SerializeField] public float maxMoveSpeed = 15f;
-
+    private float nextSpeedIncreaseDistance;
     private float itemSpawnInterval = 2f;
     private float itemSpawnTimer = 0f;
-
     private float lastSpecialItemSpawnDistance = 0f;
-    public int minObstaclesPerTile = 3;  // 최소 장애물 개수
 
     void Awake()
     {
@@ -72,33 +63,22 @@ public class Tile : MonoBehaviour
         {
             Debug.LogError("Primary item prefab (Coin) not found!");
         }
-        else
-        {
-            Debug.Log($"Primary Item Prefab: {primaryItemPrefab.name}");
-        }
 #endif
 
         otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
-#if UNITY_EDITOR
-        foreach (var item in otherItemPrefabs)
-        {
-            Debug.Log($"Other Item Prefab: {item.name}");
-        }
-#endif
     }
 
     private void Start()
     {
         nextTilePosition = startPoint;
+        nextSpeedIncreaseDistance = moveSpeedIncreaseDistance;
+
         for (var i = 0; i < numberOfTiles; i++)
         {
             var tile = SpawnTile(i >= noObstaclesInitially);
-            if (tile != null)
+            if (tile != null && i >= noItemsInitially)
             {
-                if (i >= noItemsInitially)
-                {
-                    SpawnItems(tile);
-                }
+                SpawnItems(tile);
             }
         }
 
@@ -173,12 +153,6 @@ public class Tile : MonoBehaviour
             {
                 SpawnObstacles(newTile, sectionTypeComponent.sectionType);
             }
-            else
-            {
-#if UNITY_EDITOR
-                Debug.LogWarning("SectionType component not found on the section prefab.");
-#endif
-            }
         }
 
         return newTile;
@@ -188,24 +162,9 @@ public class Tile : MonoBehaviour
     {
         var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
 
-        if (spawnPoints.Count == 0)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("No ObstacleSpawnPoint found in the tile.");
-#endif
-            return;
-        }
+        if (spawnPoints.Count == 0) return;
 
-        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"No obstacles found for section type: {sectionType}");
-#endif
-            return;
-        }
-#if UNITY_EDITOR
-        Debug.Log($"Spawn points found: {spawnPoints.Count}, filtered obstacles: {filteredObstacles.Count}");
-#endif
+        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles)) return;
 
         var selectedLanes = GetTwoUniqueRandomLanes();
 
@@ -224,15 +183,25 @@ public class Tile : MonoBehaviour
                     obstaclePrefab.transform.rotation = spawnPoint.rotation;
                     obstaclePrefab.SetActive(true);
                     obstaclePrefab.transform.SetParent(tile, true);
+
+                    // 레이어 복원
+                    if (originalLayers.ContainsKey(obstaclePrefab))
+                    {
+                        obstaclePrefab.layer = originalLayers[obstaclePrefab];
+                    }
+
+                    Rigidbody rb = obstaclePrefab.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.velocity = Vector3.zero;
+                        rb.angularVelocity = Vector3.zero;
+                    }
                 }
                 else
                 {
                     obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
                     var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
                     obstacle.transform.SetParent(tile, true);
-#if UNITY_EDITOR
-                    Debug.Log($"Spawned obstacle: {obstacle.name} at position: {spawnPoint.position}");
-#endif
                 }
             }
         }
@@ -261,6 +230,19 @@ public class Tile : MonoBehaviour
                 GameObject o;
                 (o = child.gameObject).SetActive(false);
                 obstaclePool.Enqueue(o);
+
+                // 원래 레이어로 복원
+                if (originalLayers.ContainsKey(o))
+                {
+                    o.layer = originalLayers[o];
+                }
+
+                Rigidbody rb = o.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
             }
             else if (child.CompareTag("Item"))
             {
@@ -280,12 +262,6 @@ public class Tile : MonoBehaviour
             tile.GetComponent<SectionType>().sectionType = newSectionTypeComponent.sectionType;
             SpawnObstacles(tile, newSectionTypeComponent.sectionType);
         }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("SectionType component not found on the new section prefab.");
-#endif
-        }
 
         if (tiles.IndexOf(tile) >= noItemsInitially)
         {
@@ -295,10 +271,7 @@ public class Tile : MonoBehaviour
 
     private void SpawnItems(Transform tile)
     {
-        if (tile == null)
-        {
-            return;
-        }
+        if (tile == null) return;
 
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
@@ -351,24 +324,8 @@ public class Tile : MonoBehaviour
         {
             item = Instantiate(itemPrefab, position, Quaternion.identity);
         }
-        if (tile)
-        {
-            item.transform.SetParent(tile, true);
-        }
 
-        var itemTypeComponent = item.GetComponent<ItemType>();
-        if (itemTypeComponent)
-        {
-#if UNITY_EDITOR
-            Debug.Log($"Spawned Item: {itemTypeComponent.ItemNameEnglish}, ID: {itemTypeComponent.ItemID}");
-#endif
-        }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("ItemType component not found on the spawned item.");
-#endif
-        }
+        item.transform.SetParent(tile, true);
     }
 
     private void ReplaceCoinWithSpecialItem(Transform tile)

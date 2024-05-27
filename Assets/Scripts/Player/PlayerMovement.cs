@@ -39,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
     
     private bool isInvincible;
     private float maxJumpPower = 15f;
+    private Vector2 pendingMovement;
     
     private void Awake()
     {
@@ -96,9 +97,7 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Physics.gravity * rb.mass, ForceMode.Force);
         }
     }
-
-    private Vector2 pendingMovement;
-
+    
     public void SetPendingMovement(Vector2 movement)
     {
         pendingMovement = movement;
@@ -244,6 +243,7 @@ public class PlayerMovement : MonoBehaviour
 #endif
             if(gameManager.IsFeverModeActive.Value)
             {
+                ChangeObstacleLayer(other.gameObject);
                 LaunchObstacle(other.gameObject);
                 return;
             }
@@ -252,8 +252,6 @@ public class PlayerMovement : MonoBehaviour
                 gameManager.GameOver();
                 Die();
             }
-           
-            
         }
 
         if (other.collider.CompareTag("Wall"))
@@ -263,25 +261,42 @@ public class PlayerMovement : MonoBehaviour
 #endif
             if(gameManager.IsFeverModeActive.Value)
             {
+                ChangeObstacleLayer(other.gameObject);
                 LaunchObstacle(other.gameObject);
                 return;
             }
-            
-            targetPosition = lastPosition;
-            rb.position = lastPosition;
-            currentLaneIndex = lastLaneIndex;
+            else
+            {
+                targetPosition = lastPosition;
+                rb.position = lastPosition;
+                currentLaneIndex = lastLaneIndex;
+            }
         }
 
         if (other.collider.CompareTag("WalkBy"))
         {
-            if(gameManager.IsFeverModeActive.Value)
+            if(!gameManager.IsFeverModeActive.Value)
             {
+                isJumping = true;
+            }
+            else
+            {
+                ChangeObstacleLayer(other.gameObject);
                 LaunchObstacle(other.gameObject);
-            
             }
         }
     }
-    
+
+    private void ChangeObstacleLayer(GameObject obstacle)
+    {
+        // 원래 레이어를 저장하고 피버 상태 동안 충돌하지 않는 레이어로 변경
+        if (!tile.originalLayers.ContainsKey(obstacle))
+        {
+            tile.originalLayers[obstacle] = obstacle.layer;
+        }
+        obstacle.layer = LayerMask.NameToLayer("IgnorePlayerCollision"); // 충돌하지 않는 레이어로 변경
+    }
+
     private void OnCollisionExit(Collision other)
     {
         if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
@@ -289,6 +304,10 @@ public class PlayerMovement : MonoBehaviour
             isJumping = true;
         }
         if (other.collider.CompareTag("Obstacle"))
+        {
+            isCollidingFront = false;
+        }
+        if(other.collider.CompareTag("Wall"))
         {
             isCollidingFront = false;
         }
@@ -303,7 +322,6 @@ public class PlayerMovement : MonoBehaviour
             tile.itemPool.Enqueue(o);
             other.GetComponent<Item>().Use();
         }
-        
     }
 
     private void Die()
@@ -327,7 +345,11 @@ public class PlayerMovement : MonoBehaviour
     
     public void Revive()
     {
+        Vector3 safePosition = GetSafeRevivePosition(rb.position);
+        rb.position = safePosition;
+
         rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
 
         isJumping = false;
         isSliding = false;
@@ -336,9 +358,24 @@ public class PlayerMovement : MonoBehaviour
         playerAni.SetRunAnimation();
 
         SetInvincible(true);
-        StartCoroutine(RemoveInvincibilityAfter(2.0f)); // 2초 동안 무적 유지
+        StartCoroutine(RemoveInvincibilityAfter(2.0f)); 
     }
+    
+    private Vector3 GetSafeRevivePosition(Vector3 startPosition)
+    {
+        Vector3 revivePosition = startPosition;
+        for (int i = 0; i < 10; i++)
+        {
+            if (IsObstacleInPath(revivePosition))
+            {
+                return revivePosition;
+            }
 
+            revivePosition.y += 0.5f;
+        }
+
+        return startPosition;
+    }
     public void SetInvincible(bool invincible)
     {
         isInvincible = invincible;
@@ -360,26 +397,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void LaunchObstacle(GameObject obstacle)
     {
-        var colliderObstacle = obstacle.GetComponent<Collider>();
-        var rbObstacle = obstacle.GetComponent<Rigidbody>();
-        
-        if(colliderObstacle != null && rbObstacle != null)
+        Rigidbody obstacleRigidbody = obstacle.GetComponent<Rigidbody>();
+        if (obstacleRigidbody != null)
         {
-            colliderObstacle.enabled = false;
-            rbObstacle.isKinematic = false;
-            rbObstacle.AddForce(Vector3.forward * 10f, ForceMode.Impulse);
-            StartCoroutine(LaunchObstacleCoroutine(colliderObstacle, obstacle, 1.0f));
+            Vector3 launchDirection = (obstacle.transform.position - transform.position).normalized;
+            launchDirection += Vector3.up;
+            float launchForce = 500f;
+            
+            obstacleRigidbody.AddForce(launchDirection * launchForce);
         }
-        
-    }
-
-    private IEnumerator LaunchObstacleCoroutine(Collider collider, GameObject obstacle, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (collider)
-        {
-            collider.enabled = true;
-        }
-        tile.obstaclePool.Enqueue(obstacle);
     }
 }

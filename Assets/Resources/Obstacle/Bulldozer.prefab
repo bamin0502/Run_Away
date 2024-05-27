@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -1905177527160789200}
   - component: {fileID: -7242166217638368683}
   - component: {fileID: 2483056610742312346}
+  - component: {fileID: 1413441240700145085}
   m_Layer: 6
   m_Name: Bulldozer
   m_TagString: Obstacle
@@ -173,6 +174,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.7387862, y: 2.8042116, z: 0.6092992}
   m_Center: {x: -0.041019715, y: 1.6084629, z: 3.7565181}
+--- !u!54 &1413441240700145085
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646028154367701847}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &3707136665477659509
 GameObject:
   m_ObjectHideFlags: 0

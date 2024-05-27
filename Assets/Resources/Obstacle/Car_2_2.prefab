@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -8618396109541863388}
   - component: {fileID: 5768450064166165769}
   - component: {fileID: 3157894444219997943}
+  - component: {fileID: 3832341760724898801}
   m_Layer: 6
   m_Name: Car_2_2
   m_TagString: Obstacle
@@ -148,6 +149,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.241057, y: 1.2315385, z: 0.24987316}
   m_Center: {x: -0.009191275, y: 0.8326508, z: -2.6540723}
+--- !u!54 &3832341760724898801
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816428196210802057}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &2340979276472084966
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6024161784748511912}
   - component: {fileID: 1725153081885677271}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling
   m_TagString: WalkBy
   m_Icon: {fileID: 0}

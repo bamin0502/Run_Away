@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5434746434499117696}
   - component: {fileID: 7020828326860514582}
   - component: {fileID: 4588730930063413688}
+  - component: {fileID: -2235578903592495345}
   m_Layer: 6
   m_Name: Police
   m_TagString: Obstacle
@@ -195,6 +196,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.1451693, y: 0.9308921, z: 0.13867807}
   m_Center: {x: -0.04802513, y: 0.6659369, z: -2.8221204}
+--- !u!54 &-2235578903592495345
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412363122834768907}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &3577089475253267887
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,8 +251,8 @@ Transform:
   m_GameObject: {fileID: 3577089475253267887}
   serializedVersion: 2
   m_LocalRotation: {x: 0.1366352, y: -0, z: -0, w: 0.9906215}
-  m_LocalPosition: {x: 0, y: 0.893, z: 1.378}
-  m_LocalScale: {x: 0.17296305, y: 1, z: 0.23565136}
+  m_LocalPosition: {x: 0, y: 1.336, z: 1.503}
+  m_LocalScale: {x: 0.17296305, y: 0.08381376, z: 0.23565136}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1788606808321810097}
@@ -245,7 +273,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3577089475253267887}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 3
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -364,7 +392,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2253453791601851332}
   - component: {fileID: 2260391189763684829}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling (1)
   m_TagString: WalkBy
   m_Icon: {fileID: 0}
@@ -417,7 +445,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1461223735780709152}
   - component: {fileID: 4473413868692127830}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling
   m_TagString: WalkBy
   m_Icon: {fileID: 0}

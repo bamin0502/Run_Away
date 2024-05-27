@@ -32,7 +32,7 @@ TagManager:
   - UI
   - Obstacle
   - Player
-  - 
+  - IgnorePlayerCollision
   - 
   - 
   - 
