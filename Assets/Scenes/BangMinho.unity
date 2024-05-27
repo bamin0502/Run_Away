@@ -2796,16 +2796,11 @@ MonoBehaviour:
   tileLength: 30
   moveSpeedIncreaseDistance: 70
   moveSpeedMultiplier: 1.05
-  specialItemSpawnDistance: 100
-  initialOtherItemSpawnChance: 0.1
-  maxOtherItemSpawnChance: 0.5
-  distanceFactor: 0.001
-  coinLineLength: 5
-  coinSpacing: 3
-  nextSpeedIncreaseDistance: 50
   initialMoveSpeed: 15
   maxMoveSpeed: 30
-  minObstaclesPerTile: 3
+  specialItemSpawnDistance: 100
+  coinLineLength: 5
+  coinSpacing: 3
 --- !u!1 &558920858
 GameObject:
   m_ObjectHideFlags: 0
@@ -15692,6 +15687,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4845182378957180857, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
       insertIndex: 6
       addedObject: {fileID: 4625979568379758979}
+    - targetCorrespondingSourceObject: {fileID: 4845182378957180857, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+      insertIndex: 7
+      addedObject: {fileID: 4625979568379758987}
   m_SourcePrefab: {fileID: 100100000, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
 --- !u!23 &3457160155685546085
 MeshRenderer:
@@ -17552,6 +17550,18 @@ MonoBehaviour:
   magnetRadius: 5
   magnetForce: 50
   playerTransform: {fileID: 4625979568379758971}
+--- !u!114 &4625979568379758987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519956091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ee4a1e845056d4b8f3e23cb9c1a9e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!64 &4748468856889193670
 MeshCollider:
   m_ObjectHideFlags: 0

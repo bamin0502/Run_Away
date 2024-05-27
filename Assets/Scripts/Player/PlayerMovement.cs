@@ -5,19 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Player Movement Fields")]
-    private Rigidbody rb;
+    [Header("Player Movement Fields")] internal Rigidbody rb;
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
     private GameManager gameManager;
-    private Tile tile;
-    
+
     [Header("Player Movement Parameters")]
     public float jumpForce = 10f;
     public float slideForce = -10f;
     
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
-    [SerializeField] private int currentLaneIndex = 1;
+    [SerializeField] internal int currentLaneIndex = 1;
 
     [Header("Player Movement States")]
     public Defines.SwipeDirection swipeDirection;
@@ -26,18 +24,18 @@ public class PlayerMovement : MonoBehaviour
     private float slideTimer;
 
     [SerializeField] private float laneChangeSpeed = 5f;
-    private Vector3 targetPosition;
-    private Vector3 lastPosition;
-    private int lastLaneIndex;
+    public Vector3 targetPosition { get; internal set; }
+    public Vector3 lastPosition { get; private set; }
+    public int lastLaneIndex { get; private set; }
 
-    private bool isJumping;
-    private bool isSliding;
-    private bool isCollidingFront;
+    public bool isJumping { get; internal set; }
+    public bool isSliding { get; private set; }
+    public bool isCollidingFront { get; internal set; }
 
     private Vector3 originalColliderCenter;
     private Vector3 originalColliderSize;
     
-    private bool isInvincible;
+    public bool isInvincible { get; private set; }
     private float maxJumpPower = 15f;
     private Vector2 pendingMovement;
     
@@ -47,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
         playerAni = GetComponent<PlayerAni>();
         boxCollider = GetComponent<BoxCollider>();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        tile = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Tile>();
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
     }
@@ -82,7 +79,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
         rb.MovePosition(newPosition);
-        
     }
 
     private void FixedUpdate()
@@ -127,7 +123,6 @@ public class PlayerMovement : MonoBehaviour
             if (vertical > 0.5f)
             {
                 PerformJump();
-                
                 //SoundManager.instance.PlaySfx(6);
             }
             else if (vertical < -0.5f)
@@ -167,15 +162,6 @@ public class PlayerMovement : MonoBehaviour
             isJumping = false;
         }
 
-        if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f))
-        {
-#if UNITY_EDITOR
-            Debug.Log("Obstacle detected during slide"); 
-#endif
-            Die();
-            return;
-        }
-
         swipeDirection = Defines.SwipeDirection.SLIDE;
         slideTimer = slideDuration;
         isSliding = true;
@@ -184,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
         boxCollider.size = new Vector3(0.6f, 0.6f, 0.75f);
     }
 
-    private void TryMoveToLane(int newLaneIndex)
+    public void TryMoveToLane(int newLaneIndex)
     {
         if (isCollidingFront) return;
 
@@ -215,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private bool IsObstacleInPath(Vector3 targetPos)
+    public bool IsObstacleInPath(Vector3 targetPos)
     {
         Vector3 direction = targetPos - transform.position;
         if (Physics.Raycast(transform.position, direction, out var hit, direction.magnitude))
@@ -228,93 +214,7 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
-        {
-            isJumping = false;
-            if (!isSliding) playerAni.SetRunAnimation();
-        }
-
-        if (other.collider.CompareTag("Obstacle"))
-        {
-#if UNITY_EDITOR
-            Debug.Log("Hit an obstacle, game over!");
-#endif
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-                return;
-            }
-            else if (!isInvincible)
-            {
-                gameManager.GameOver();
-                Die();
-            }
-           
-            
-        }
-
-        if (other.collider.CompareTag("Wall"))
-        {
-#if UNITY_EDITOR
-            Debug.Log("Hit a wall, returning to last position.");
-#endif
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-                return;
-            }
-            else
-            {
-                targetPosition = lastPosition;
-                rb.position = lastPosition;
-                currentLaneIndex = lastLaneIndex;
-            }
-            
-        }
-
-        if (other.collider.CompareTag("WalkBy"))
-        {
-            if(!gameManager.IsFeverModeActive.Value)
-            {
-                isJumping = true;
-            }
-            else
-            {
-                LaunchObstacle(other.gameObject);
-            }
-        }
-    }
-    
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
-        {
-            isJumping = true;
-        }
-        if (other.collider.CompareTag("Obstacle"))
-        {
-            isCollidingFront = false;
-        }
-        if(other.collider.CompareTag("Wall"))
-        {
-            isCollidingFront = false;
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Item"))
-        {
-            GameObject o;
-            (o = other.gameObject).SetActive(false);
-            tile.itemPool.Enqueue(o);
-            other.GetComponent<Item>().Use();
-        }
-    }
-
-    private void Die()
+    public void Die()
     {
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
@@ -366,6 +266,7 @@ public class PlayerMovement : MonoBehaviour
 
         return startPosition;
     }
+
     public void SetInvincible(bool invincible)
     {
         isInvincible = invincible;
@@ -383,19 +284,5 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         SetInvincible(false);
-    }
-
-    private void LaunchObstacle(GameObject obstacle)
-    {
-        Rigidbody obstacleRigidbody = obstacle.GetComponent<Rigidbody>();
-        if (obstacleRigidbody != null)
-        {
-            obstacle.layer = LayerMask.NameToLayer("IgnorePlayerCollision");
-            
-            Vector3 launchDirection = (obstacle.transform.position - transform.position).normalized + Vector3.up;
-            float launchForce = 500f;
-            obstacleRigidbody.isKinematic = false; 
-            obstacleRigidbody.AddForce(launchDirection * launchForce);
-        }
     }
 }
