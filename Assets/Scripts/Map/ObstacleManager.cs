@@ -4,37 +4,27 @@ using UnityEngine;
 public class ObstacleManager : MonoBehaviour
 {
     private Dictionary<int, List<GameObject>> obstaclePrefabsBySection;
-    private List<GameObject> sectionPrefabs;
-    public Queue<GameObject> obstaclePool = new Queue<GameObject>();
+    private Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
-    void Awake()
+    private void Awake()
     {
-        sectionPrefabs = DataManager.GetSectionTable().GetLoadedSections("Tile");
         obstaclePrefabsBySection = DataManager.GetObstacleTable().GetObstaclesBySection();
     }
 
-    public GameObject GetRandomSectionPrefab()
+    public void SpawnObstacles(Transform tile, int sectionType)
     {
-        return sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
-    }
-
-    public void SpawnObstacles(Transform tile)
-    {
-        var sectionTypeComponent = tile.GetComponent<SectionType>();
-        if (sectionTypeComponent == null) return;
-
         var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
-        var filteredObstacles = obstaclePrefabsBySection[sectionTypeComponent.sectionType];
-        var selectedLanes = new HashSet<int>();
 
-        while (selectedLanes.Count < Random.Range(1, 3))
-        {
-            selectedLanes.Add(Random.Range(0, 3));
-        }
+        if (spawnPoints.Count == 0) return;
+
+        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles)) return;
+
+        var selectedLanes = GetTwoUniqueRandomLanes();
 
         foreach (var spawnPoint in spawnPoints)
         {
             var lanePosition = Mathf.RoundToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
+
             if (selectedLanes.Contains(lanePosition))
             {
                 GameObject obstaclePrefab;
@@ -57,37 +47,33 @@ public class ObstacleManager : MonoBehaviour
         }
     }
 
-    public void ResetTileObstacles(Transform tile)
+    public void RecycleObstacle(GameObject obstacle)
     {
-        foreach (Transform child in tile)
-        {
-            if (child.CompareTag("Obstacle"))
-            {
-                GameObject o;
-                (o = child.gameObject).SetActive(false);
-                obstaclePool.Enqueue(o);
-            }
-        }
+        obstacle.SetActive(false);
+        obstaclePool.Enqueue(obstacle);
+    }
 
-        var newSectionPrefab = GetRandomSectionPrefab();
-        var newSectionTypeComponent = newSectionPrefab.GetComponent<SectionType>();
-
-        if (newSectionTypeComponent)
+    private HashSet<int> GetTwoUniqueRandomLanes()
+    {
+        var lanes = new HashSet<int>();
+        while (lanes.Count < 2)
         {
-            tile.GetComponent<SectionType>().sectionType = newSectionTypeComponent.sectionType;
-            SpawnObstacles(tile);
+            lanes.Add(Random.Range(0, 3));
         }
+        return lanes;
     }
 
     private List<Transform> GetAllChildTransforms(Transform parent, string tag)
     {
         var result = new List<Transform>();
         var queue = new Queue<Transform>();
+
         queue.Enqueue(parent);
 
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
+
             foreach (Transform child in current)
             {
                 if (child.CompareTag(tag))

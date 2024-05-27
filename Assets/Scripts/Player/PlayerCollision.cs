@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerCollision: MonoBehaviour
+public class PlayerCollision : MonoBehaviour
 {
     private PlayerMovement playerMovement;
     private PlayerAni playerAni;
@@ -14,7 +14,7 @@ public class PlayerCollision: MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         tile = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Tile>();
     }
-    
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
@@ -28,7 +28,7 @@ public class PlayerCollision: MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit an obstacle, game over!");
 #endif
-            if(gameManager.IsFeverModeActive.Value)
+            if (gameManager.IsFeverModeActive.Value)
             {
                 LaunchObstacle(other.gameObject);
                 return;
@@ -45,7 +45,7 @@ public class PlayerCollision: MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit a wall, returning to last position.");
 #endif
-            if(gameManager.IsFeverModeActive.Value)
+            if (gameManager.IsFeverModeActive.Value)
             {
                 LaunchObstacle(other.gameObject);
                 return;
@@ -60,9 +60,10 @@ public class PlayerCollision: MonoBehaviour
 
         if (other.collider.CompareTag("WalkBy"))
         {
-            if(!gameManager.IsFeverModeActive.Value)
+            if (!gameManager.IsFeverModeActive.Value)
             {
-                playerMovement.isJumping = true;
+                playerMovement.isJumping = false;
+                playerAni.SetRunAnimation();
             }
             else
             {
@@ -81,7 +82,7 @@ public class PlayerCollision: MonoBehaviour
         {
             playerMovement.isCollidingFront = false;
         }
-        if(other.collider.CompareTag("Wall"))
+        if (other.collider.CompareTag("Wall"))
         {
             playerMovement.isCollidingFront = false;
         }
@@ -104,10 +105,11 @@ public class PlayerCollision: MonoBehaviour
         if (obstacleRigidbody != null)
         {
             obstacle.layer = LayerMask.NameToLayer("IgnorePlayerCollision");
-            
+
             Vector3 launchDirection = (obstacle.transform.position - transform.position).normalized + Vector3.up;
+            launchDirection += Vector3.right * (Random.value > 0.5f ? 1 : -1); // Randomly choose left or right direction
             float launchForce = 500f;
-            obstacleRigidbody.isKinematic = false; 
+            obstacleRigidbody.isKinematic = false;
             obstacleRigidbody.AddForce(launchDirection * launchForce);
         }
     }

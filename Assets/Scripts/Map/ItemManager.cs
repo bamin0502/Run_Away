@@ -3,62 +3,40 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    private List<GameObject> itemPrefabs;
-    private GameObject primaryItemPrefab;
-    private List<GameObject> otherItemPrefabs;
-    public Queue<GameObject> itemPool = new Queue<GameObject>();
+    public GameObject primaryItemPrefab;
+    public List<GameObject> otherItemPrefabs;
 
+    private Queue<GameObject> itemPool = new Queue<GameObject>();
+    private float totalDistance = 0f;
+    private float lastSpecialItemSpawnDistance = 0f;
     public float specialItemSpawnDistance = 100f;
-    public float initialOtherItemSpawnChance = 0.05f;
-    public float maxOtherItemSpawnChance = 0.2f;
-    public float distanceFactor = 0.0005f;
     public int coinLineLength = 5;
     public float coinSpacing = 3.0f;
+    private Collider[] overlapResults = new Collider[10];
 
-    private float totalDistance = 0f;
-    private bool isFirstItem = true;
-
-    void Awake()
+    public void SpawnItems(Transform tile, float totalDistance)
     {
-        itemPrefabs = DataManager.GetItemTable().GetLoadedItems("Item");
-        primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
-        otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
-    }
-
-    public void UpdateDistance(float distance)
-    {
-        totalDistance += distance;
-    }
-
-    public void SpawnItems(Transform tile)
-    {
-        if (tile == null)
-        {
-            return;
-        }
+        this.totalDistance = totalDistance;
 
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
         foreach (var lane in lanePositions)
         {
-            for (int attempts = 0; attempts < 10; attempts++)
+            Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z));
+            if (!IsObstacleAtPosition(startPosition))
             {
-                var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+                SpawnCoinLine(startPosition, lane, tile);
+            }
+        }
 
-                if (!IsObstacleAtPosition(randomPosition))
-                {
-                    if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
-                    {
-                        SpawnSingleItem(randomPosition, tile);
-                    }
-                    else
-                    {
-                        SpawnCoinLine(randomPosition, lane, tile);
-                    }
-                    isFirstItem = false;
-                    break;
-                }
+        if (totalDistance - lastSpecialItemSpawnDistance > specialItemSpawnDistance)
+        {
+            Vector3 randomPosition = new Vector3(lanePositions[Random.Range(0, lanePositions.Length)], bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+            if (!IsObstacleAtPosition(randomPosition))
+            {
+                ReplaceCoinWithSpecialItem(tile);
+                lastSpecialItemSpawnDistance = totalDistance;
             }
         }
     }
@@ -75,7 +53,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin = false)
+    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
     {
         var itemPrefab = isCoin ? primaryItemPrefab : otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
 
@@ -91,15 +69,27 @@ public class ItemManager : MonoBehaviour
         {
             item = Instantiate(itemPrefab, position, Quaternion.identity);
         }
-        if (tile)
+
+        item.transform.SetParent(tile, true);
+    }
+
+    private void ReplaceCoinWithSpecialItem(Transform tile)
+    {
+        foreach (Transform child in tile)
         {
-            item.transform.SetParent(tile, true);
+            if (child.CompareTag("Item") && child.gameObject.name.Contains("Coin"))
+            {
+                var specialItemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+                Destroy(child.gameObject);
+                var specialItem = Instantiate(specialItemPrefab, child.position, Quaternion.identity);
+                specialItem.transform.SetParent(tile, true);
+                break;
+            }
         }
     }
 
     private bool IsObstacleAtPosition(Vector3 position)
     {
-        var overlapResults = new Collider[10];
         int numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
         for (int i = 0; i < numColliders; i++)
         {
@@ -109,5 +99,11 @@ public class ItemManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void RecycleItem(GameObject item)
+    {
+        item.SetActive(false);
+        itemPool.Enqueue(item);
     }
 }

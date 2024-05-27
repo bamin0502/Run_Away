@@ -37,7 +37,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public TextMeshProUGUI GameScoreText;
     [SerializeField] public TextMeshProUGUI HighGameScoreText;
     
-    [Header("Game Panel Ui Text"),Tooltip("게임 패널 텍스트들")]
+    [Header("Game Panel Ui Text"),Tooltip("게임 결과 패널 텍스트들")]
     [SerializeField] public Button startButton;
     [SerializeField] public TextMeshProUGUI HighScoreText;
     [SerializeField] public TextMeshProUGUI AllCoinText;
@@ -46,6 +46,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button ReviveCheckButton;
     [SerializeField] public Button BackButton;
     [SerializeField] public TextMeshProUGUI ReviveCoinText;
+    
     public void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -83,12 +84,10 @@ public class UiManager : MonoBehaviour
         if (gameManager.isTutorialActive)
         {
             tutorialManager.StartTutorial(StartGame);
-            GameMenuPanel.SetActive(false);
         }
         else
         {
             StartGame();
-            GameMenuPanel.SetActive(false);
         }
            
     }
@@ -137,6 +136,7 @@ public class UiManager : MonoBehaviour
         gameManager.MenuCamera.enabled = false;
         gameManager.InGameCamera.enabled = true;
         GamePanel.SetActive(true);
+        GameMenuPanel.SetActive(false);
         SoundManager.Instance.PlayBgm(1);
     }
     

@@ -20,7 +20,6 @@ public partial class MagnetEffect : MonoBehaviour
 
         if (playerCollider == null)
         {
-            return;
 #if UNITY_EDITOR
             Debug.LogError("Player BoxCollider not found!");
 #endif

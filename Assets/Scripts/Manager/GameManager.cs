@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public bool isPaused;
     public bool isPlaying = false;
     
+    // [Header("타일 관련 필드")]
+    // public TileManager tileManager;
+    
     [Header("튜토리얼 관련 진행여부 필드")]
     public bool isTutorialActive = true;
     
@@ -64,6 +67,7 @@ public class GameManager : MonoBehaviour
         jsonData = GameObject.FindGameObjectWithTag("UiManager").GetComponent<JsonData>();
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
         initialJumpPower = playerMovement.jumpForce;
+        //tileManager = GameObject.FindGameObjectWithTag("TileManager").GetComponent<TileManager>();
     }
 
     private void OnApplicationPause(bool pauseStatus)
@@ -88,6 +92,8 @@ public class GameManager : MonoBehaviour
         CurrentScore = 0;
         uiManager.UpdateScoreText(CurrentScore);
         SoundManager.Instance.PlayBgm(0);
+        
+        //tileManager.Initialize();
     }
     
 
@@ -257,6 +263,8 @@ public class GameManager : MonoBehaviour
             distanceTravelled += stageSpeed * Time.deltaTime;
             CurrentScore = (int) distanceTravelled * scorePerDistance;
             uiManager.UpdateScoreText(CurrentScore);
+            
+            //tileManager.UpdateTiles(stageSpeed);
         }
         
         if(CurrentScore > HighScore)

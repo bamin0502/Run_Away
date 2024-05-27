@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 168699878548370634}
   - component: {fileID: 2470024520747997894}
   - component: {fileID: 2531599292606248753}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyRearRight (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 168699878959930478}
   - component: {fileID: 2470024521394451042}
   - component: {fileID: 2531599293268418453}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyRearRight (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6666319209495708649}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LorryTrailer (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,6 @@ Transform:
   - {fileID: 6666319209495708649}
   - {fileID: 1196825716816815304}
   - {fileID: 3296278470888785962}
-  - {fileID: 9063318300189374782}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &5253933735294873013
@@ -318,7 +317,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6255359194697009820}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wheels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -350,7 +349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6255359195393794616}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wheels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -382,7 +381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2433178247364286917}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -429,7 +428,7 @@ GameObject:
   - component: {fileID: 2760385256890774378}
   - component: {fileID: 1288311317878029519}
   - component: {fileID: 3892789138405771269}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -512,7 +511,7 @@ GameObject:
   - component: {fileID: 2760385256907988987}
   - component: {fileID: 1288311317894451294}
   - component: {fileID: 3892789138422113428}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,7 +594,7 @@ GameObject:
   - component: {fileID: 2760385256626473770}
   - component: {fileID: 1288311317613855887}
   - component: {fileID: 3892789138141589573}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,7 +677,7 @@ GameObject:
   - component: {fileID: 2760385256504475266}
   - component: {fileID: 1288311317490544935}
   - component: {fileID: 3892789138288756205}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -761,7 +760,7 @@ GameObject:
   - component: {fileID: 2760385257284338945}
   - component: {fileID: 1288311318069611172}
   - component: {fileID: 3892789137592778350}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -844,7 +843,7 @@ GameObject:
   - component: {fileID: 2760385257077478836}
   - component: {fileID: 1288311317997492753}
   - component: {fileID: 3892789137787055835}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -927,7 +926,7 @@ GameObject:
   - component: {fileID: 2760385257122207010}
   - component: {fileID: 1288311317973801607}
   - component: {fileID: 3892789137696190029}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1010,7 +1009,7 @@ GameObject:
   - component: {fileID: 2760385258045502733}
   - component: {fileID: 1288311316750662312}
   - component: {fileID: 3892789139427888738}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1093,7 +1092,7 @@ GameObject:
   - component: {fileID: 2760385257920515765}
   - component: {fileID: 1288311316626063632}
   - component: {fileID: 3892789139569653210}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_2 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1176,7 +1175,7 @@ GameObject:
   - component: {fileID: 2760385258534071805}
   - component: {fileID: 1288311317306466904}
   - component: {fileID: 3892789138977068690}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_3 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1259,7 +1258,7 @@ GameObject:
   - component: {fileID: 2760385258508687374}
   - component: {fileID: 1288311317348587435}
   - component: {fileID: 3892789138952119137}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1342,7 +1341,7 @@ GameObject:
   - component: {fileID: 2760385258297487372}
   - component: {fileID: 1288311317001994153}
   - component: {fileID: 3892789138605476707}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_3 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1425,7 +1424,7 @@ GameObject:
   - component: {fileID: 2760385258127489797}
   - component: {fileID: 1288311316966470816}
   - component: {fileID: 3892789138838388842}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1508,7 +1507,7 @@ GameObject:
   - component: {fileID: 2760385258118215111}
   - component: {fileID: 1288311316956805730}
   - component: {fileID: 3892789138826694312}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box_1 (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1590,9 +1589,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3296278470888785962}
   - component: {fileID: 7255641904780748541}
-  m_Layer: 0
+  - component: {fileID: 8709539492712215683}
+  m_Layer: 6
   m_Name: Wall
-  m_TagString: Ground
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1631,8 +1631,29 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.102159, y: 2.27286, z: 12.764193}
-  m_Center: {x: -0.010259628, y: 0.5808668, z: 0.2992611}
+  m_Size: {x: 0.22806787, y: 0.89572763, z: 12.764193}
+  m_Center: {x: -1.1778324, y: 0.19669771, z: 0.2992611}
+--- !u!65 &8709539492712215683
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3246760542555494300}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.20620298, y: 0.9817741, z: 12.941456}
+  m_Center: {x: 1.145982, y: 0.16402423, z: 0.22830677}
 --- !u!1 &3791949240186393531
 GameObject:
   m_ObjectHideFlags: 0
@@ -1644,7 +1665,7 @@ GameObject:
   - component: {fileID: 5506300343124035510}
   - component: {fileID: 6768321593113958477}
   - component: {fileID: 8915409611596781528}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TrailerDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1727,7 +1748,7 @@ GameObject:
   - component: {fileID: 5506300343535611666}
   - component: {fileID: 6768321592433963241}
   - component: {fileID: 8915409612025134972}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TrailerDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1811,7 +1832,7 @@ GameObject:
   - component: {fileID: 577330800719767021}
   - component: {fileID: 2398910361414797766}
   - component: {fileID: 1444493780372190289}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: WalkBy
   m_Icon: {fileID: 0}
@@ -1827,7 +1848,7 @@ Transform:
   m_GameObject: {fileID: 4258699528502764845}
   serializedVersion: 2
   m_LocalRotation: {x: -0.258819, y: 0, z: 0, w: 0.9659259}
-  m_LocalPosition: {x: -0, y: 0.61, z: -7.18}
+  m_LocalPosition: {x: 0.03, y: 0.61, z: -8.05}
   m_LocalScale: {x: 0.22445287, y: 0.31669867, z: 0.46000925}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1914,7 +1935,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5630148700747927596}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelsHeavy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1949,7 +1970,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5630148701159504008}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelsHeavy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1986,7 +2007,7 @@ GameObject:
   - component: {fileID: 8241605444175449953}
   - component: {fileID: 320060863137456542}
   - component: {fileID: 3279158907098114991}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyFrontLeft (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2069,7 +2090,7 @@ GameObject:
   - component: {fileID: 8241605444570245061}
   - component: {fileID: 320060863783897402}
   - component: {fileID: 3279158906402374411}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyFrontLeft (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2141,59 +2162,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &5286382355753727341
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9063318300189374782}
-  - component: {fileID: 4786181725006281242}
-  m_Layer: 6
-  m_Name: WalkBy
-  m_TagString: WalkBy
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9063318300189374782
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5286382355753727341}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6666319209889459021}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4786181725006281242
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5286382355753727341}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.790142, y: 0.28396535, z: 11.930794}
-  m_Center: {x: 0.01530242, y: 1.7354466, z: 0.65894413}
 --- !u!1 &6206162703313669911
 GameObject:
   m_ObjectHideFlags: 0
@@ -2205,7 +2173,7 @@ GameObject:
   - component: {fileID: 1755621173797118871}
   - component: {fileID: 2425089390595755896}
   - component: {fileID: 5812466176122058231}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyRearLeft (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2288,7 +2256,7 @@ GameObject:
   - component: {fileID: 1755621173151714099}
   - component: {fileID: 2425089389916809180}
   - component: {fileID: 5812466176801004883}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyRearLeft (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2371,7 +2339,7 @@ GameObject:
   - component: {fileID: 4467241099496083430}
   - component: {fileID: 6744659163895511719}
   - component: {fileID: 1014930942009478251}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TrailerDoor.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2454,7 +2422,7 @@ GameObject:
   - component: {fileID: 4467241099889829698}
   - component: {fileID: 6744659164290290179}
   - component: {fileID: 1014930941364085967}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TrailerDoor.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2537,10 +2505,10 @@ GameObject:
   - component: {fileID: 8292458369288019441}
   - component: {fileID: 4952659309666210388}
   - component: {fileID: 7160607062026577566}
-  - component: {fileID: 2594699422763952271}
-  m_Layer: 0
-  m_Name: Body
-  m_TagString: Untagged
+  - component: {fileID: 453321995096477238}
+  m_Layer: 6
+  m_Name: WalkBy
+  m_TagString: WalkBy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2613,8 +2581,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2594699422763952271
-MeshCollider:
+--- !u!65 &453321995096477238
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2631,10 +2599,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7052076620080507571, guid: fa11eafd12b44e24598a134126c50254, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.1232991, y: 2.5074835, z: 9.278184}
+  m_Center: {x: -0, y: 0.6382263, z: -1.4997731}
 --- !u!1 &8673768364316356591
 GameObject:
   m_ObjectHideFlags: 0
@@ -2646,10 +2613,9 @@ GameObject:
   - component: {fileID: 8292458369716368725}
   - component: {fileID: 4952659310093515504}
   - component: {fileID: 7160607061648559674}
-  - component: {fileID: 337213867364583763}
-  m_Layer: 0
-  m_Name: Body
-  m_TagString: Untagged
+  m_Layer: 6
+  m_Name: WalkBy
+  m_TagString: WalkBy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2722,28 +2688,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &337213867364583763
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8673768364316356591}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7052076620080507571, guid: fa11eafd12b44e24598a134126c50254, type: 3}
 --- !u!1 &8727311912918391484
 GameObject:
   m_ObjectHideFlags: 0
@@ -2755,7 +2699,7 @@ GameObject:
   - component: {fileID: 9037619529806909871}
   - component: {fileID: 4003951068460232675}
   - component: {fileID: 7689798479222301302}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyFrontRight (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2838,7 +2782,7 @@ GameObject:
   - component: {fileID: 9037619529127966987}
   - component: {fileID: 4003951067763443527}
   - component: {fileID: 7689798478576896722}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheelHeavyFrontRight (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
