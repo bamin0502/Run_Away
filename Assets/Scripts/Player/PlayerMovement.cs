@@ -206,6 +206,14 @@ public class PlayerMovement : MonoBehaviour
         currentLaneIndex = clampedLaneIndex;
         swipeDirection = Defines.SwipeDirection.RUN;
         targetPosition = potentialTargetPosition;
+        
+        if (isSliding)
+        {
+            isSliding = false;
+            playerAni.SetRunAnimation();
+            boxCollider.center = originalColliderCenter;
+            boxCollider.size = originalColliderSize;
+        }
     }
 
     private bool IsObstacleInPath(Vector3 targetPos)
@@ -229,19 +237,22 @@ public class PlayerMovement : MonoBehaviour
             if (!isSliding) playerAni.SetRunAnimation();
         }
 
-        if (other.collider.CompareTag("Obstacle") && !isInvincible)
+        if (other.collider.CompareTag("Obstacle"))
         {
 #if UNITY_EDITOR
             Debug.Log("Hit an obstacle, game over!");
 #endif
-            // if(gameManager.IsFeverModeActive.Value)
-            // {
-            //     LaunchObstacle(other.gameObject);
-            //     return;
-            // }
-
-            gameManager.GameOver();
-            Die();
+            if(gameManager.IsFeverModeActive.Value)
+            {
+                LaunchObstacle(other.gameObject);
+                return;
+            }
+            else if (!isInvincible)
+            {
+                gameManager.GameOver();
+                Die();
+            }
+           
             
         }
 
@@ -250,11 +261,11 @@ public class PlayerMovement : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Hit a wall, returning to last position.");
 #endif
-            // if(gameManager.IsFeverModeActive.Value)
-            // {
-            //     LaunchObstacle(other.gameObject);
-            //     return;
-            // }
+            if(gameManager.IsFeverModeActive.Value)
+            {
+                LaunchObstacle(other.gameObject);
+                return;
+            }
             
             targetPosition = lastPosition;
             rb.position = lastPosition;
@@ -263,11 +274,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.collider.CompareTag("WalkBy"))
         {
-            // if(gameManager.IsFeverModeActive.Value)
-            // {
-            //     LaunchObstacle(other.gameObject);
-            //
-            // }
+            if(gameManager.IsFeverModeActive.Value)
+            {
+                LaunchObstacle(other.gameObject);
+            
+            }
         }
     }
     
@@ -349,11 +360,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void LaunchObstacle(GameObject obstacle)
     {
-        StartCoroutine(LaunchObstacleCoroutine(obstacle));
+        var colliderObstacle = obstacle.GetComponent<Collider>();
+        var rbObstacle = obstacle.GetComponent<Rigidbody>();
+        
+        if(colliderObstacle != null && rbObstacle != null)
+        {
+            colliderObstacle.enabled = false;
+            rbObstacle.isKinematic = false;
+            rbObstacle.AddForce(Vector3.forward * 10f, ForceMode.Impulse);
+            StartCoroutine(LaunchObstacleCoroutine(colliderObstacle, obstacle, 1.0f));
+        }
+        
     }
 
-    private IEnumerator LaunchObstacleCoroutine(GameObject obstacle)
+    private IEnumerator LaunchObstacleCoroutine(Collider collider, GameObject obstacle, float delay)
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(delay);
+        if (collider)
+        {
+            collider.enabled = true;
+        }
+        tile.obstaclePool.Enqueue(obstacle);
     }
 }
