@@ -17,6 +17,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject GamePanel;
     [SerializeField] public GameObject GameMenuPanel;
     [SerializeField] public GameObject RevivePanel;
+    [SerializeField] public GameObject QuitPanel;
     
     [Header("Pause Panel Ui Button"),Tooltip("일시정지 패널 버튼들")]
     [SerializeField] public Button homeButton;
@@ -47,6 +48,10 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button BackButton;
     [SerializeField] public TextMeshProUGUI ReviveCoinText;
     
+    [Header("Quit Panel Ui"),Tooltip("종료 패널 UI들")]
+    [SerializeField] public Button QuitCheckButton;
+    [SerializeField] public Button QuitBackButton;
+    
     public void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -64,6 +69,8 @@ public class UiManager : MonoBehaviour
         LobbyButton.onClick.AddListener(OnHomeButtonClick);
         BackButton.onClick.AddListener(HideRevivePanel);
         ReviveCheckButton.onClick.AddListener(OnReviveButtonClick);
+        QuitCheckButton.onClick.AddListener(OnQuitButtonClick);
+        QuitBackButton.onClick.AddListener(() => QuitPanel.SetActive(false));
         
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
@@ -96,6 +103,11 @@ public class UiManager : MonoBehaviour
     {
         PausePanel.SetActive(true);
         Time.timeScale = 0;
+    }
+    
+    public void ShowQuitPanel()
+    {
+        QuitPanel.SetActive(true);
     }
 
     public void ShowGameOverPanel()

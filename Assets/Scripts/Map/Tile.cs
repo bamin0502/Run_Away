@@ -189,8 +189,8 @@ public class Tile : MonoBehaviour
                         rb.angularVelocity = Vector3.zero;
                         rb.isKinematic = true;
                     }
-                    
-                    obstaclePrefab.layer = LayerMask.NameToLayer("Obstacle");
+
+                    SetLayerRecursively(obstaclePrefab, LayerMask.NameToLayer("Obstacle"));
                 }
                 else
                 {
@@ -231,10 +231,10 @@ public class Tile : MonoBehaviour
                 {
                     rb.velocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
-                    rb.isKinematic = true; 
+                    rb.isKinematic = true;
                 }
-                
-                o.layer = LayerMask.NameToLayer("Obstacle");
+
+                SetLayerRecursively(o, LayerMask.NameToLayer("Obstacle"));
             }
             else if (child.CompareTag("Item"))
             {
@@ -370,5 +370,22 @@ public class Tile : MonoBehaviour
         }
 
         return result;
+    }
+
+    private void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        Stack<Transform> stack = new Stack<Transform>();
+        stack.Push(obj.transform);
+
+        while (stack.Count > 0)
+        {
+            Transform current = stack.Pop();
+            current.gameObject.layer = newLayer;
+
+            foreach (Transform child in current)
+            {
+                stack.Push(child);
+            }
+        }
     }
 }

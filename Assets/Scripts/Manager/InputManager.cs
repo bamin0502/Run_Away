@@ -17,12 +17,14 @@ public class InputManager : Singleton<InputManager>
     private PlayerControls playerControls;
     private Camera mainCamera;
     private UiManager uiManager;
+    private GameManager gameManager;
     
     private new void Awake()
     {
         playerControls = new PlayerControls();
         mainCamera = Camera.main;
         uiManager = GameObject.FindGameObjectWithTag("UiManager").gameObject.GetComponent<UiManager>();
+        gameManager = GameObject.FindGameObjectWithTag("Manager").gameObject.GetComponent<GameManager>();
     }
 
     private void OnEnable()
@@ -60,8 +62,17 @@ public class InputManager : Singleton<InputManager>
     private void OnBackAction(InputAction.CallbackContext context)
     {
         OnBackButtonPressed?.Invoke();
+#if UNITY_EDITOR
         Debug.Log("Back button pressed");
-        uiManager.ShowPausePanel();
+#endif
+        if (gameManager.isPlaying)
+        {
+            uiManager.ShowPausePanel();
+        }
+        else
+        {
+            uiManager.ShowQuitPanel();
+        }
     }
 
 }

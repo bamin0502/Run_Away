@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
@@ -104,13 +105,31 @@ public class PlayerCollision : MonoBehaviour
         Rigidbody obstacleRigidbody = obstacle.GetComponent<Rigidbody>();
         if (obstacleRigidbody != null)
         {
-            obstacle.layer = LayerMask.NameToLayer("IgnorePlayerCollision");
+            SetLayerRecursively(obstacle, LayerMask.NameToLayer("IgnorePlayerCollision"));
 
             Vector3 launchDirection = (obstacle.transform.position - transform.position).normalized + Vector3.up;
-            launchDirection += Vector3.right * (Random.value > 0.5f ? 1 : -1); // Randomly choose left or right direction
             float launchForce = 500f;
             obstacleRigidbody.isKinematic = false;
             obstacleRigidbody.AddForce(launchDirection * launchForce);
+        }
+    }
+
+    private void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        if (obj == null) return;
+
+        Stack<Transform> stack = new Stack<Transform>();
+        stack.Push(obj.transform);
+
+        while (stack.Count > 0)
+        {
+            Transform current = stack.Pop();
+            current.gameObject.layer = newLayer;
+
+            foreach (Transform child in current)
+            {
+                stack.Push(child);
+            }
         }
     }
 }
