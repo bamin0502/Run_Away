@@ -17,6 +17,7 @@ public class Tile : MonoBehaviour
     public float moveSpeedMultiplier = 1.05f;
     public float initialMoveSpeed = 5f;
     public float maxMoveSpeed = 30f;
+    public float speedIncreaseDistanceIncrement = 5f;
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
@@ -45,6 +46,9 @@ public class Tile : MonoBehaviour
     private float itemSpawnInterval = 2f;
     private float itemSpawnTimer = 0f;
     private float lastSpecialItemSpawnDistance = 0f;
+
+    private Vector3 lastCoinPosition = Vector3.zero;
+    private bool hasLastCoinPosition = false;
 
     void Awake()
     {
@@ -98,7 +102,8 @@ public class Tile : MonoBehaviour
             if (distanceTravelled > nextSpeedIncreaseDistance)
             {
                 moveSpeed = Mathf.Min(moveSpeed * moveSpeedMultiplier, maxMoveSpeed);
-                nextSpeedIncreaseDistance += moveSpeedIncreaseDistance;
+                nextSpeedIncreaseDistance += moveSpeedIncreaseDistance + speedIncreaseDistanceIncrement;
+                moveSpeedIncreaseDistance += speedIncreaseDistanceIncrement;
             }
 
             totalDistance += moveSpeed * Time.deltaTime;
@@ -286,7 +291,7 @@ public class Tile : MonoBehaviour
             var laneIndex = Mathf.RoundToInt((lane + 3.8f) / 3.8f);
             if (!occupiedLanes.Contains(laneIndex))
             {
-                Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z));
+                Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
                 SpawnCoinLine(startPosition, lane, tile);
             }
         }
@@ -296,7 +301,7 @@ public class Tile : MonoBehaviour
             Vector3 randomPosition = new Vector3(lanePositions[Random.Range(0, lanePositions.Length)], bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
             if (!IsObstacleAtPosition(randomPosition))
             {
-                ReplaceCoinWithSpecialItem(tile);
+                SpawnSpecialItem(randomPosition, tile);
                 lastSpecialItemSpawnDistance = totalDistance;
             }
         }
@@ -334,19 +339,23 @@ public class Tile : MonoBehaviour
         item.transform.SetParent(tile, true);
     }
 
-    private void ReplaceCoinWithSpecialItem(Transform tile)
+    private void SpawnSpecialItem(Vector3 position, Transform tile)
     {
-        foreach (Transform child in tile)
+        var specialItemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+        GameObject specialItem;
+        if (itemPool.Count > 0)
         {
-            if (child.CompareTag("Item") && child.gameObject.name.Contains("Coin"))
-            {
-                var specialItemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
-                child.GetComponent<Item>().Use();
-                var specialItem = Instantiate(specialItemPrefab, child.position, Quaternion.identity);
-                specialItem.transform.SetParent(tile, true);
-                break;
-            }
+            specialItem = itemPool.Dequeue();
+            specialItem.transform.position = position;
+            specialItem.transform.rotation = Quaternion.identity;
+            specialItem.SetActive(true);
         }
+        else
+        {
+            specialItem = Instantiate(specialItemPrefab, position, Quaternion.identity);
+        }
+
+        specialItem.transform.SetParent(tile, true);
     }
 
     private bool IsObstacleAtPosition(Vector3 position)
