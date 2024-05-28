@@ -137,4 +137,24 @@ public class PlayerCollision : MonoBehaviour
             }
         }
     }
+    
+    private void OnCollisionStay(Collision other)
+    {
+        if (other.collider.CompareTag("Obstacle"))
+        {
+            Rigidbody obstacleRigidbody = other.collider.GetComponent<Rigidbody>();
+            if (obstacleRigidbody != null && !obstacleRigidbody.isKinematic)
+            {
+                SetLayerRecursively(other.collider.gameObject, LayerMask.NameToLayer("IgnorePlayerCollision"));
+
+                Vector3 direction = (other.collider.transform.position - transform.position).normalized;
+                Vector3 launchDirection = direction + Vector3.up;
+                float randomDirection = Random.Range(-1.0f, 1.0f);
+                launchDirection += Vector3.right * randomDirection;
+
+                float launchForce = 500f;
+                obstacleRigidbody.AddForce(launchDirection * launchForce);
+            }
+        }
+    }
 }
