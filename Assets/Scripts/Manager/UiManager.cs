@@ -223,7 +223,11 @@ public class UiManager : MonoBehaviour
         if (FeverGauge.fillAmount >= 1)
         {
             gameManager.ActivateFeverMode(10f);
-            FeverGauge.fillAmount = 0;
         }
+    }
+    
+    public void ResetFeverGuage()
+    {
+        FeverGauge.fillAmount = 0;
     }
 }

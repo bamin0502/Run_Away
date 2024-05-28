@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
-        // 로비로 돌아갈 때 총 코인 업데이트
+
         uiManager.UpdateAllCoinText(TotalCoins);
         
     }
@@ -165,7 +165,6 @@ public class GameManager : MonoBehaviour
             
             if (coinFeverCount >= coinsForFever)
             {
-                coinFeverCount = 0; // 피버 모드 발동 후 카운터 초기화
                 uiManager.UpdateFeverGauge(1);
             }
             else
@@ -275,8 +274,9 @@ public class GameManager : MonoBehaviour
             {
                 IsFeverModeActive.Value = false;
                 isFeverMode = false;
+                coinFeverCount = 0;
                 
-                uiManager.UpdateFeverGauge(0);
+                uiManager.ResetFeverGuage();
             });
     }
     
@@ -342,7 +342,7 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
     private void ActivateCheat()
     {
-        int coinsToAdd = 1000; // Number of coins to add
+        int coinsToAdd = 1000;
         AddCheatCoins(coinsToAdd);
 
         Debug.Log("Cheat activated! Coins added: " + coinsToAdd);
