@@ -283,6 +283,19 @@ public class Tile : MonoBehaviour
             {
                 var lanePosition = Mathf.RoundToInt((child.localPosition.x + 3.8f) / 3.8f);
                 occupiedLanes.Add(lanePosition);
+                
+                foreach (Transform obstacleChild in child)
+                {
+                    if (obstacleChild.CompareTag("WalkBy"))
+                    {
+                        var boxCollider = child.GetComponent<BoxCollider>();
+                        if (boxCollider)
+                        {
+                            Vector3 spawnPosition = obstacleChild.position + Vector3.up * (boxCollider.size.y); 
+                            SpawnSingleItem(spawnPosition, tile, true);
+                        }
+                    }
+                }
             }
         }
 
