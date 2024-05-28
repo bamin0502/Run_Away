@@ -270,11 +270,23 @@ public class Tile : MonoBehaviour
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
+        HashSet<int> occupiedLanes = new HashSet<int>();
+
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Obstacle"))
+            {
+                var lanePosition = Mathf.RoundToInt((child.localPosition.x + 3.8f) / 3.8f);
+                occupiedLanes.Add(lanePosition);
+            }
+        }
+
         foreach (var lane in lanePositions)
         {
-            Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z));
-            if (!IsObstacleAtPosition(startPosition))
+            var laneIndex = Mathf.RoundToInt((lane + 3.8f) / 3.8f);
+            if (!occupiedLanes.Contains(laneIndex))
             {
+                Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z));
                 SpawnCoinLine(startPosition, lane, tile);
             }
         }
