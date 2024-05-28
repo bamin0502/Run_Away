@@ -45,9 +45,10 @@ public class PlayerAni : MonoBehaviour
         isFlashing = true;
         while (isFlashing)
         {
-            playerRenderer.material.color = Color.red;
+            var material = playerRenderer.material;
+            material.color = Color.red;
             yield return new WaitForSeconds(0.1f);
-            playerRenderer.material.color = originalColor;
+            material.color = originalColor;
             yield return new WaitForSeconds(0.1f);
         }
     }

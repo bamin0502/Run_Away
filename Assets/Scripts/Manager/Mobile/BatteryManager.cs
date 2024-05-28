@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UniRx;
 
 public class BatteryManager : Singleton<BatteryManager>
 {
