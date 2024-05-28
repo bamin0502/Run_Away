@@ -106,9 +106,14 @@ public class PlayerCollision : MonoBehaviour
         if (obstacleRigidbody != null)
         {
             SetLayerRecursively(obstacle, LayerMask.NameToLayer("IgnorePlayerCollision"));
+            Vector3 playerToObstacleDirection = (obstacle.transform.position - transform.position).normalized;
+            Vector3 launchDirection = playerToObstacleDirection + Vector3.up;
+            
+            float randomDirection = Random.Range(-1.0f, 1.0f);
+            launchDirection += Vector3.right * randomDirection;
 
-            Vector3 launchDirection = (obstacle.transform.position - transform.position).normalized + Vector3.up;
             float launchForce = 500f;
+            
             obstacleRigidbody.isKinematic = false;
             obstacleRigidbody.AddForce(launchDirection * launchForce);
         }
