@@ -183,23 +183,23 @@ public class UiManager : MonoBehaviour
 
     public void UpdateScoreText(int currentScore)
     {
-        GameScoreText.text = currentScore.ToString("00000");
+        GameScoreText.text = currentScore.ToString("");
         
         if(currentScore > gameManager.HighScore)
         {
-            HighGameScoreText.text = currentScore.ToString("00000");
+            HighGameScoreText.text = currentScore.ToString("");
         }
     }
     
     public void UpdateResultScoreText(int currentScore)
     {
-        scoreText.text = "SCORE: " + currentScore.ToString("00000");
+        scoreText.text = "SCORE: " + currentScore.ToString("");
     }
 
     public void UpdateHighScoreText(int highScore)
     {
-        HighScoreText.text = highScore.ToString("00000");
-        HighGameScoreText.text = highScore.ToString("00000");
+        HighScoreText.text = highScore.ToString("");
+        HighGameScoreText.text = highScore.ToString("");
     }
 
     private void UpdateReviveCoinText(int coin)

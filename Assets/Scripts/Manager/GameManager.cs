@@ -321,6 +321,18 @@ public class GameManager : MonoBehaviour
         {
             ActivateCheat();
         } 
+        if(Input.GetKeyDown(KeyCode.F2))
+        {
+            IncreaseJumpPower(5f,10f);
+        }
+        if(Input.GetKeyDown(KeyCode.F3))
+        {
+            ActivateMagnetEffect(10f);
+        }
+        if(Input.GetKeyDown(KeyCode.F4))
+        {
+            ActivateFeverModeByItem(10f);    
+        }
 #endif
         
 
