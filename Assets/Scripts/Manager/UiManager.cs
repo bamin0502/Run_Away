@@ -157,12 +157,12 @@ public class UiManager : MonoBehaviour
     
     public void UpdateCoinText(int coin)
     {
-        coinText.text = coin.ToString("0000");
+        coinText.text = coin.ToString("");
     }
 
     public void UpdateResultCoinText(int coin)
     {
-        resultCoinText.text = "COIN:" + coin.ToString("0000");
+        resultCoinText.text = "COIN:" + coin.ToString("");
     }
 
     public void UpdateAllCoinText(int coin)

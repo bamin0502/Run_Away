@@ -259,7 +259,7 @@ public class GameManager : MonoBehaviour
 
     public void ActivateFeverMode(float duration)
     {
-        if (IsFeverModeActive.Value)
+        if (IsFeverModeActive.Value || isFeverMode)
         {
             return;
         }
@@ -297,6 +297,11 @@ public class GameManager : MonoBehaviour
     
     public void ActivateFeverModeByItem(float duration)
     {
+        if(isFeverMode || IsFeverModeActive.Value)
+        {
+            return;
+        }
+        
         ActivateFeverMode(duration);
     }
     
@@ -332,6 +337,10 @@ public class GameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.F4))
         {
             ActivateFeverModeByItem(10f);    
+        }
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            ActivateFeverMode(10f);
         }
 #endif
         
