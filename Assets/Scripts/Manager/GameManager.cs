@@ -29,6 +29,9 @@ public class GameManager : MonoBehaviour
     
     [Header("피버모드 관련 필드")]
     public bool isFeverMode = false;
+    private int coinsForFever = 100;
+    private bool feverActivatedByItem = false;
+    private int coinFeverCount = 0;
     
     [Header("코인 관련 필드")] 
     public int CurrentGameCoins = 0;
@@ -152,10 +155,24 @@ public class GameManager : MonoBehaviour
     
     public void AddCoin()
     {
-        // 코인 획득 시 처리
         CurrentGameCoins++;
         TotalCoins++;
         uiManager.UpdateCoinText(CurrentGameCoins);
+        
+        if (!isFeverMode)
+        {
+            coinFeverCount++;
+            
+            if (coinFeverCount >= coinsForFever)
+            {
+                coinFeverCount = 0; // 피버 모드 발동 후 카운터 초기화
+                uiManager.UpdateFeverGauge(1);
+            }
+            else
+            {
+                uiManager.UpdateFeverGauge(coinFeverCount / (float)coinsForFever);
+            }
+        }
     }
     
     public void IncreaseJumpPower(float amount, float duration)
@@ -225,20 +242,21 @@ public class GameManager : MonoBehaviour
             .Subscribe(_ => IsMagnetEffectActive.Value = false);
             
     }
-    
+
     public void ActivateFeverMode(float duration)
     {
         if (IsFeverModeActive.Value)
         {
             return;
         }
-        
+
+        isFeverMode = true;
         currentFeverEffect?.Dispose();
         blinkSubscription?.Dispose();
-        
+
         IsFeverModeActive.Value = true;
         feverEffect.Play();
-        
+
         blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
             .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
             .Subscribe(t =>
@@ -253,7 +271,18 @@ public class GameManager : MonoBehaviour
                 }
             });
         currentFeverEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
-            .Subscribe(_ => IsFeverModeActive.Value = false);
+            .Subscribe(_ =>
+            {
+                IsFeverModeActive.Value = false;
+                isFeverMode = false;
+                
+                uiManager.UpdateFeverGauge(0);
+            });
+    }
+    
+    public void ActivateFeverModeByItem(float duration)
+    {
+        ActivateFeverMode(duration);
     }
     
     private void Update()
@@ -295,6 +324,8 @@ public class GameManager : MonoBehaviour
             uiManager.GameOverPanel.SetActive(false);
             isGameover = false;
             isPlaying = true;
+            isFeverMode = false;
+            IsFeverModeActive.Value = false;
             
             StartCoroutine(StartInvincibility());
             

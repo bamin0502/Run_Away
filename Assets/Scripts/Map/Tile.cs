@@ -185,6 +185,7 @@ public class Tile : MonoBehaviour
                     Rigidbody rb = obstaclePrefab.GetComponent<Rigidbody>();
                     if (rb)
                     {
+                        rb.isKinematic = false;
                         rb.velocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;
                         rb.isKinematic = true;
@@ -229,6 +230,7 @@ public class Tile : MonoBehaviour
                 Rigidbody rb = o.GetComponent<Rigidbody>();
                 if (rb)
                 {
+                    rb.isKinematic = false;
                     rb.velocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                     rb.isKinematic = true;

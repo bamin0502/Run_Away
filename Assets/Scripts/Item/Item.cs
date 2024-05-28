@@ -51,7 +51,7 @@ public class Item : MonoBehaviour
 #if UNITY_EDITOR
                 Debug.Log("피버 모드");
 #endif
-                gameManager.ActivateFeverMode(10f);
+                gameManager.ActivateFeverModeByItem(10f);
                 //SoundManager.Instance.PlaySfx(2);
                 break;
             default:

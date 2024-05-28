@@ -37,6 +37,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button optionButton;
     [SerializeField] public TextMeshProUGUI GameScoreText;
     [SerializeField] public TextMeshProUGUI HighGameScoreText;
+    [SerializeField] public Image FeverGauge;
     
     [Header("Game Panel Ui Text"),Tooltip("게임 결과 패널 텍스트들")]
     [SerializeField] public Button startButton;
@@ -75,6 +76,8 @@ public class UiManager : MonoBehaviour
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
         UpdateReviveCoinText(gameManager.TotalCoins);
+        
+        FeverGauge.fillAmount = 0;
         
         RevivePanel.SetActive(false);
         PausePanel.SetActive(false);
@@ -213,4 +216,14 @@ public class UiManager : MonoBehaviour
         gameManager.RevivePlayer();
     }
     
+    public void UpdateFeverGauge(float value)
+    {
+        FeverGauge.fillAmount = value;
+
+        if (FeverGauge.fillAmount >= 1)
+        {
+            gameManager.ActivateFeverMode(10f);
+            FeverGauge.fillAmount = 0;
+        }
+    }
 }
