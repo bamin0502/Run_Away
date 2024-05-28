@@ -199,16 +199,27 @@ public class GameManager : MonoBehaviour
                     jumpEffect.Play();
                 }
             });
+        if (playerMovement.jumpForce > initialJumpPower)
+        {
+            playerMovement.jumpForce = initialJumpPower;
+        }
 
         playerMovement.AdjustJumpPower(amount);
+        
+        if (playerMovement.jumpForce > maxJumpPower)
+        {
+            playerMovement.jumpForce = maxJumpPower;
+        }
+
         currentJumpEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
-            .Subscribe(_ => ResetJumpPower(amount));
+            .Subscribe(_ => ResetJumpPower());
             
     }
 
-    private void ResetJumpPower(float amount)
+    private void ResetJumpPower()
     {
-        playerMovement.AdjustJumpPower(-amount);
+        playerMovement.jumpForce = initialJumpPower;
+        jumpEffect.Stop();
     }
 
     public void ActivateMagnetEffect(float duration)
@@ -238,7 +249,11 @@ public class GameManager : MonoBehaviour
                 }
             });
         currentMagnetEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
-            .Subscribe(_ => IsMagnetEffectActive.Value = false);
+            .Subscribe(_ =>
+            {
+                IsMagnetEffectActive.Value = false;
+                magnetEffect.Stop();
+            });
             
     }
 
@@ -275,7 +290,7 @@ public class GameManager : MonoBehaviour
                 IsFeverModeActive.Value = false;
                 isFeverMode = false;
                 coinFeverCount = 0;
-                
+                feverEffect.Stop();
                 uiManager.ResetFeverGuage();
             });
     }
