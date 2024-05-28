@@ -57,12 +57,6 @@ Versions of burning shader
       * _notriplanar - lightens the shader
 
 
-To control burning process use "Shader.SetGlobalFloat("_StartBurning", FLOAT)" and "Shader.SetGlobalFloat("_StopBurning", FLOAT)", where FLOAT is a number from 0 to 1 (off and on respectively).
-If you want to change the burning of each object separately, then use non-global shaders. In script: "rend.material.SetFloat("_StartBurning", FLOAT)" and "rend.material.SetFloat("_StopBurning", FLOAT)".
-
-To make particle blur work in URP, enable Opaque Texture in URP-HighFidelity.
-
-
 Feedback (suggestions, questions, reports or errors)
    SomeOneWhoCaresFeedBack@gmail.com
 

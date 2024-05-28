@@ -2,15 +2,14 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 8
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: mat_build_storage_04
   m_Shader: {fileID: 4800000, guid: c20ec7c7bf50f264ab3c3c9d6956a3bc, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -124,15 +123,13 @@ Material:
         m_Texture: {fileID: 2800000, guid: a0fff3e053e70494ba9c91d152aeffa0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
     m_Floats:
-    - _AO_Coal: 0
     - _AshesPower: 3.64
     - _CinderLow: -0.29
     - _CinderPower: 0.13
     - _CinderSidePower: 1.49
     - _CoalNoiseScale: 0.58
-    - _Cutoff: 0.1
+    - _Cutoff: 0.5
     - _FirePower: 1
     - _Float0: 1.15
     - _Float1: 9.58
@@ -151,7 +148,7 @@ Material:
     - _Float7: 1
     - _Float8: 16
     - _Float9: 0.56
-    - _MaskPower: 0.52
+    - _MaskPower: 1.15
     - _SpecConst: 0
     - _StartBurning: 0
     - _StopBurning: 0
@@ -174,4 +171,3 @@ Material:
     - _Vector0: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _Vector2: {r: 2, g: 2, b: 0, a: 0}
     - _WindNoiseUVPanner: {r: 0.1, g: 0, b: 0, a: 0}
-  m_BuildTextureStacks: []

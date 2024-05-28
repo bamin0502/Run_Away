@@ -2,15 +2,14 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 8
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: mat_build_storage_01
   m_Shader: {fileID: 4800000, guid: 46ad5ffaba2dcde4a92c015e6aec4ba8, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -128,9 +127,8 @@ Material:
         m_Texture: {fileID: 2800000, guid: a0fff3e053e70494ba9c91d152aeffa0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
     m_Floats:
-    - _AO_Coal: 0
+    - _AO_Coal: 0.58
     - _AshesPower: 2.26
     - _CinderLow: 0.62
     - _CinderPower: 0.9
@@ -172,9 +170,8 @@ Material:
     - _Color1: {r: 0.122641504, g: 0.09867518, b: 0.03875934, a: 1}
     - _Color2: {r: 0.7169812, g: 0.68034977, b: 0.6121396, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 0}
-    - _Specular: {r: 0.6509434, g: 0.3408241, b: 0.3408241, a: 0}
+    - _Specular: {r: 0.6509434, g: 0.34082413, b: 0.34082413, a: 0}
     - _UVTiling: {r: 12, g: 12, b: 0, a: 0}
     - _Vector0: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _Vector2: {r: 2, g: 2, b: 0, a: 0}
     - _WindNoiseUVPanner: {r: 0.1, g: 0, b: 0, a: 0}
-  m_BuildTextureStacks: []
