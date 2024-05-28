@@ -8,8 +8,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HealtBar
-  m_Shader: {fileID: -6465566751694194690, guid: 6f629dca2e240454cb1d2f075e7e1124,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 6f629dca2e240454cb1d2f075e7e1124, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -18,6 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -129,14 +131,10 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - CircleColor: {r: 41.73181, g: 32.992165, b: 0, a: 1}
-    - Color_18d890ee80824248a51ee0a2b47a330e: {r: 118.035385, g: 46.962074, b: 12.97771,
-        a: 1}
-    - Color_607f5569b9154aa08a8d1f63dff6a86b: {r: 5.2164755, g: 3.5504808, b: 0.5462278,
-        a: 1}
-    - Color_7fd9fcac161c4065bbf49388eee649c3: {r: 3.9004147, g: 3.9004147, b: 4.10216,
-        a: 1}
-    - Color_8eede2b3ffe147bc911ee668e4223cca: {r: 4.8029895, g: 3.3505394, b: 3.0131962,
-        a: 0}
+    - Color_18d890ee80824248a51ee0a2b47a330e: {r: 118.035385, g: 46.962074, b: 12.97771, a: 1}
+    - Color_607f5569b9154aa08a8d1f63dff6a86b: {r: 5.2164755, g: 3.5504808, b: 0.5462278, a: 1}
+    - Color_7fd9fcac161c4065bbf49388eee649c3: {r: 3.9004147, g: 3.9004147, b: 4.10216, a: 1}
+    - Color_8eede2b3ffe147bc911ee668e4223cca: {r: 4.8029895, g: 3.3505394, b: 3.0131962, a: 0}
     - LineColor: {r: 1, g: 1, b: 1, a: 1}
     - Vector2_03a6df3ef0694a4f97c15798379a80fd: {r: 0, g: 1, b: 0, a: 0}
     - Vector2_47b54501113b4c409f7770bf21e02d97: {r: 1, g: 0, b: 0, a: 0}
@@ -161,4 +159,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 7
