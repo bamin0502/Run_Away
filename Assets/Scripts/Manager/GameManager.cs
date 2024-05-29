@@ -52,6 +52,10 @@ public class GameManager : MonoBehaviour
     [Header("시작후에 비출 카메라")] 
     [SerializeField] public CinemachineVirtualCamera InGameCamera;
 
+    [Header("점프 관련 필드")]
+    private float initialJumpPower;
+    private float maxJumpPower = 20f;
+    
     [Header("아이템 이펙트 관련")]
     private IDisposable currentJumpEffect;
     private IDisposable currentMagnetEffect;
@@ -59,11 +63,11 @@ public class GameManager : MonoBehaviour
     public ParticleSystem jumpEffect;
     public ParticleSystem magnetEffect;
     public ParticleSystem feverEffect;
+    public ParticleSystem coinfeverEffect;
     private IDisposable blinkSubscription;
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();
-    private float initialJumpPower;
-    private float maxJumpPower = 20f;
+
     public void Awake()
     {
         uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();

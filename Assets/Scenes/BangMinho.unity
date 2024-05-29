@@ -9581,6 +9581,7 @@ MonoBehaviour:
   jumpEffect: {fileID: 1306647231}
   magnetEffect: {fileID: 198499883}
   feverEffect: {fileID: 2036867627}
+  coinfeverEffect: {fileID: 1728627674}
 --- !u!4 &1504525080
 Transform:
   m_ObjectHideFlags: 0
@@ -11505,6 +11506,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1727853815}
   m_CullTransparentMesh: 1
+--- !u!198 &1728627674 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 725116909893212457, guid: e22d4423a239ba747a9c935619f9111c, type: 3}
+  m_PrefabInstance: {fileID: 3267180963829084152}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1732845584
 GameObject:
   m_ObjectHideFlags: 0

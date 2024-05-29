@@ -1,4 +1,4 @@
-using System; // TimeSpan을 위해 추가
+using System;
 using UnityEngine;
 using UniRx;
 
@@ -13,7 +13,7 @@ public class BatteryManager : Singleton<BatteryManager>
 
     private void Update()
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_ANDROID
         Debug.Log("Battery Level: " + SystemInfo.batteryLevel);
         Debug.Log("Battery Status: " + SystemInfo.batteryStatus);
 #endif
