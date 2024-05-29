@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class PlayerCollision : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class PlayerCollision : MonoBehaviour
     private PlayerAni playerAni;
     private GameManager gameManager;
     private Tile tile;
+    
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     private void Awake()
     {
@@ -118,6 +121,14 @@ public class PlayerCollision : MonoBehaviour
             
             obstacleRigidbody.isKinematic = false;
             obstacleRigidbody.AddForce(launchDirection * launchForce);
+        }
+        ParticleSystem particleSystem = obstacle.GetComponentInChildren<ParticleSystem>();
+        if (particleSystem != null)
+        {
+            particleSystem.Play();
+            Observable.Timer(System.TimeSpan.FromSeconds(2.0f))
+                .Subscribe(_ => particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear))
+                .AddTo(disposables); 
         }
     }
 
