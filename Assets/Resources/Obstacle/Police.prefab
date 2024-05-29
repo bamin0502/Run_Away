@@ -113,8 +113,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.6946352, y: 0.8613713, z: 0.09311581}
-  m_Center: {x: -0.029165655, y: 0.59000146, z: 2.7674613}
+  m_Size: {x: 1.6689827, y: 0.8613713, z: 0.09311581}
+  m_Center: {x: -0.016339451, y: 0.59000146, z: 2.7674613}
 --- !u!205 &-6041482979812847088
 LODGroup:
   m_ObjectHideFlags: 0
@@ -194,8 +194,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.755871, y: 0.9308921, z: 0.06872845}
-  m_Center: {x: -0.010764629, y: 0.6659369, z: -2.7871456}
+  m_Size: {x: 1.755871, y: 0.83556724, z: 0.05696416}
+  m_Center: {x: -0.010764599, y: 0.61827445, z: -2.7131858}
 --- !u!54 &-2235578903592495345
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 8414498967103240728}
   - component: {fileID: 5870441986634263858}
   - component: {fileID: 85159843480007402}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +339,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2660655761670534435}
   - component: {fileID: 8387280337414970386}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -380,8 +380,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.17596269, y: 1.443179, z: 5.2882643}
-  m_Center: {x: -0.9711758, y: 0.64631766, z: -0.117649555}
+  m_Size: {x: 0.11977959, y: 1.443179, z: 5.496435}
+  m_Center: {x: -0.94308424, y: 0.64631766, z: -0.013564229}
 --- !u!1 &6764268063720464529
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +498,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5563115016103717909}
   - component: {fileID: 3668321152542735646}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall (1)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -539,5 +539,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.13446426, y: 1.3455034, z: 5.3886833}
-  m_Center: {x: -1.5359249, y: 0.5962729, z: -0.07736254}
+  m_Size: {x: 0.10319185, y: 1.3455034, z: 5.5054564}
+  m_Center: {x: -1.5515611, y: 0.5962729, z: -0.018975973}

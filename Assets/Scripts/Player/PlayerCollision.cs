@@ -102,6 +102,11 @@ public class PlayerCollision : MonoBehaviour
 
     private void LaunchObstacle(GameObject obstacle)
     {
+        if (!gameManager.IsFeverModeActive.Value) 
+        {
+            return;
+        }
+
         Rigidbody obstacleRigidbody = obstacle.GetComponent<Rigidbody>();
         if (obstacleRigidbody != null)
         {

@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.4749284, y: 0.21186543, z: 2.8079758}
-  m_Center: {x: -0.00946033, y: 0.17025685, z: -1.0990584}
+  m_Size: {x: 2.0310516, y: 0.21186543, z: 2.8697093}
+  m_Center: {x: -0.0056095123, y: 0.17025685, z: -1.1299249}
 --- !u!1 &191271634886909354
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 710701438290956310}
   - component: {fileID: 1689057221619591636}
   - component: {fileID: 9014603334500340717}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -350,7 +350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3430709000537854367}
   - component: {fileID: 6696165676398347069}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -391,8 +391,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.18264341, y: 1.4027832, z: 4.761656}
-  m_Center: {x: -1.0948355, y: 0.13866425, z: -0.14976406}
+  m_Size: {x: 0.18264341, y: 1.4027832, z: 4.978015}
+  m_Center: {x: -1.0948355, y: 0.13866425, z: -0.25794375}
 --- !u!1 &8605262767512087871
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,7 +403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1252092337176820475}
   - component: {fileID: 5824739651682346218}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall (1)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -444,5 +444,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.174487, y: 1.457522, z: 4.7334285}
-  m_Center: {x: 1.1123495, y: 0.15204674, z: -1.3867991}
+  m_Size: {x: 0.17448711, y: 1.332638, z: 4.955111}
+  m_Center: {x: 1.1123495, y: 0.089604706, z: -1.4976408}

@@ -211,7 +211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8092002630361351182}
   - component: {fileID: 4037132047450025835}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling
   m_TagString: WalkBy
   m_Icon: {fileID: 0}
@@ -252,8 +252,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3818882, y: 0.19428682, z: 7.978514}
-  m_Center: {x: -0.006962657, y: 1.5585012, z: -0.17228389}
+  m_Size: {x: 2.3818882, y: 0.19428682, z: 8.541849}
+  m_Center: {x: -0.006962657, y: 1.5585012, z: -0.0037572384}
 --- !u!1 &8217687102773977814
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1908894363112991568}
   - component: {fileID: 1916348424507403135}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall
   m_TagString: Wall
   m_Icon: {fileID: 0}

@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.49405, y: 0.13591802, z: 1.5132642}
-  m_Center: {x: 0.025832951, y: -0.432041, z: 2.6217496}
+  m_Size: {x: 2.49405, y: 0.13591802, z: 1.6372916}
+  m_Center: {x: 0.025832891, y: -0.432041, z: 2.683763}
 --- !u!1 &7475856445015016344
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7609328925052997867}
   - component: {fileID: 279123621692152524}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -350,5 +350,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.49405, y: 0.10256934, z: 4.967515}
-  m_Center: {x: 0.025832891, y: -0.44871533, z: 0.89462423}
+  m_Size: {x: 2.49405, y: 0.10256934, z: 5.114643}
+  m_Center: {x: 0.025832891, y: -0.44871533, z: 0.8210603}

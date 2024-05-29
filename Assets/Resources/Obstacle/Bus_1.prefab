@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8863970010461841079}
   - component: {fileID: 4763235387408524355}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8454607222699912106}
   - component: {fileID: 4789196799439170519}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling
   m_TagString: WalkBy
   m_Icon: {fileID: 0}
@@ -104,8 +104,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.4545093, y: 0.083825946, z: 8.311953}
-  m_Center: {x: 0.03103733, y: 1.3400784, z: 0.0312109}
+  m_Size: {x: 2.4545093, y: 0.20295286, z: 8.56756}
+  m_Center: {x: 0.03103733, y: 1.2937515, z: 0.038269997}
 --- !u!1001 &2450421504504587069
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -233,8 +233,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3697376, y: 2.41626, z: 0.22248459}
-  m_Center: {x: 0.04223156, y: 1.6338643, z: -4.12951}
+  m_Size: {x: 2.3697376, y: 2.4427326, z: 0.22248459}
+  m_Center: {x: 0.04223156, y: 1.620628, z: -4.12951}
 --- !u!205 &8791228723743338745
 LODGroup:
   m_ObjectHideFlags: 0
@@ -296,8 +296,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3813987, y: 2.5358799, z: 0.19026089}
-  m_Center: {x: 0.012127638, y: 1.5707678, z: 4.245417}
+  m_Size: {x: 2.3813987, y: 2.4167533, z: 0.19026089}
+  m_Center: {x: 0.012127638, y: 1.5906222, z: 4.245417}
 --- !u!54 &-1479011422203298908
 Rigidbody:
   m_ObjectHideFlags: 0

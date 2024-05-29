@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8227729587060569875}
   - component: {fileID: 2300702841596702757}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8366382236088262572}
   - component: {fileID: 1378665560741445579}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ceiling
   m_TagString: WalkBy
   m_Icon: {fileID: 0}
@@ -104,8 +104,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.50925, y: 0.14131045, z: 8.132116}
-  m_Center: {x: 0.0083066225, y: 1.648961, z: -0.09934425}
+  m_Size: {x: 2.50925, y: 0.14131045, z: 8.6818905}
+  m_Center: {x: 0.0083066225, y: 1.648961, z: -0.04197216}
 --- !u!1001 &218424308131419438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -132,11 +132,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6ebdbc7cac790754eb5859de50c9aa82, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.77
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6ebdbc7cac790754eb5859de50c9aa82, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.36
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6ebdbc7cac790754eb5859de50c9aa82, type: 3}
       propertyPath: m_LocalRotation.w

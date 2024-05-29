@@ -142,11 +142,12 @@ public class PlayerMovement : MonoBehaviour
         velocity = new Vector3(velocity.x, 0, velocity.z);
         rb.velocity = velocity;
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        pendingMovement = Vector2.zero;
         swipeDirection = Defines.SwipeDirection.JUMP;
         isJumping = true;
         isSliding = false;
         playerAni.SetJumpAnimation();
-        pendingMovement = Vector2.zero;
+
         boxCollider.center = originalColliderCenter;
         boxCollider.size = originalColliderSize;
     }

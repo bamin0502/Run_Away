@@ -237,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4272427755532407088}
   - component: {fileID: 10139493277745827}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -331,5 +331,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3978362, y: 0.10240054, z: 4.9254827}
-  m_Center: {x: -0.012192488, y: 0.31940782, z: -0.82600975}
+  m_Size: {x: 2.3978362, y: 0.10240054, z: 5.0732884}
+  m_Center: {x: -0.012192488, y: 0.31940782, z: -0.89991313}

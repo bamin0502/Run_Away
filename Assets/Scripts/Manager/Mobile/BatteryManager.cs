@@ -61,7 +61,7 @@ public class BatteryManager : Singleton<BatteryManager>
                 SetGameSettings(30, 0, 3);
                 break;
             default:
-                SetGameSettings(30, 0, 3);
+                SetGameSettings(60, 0, 3);
                 break;
         }
     }

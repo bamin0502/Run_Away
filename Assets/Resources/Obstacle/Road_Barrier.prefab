@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5236454104286387234}
   - component: {fileID: 4079912640470414313}
   - component: {fileID: 4672598906905275575}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.13923144, y: 1.2689344, z: 0.85396075}
-  m_Center: {x: -1.0048435, y: 0.6298434, z: -0.0026753545}
+  m_Size: {x: 0.13923144, y: 1.263856, z: 0.8944212}
+  m_Center: {x: -1.0048435, y: 0.62730426, z: 0.0077309757}
 --- !u!65 &4672598906905275575
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -73,8 +73,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1443007, y: 1.2278512, z: 1}
-  m_Center: {x: 1.012065, y: 0.61188424, z: 0}
+  m_Size: {x: 0.1443007, y: 1.2563112, z: 0.890479}
+  m_Center: {x: 1.012065, y: 0.62611425, z: 0.0028724372}
 --- !u!1001 &964638349897421181
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -191,8 +191,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8658652, y: 1.4654624, z: 0.88906336}
-  m_Center: {x: -0.0017826259, y: 0.7327312, z: 0.0032824874}
+  m_Size: {x: 1.8658652, y: 1.2554338, z: 0.88906336}
+  m_Center: {x: -0.0017826557, y: 0.6277169, z: 0.0032824874}
 --- !u!205 &4173020281638783229
 LODGroup:
   m_ObjectHideFlags: 0

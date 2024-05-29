@@ -13,11 +13,18 @@ public class Tile : MonoBehaviour
     public float tileLength = 17;
 
     [Header("Speed Settings")]
-    public float moveSpeedIncreaseDistance = 20f;
-    public float moveSpeedMultiplier = 1.05f;
+    public float moveSpeedIncreaseDistance = 200f; 
+    public float moveSpeedMultiplier = 1.01f; 
     public float initialMoveSpeed = 5f;
-    public float maxMoveSpeed = 30f;
-    public float speedIncreaseDistanceIncrement = 5f;
+    public float maxMoveSpeed = 15f; 
+    public float speedIncreaseDistanceIncrement = 50f; 
+
+    [Header("Coin Settings")]
+    public float specialItemSpawnDistance = 100f;
+    public int coinLineLength = 5;
+    public float coinSpacing = 3.0f;
+    public int parabolicPoints = 8;
+    public float parabolicCurveHeight = 2.0f; // 포물선의 굴곡 높이 설정
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
@@ -33,16 +40,12 @@ public class Tile : MonoBehaviour
     public Queue<GameObject> itemPool = new Queue<GameObject>();
     public Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
-    private float totalDistance = 0f;
-    public float specialItemSpawnDistance = 100f;
-    public int coinLineLength = 5;
-    public float coinSpacing = 3.0f;
-    public int parabolicPoints = 8;
+    [SerializeField] private float totalDistance = 0f;
 
     private Collider[] overlapResults = new Collider[10];
 
     private float moveSpeed;
-    private float distanceTravelled = 0f;
+    [SerializeField] private float distanceTravelled = 0f;
     private float nextSpeedIncreaseDistance;
     private float itemSpawnInterval = 2f;
     private float itemSpawnTimer = 0f;
@@ -50,6 +53,9 @@ public class Tile : MonoBehaviour
 
     private Vector3 lastCoinPosition = Vector3.zero;
     private bool hasLastCoinPosition = false;
+
+    // 포물선 점을 미리 계산하여 캐시하는 리스트
+    private List<Vector3> parabolicPointsCache;
 
     void Awake()
     {
@@ -69,6 +75,9 @@ public class Tile : MonoBehaviour
 #endif
 
         otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
+
+        // 포물선 점을 미리 계산하여 캐시합니다.
+        CacheParabolicPoints();
     }
 
     private void Start()
@@ -293,7 +302,7 @@ public class Tile : MonoBehaviour
                     {
                         Vector3 centerPos = child.position + boxCollider.center;
                         float height = boxCollider.size.y;
-                        SpawnParabolicCoins(centerPos, height, parabolicPoints, tile);
+                        SpawnParabolicCoins(centerPos, height, tile);
                     }
                 }
             }
@@ -344,12 +353,11 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SpawnParabolicCoins(Vector3 centerPos, float height, int points, Transform tile)
+    private void SpawnParabolicCoins(Vector3 centerPos, float height, Transform tile)
     {
-        for (int i = 0; i <= points; i++)
+        foreach (var point in parabolicPointsCache)
         {
-            float t = (float)i / points;
-            Vector3 position = CalculateParabolaPoint(centerPos, height, t);
+            Vector3 position = centerPos + point;
             if (!IsObstacleAtPosition(position))
             {
                 SpawnSingleItem(position, tile, true);
@@ -357,12 +365,16 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private Vector3 CalculateParabolaPoint(Vector3 centerPos, float height, float t)
+    private void CacheParabolicPoints()
     {
-        float z = centerPos.z + (t - 0.5f) * coinSpacing * parabolicPoints; 
-        float y = centerPos.y + height * 4 * t * (1 - t); 
-
-        return new Vector3(centerPos.x, y, z);
+        parabolicPointsCache = new List<Vector3>();
+        for (int i = 0; i <= parabolicPoints; i++)
+        {
+            float t = (float)i / parabolicPoints;
+            float z = (t - 0.5f) * coinSpacing * parabolicPoints; 
+            float y = parabolicCurveHeight * 4 * t * (1 - t); 
+            parabolicPointsCache.Add(new Vector3(0, y, z));
+        }
     }
 
     private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
