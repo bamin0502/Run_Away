@@ -102,20 +102,12 @@ public class PlayerCollision : MonoBehaviour
 
     private void LaunchObstacle(GameObject obstacle)
     {
-        if (!gameManager.IsFeverModeActive.Value )
-        {
-            return;
-        }
-
         Rigidbody obstacleRigidbody = obstacle.GetComponent<Rigidbody>();
         if (obstacleRigidbody != null)
         {
             SetLayerRecursively(obstacle, LayerMask.NameToLayer("IgnorePlayerCollision"));
             Vector3 playerToObstacleDirection = (obstacle.transform.position - transform.position).normalized;
-            Vector3 launchDirection = playerToObstacleDirection + Vector3.up;
-            
-            float randomDirection = Random.Range(-1.0f, 1.0f);
-            launchDirection += Vector3.right * randomDirection;
+            Vector3 launchDirection = Vector3.right * Mathf.Sign(playerToObstacleDirection.x) + Vector3.up * 0.5f; // 좌우로 날아가도록 방향 설정
 
             float launchForce = 500f;
             
@@ -139,28 +131,6 @@ public class PlayerCollision : MonoBehaviour
             foreach (Transform child in current)
             {
                 stack.Push(child);
-            }
-        }
-    }
-    
-    private void OnCollisionStay(Collision other)
-    {
-        if (playerMovement.isInvincible) return;
-        
-        if (gameManager.IsFeverModeActive.Value && other.collider.CompareTag("Obstacle"))
-        {
-            Rigidbody obstacleRigidbody = other.collider.GetComponent<Rigidbody>();
-            if (obstacleRigidbody != null && !obstacleRigidbody.isKinematic)
-            {
-                SetLayerRecursively(other.collider.gameObject, LayerMask.NameToLayer("IgnorePlayerCollision"));
-
-                Vector3 direction = (other.collider.transform.position - transform.position).normalized;
-                Vector3 launchDirection = direction + Vector3.up;
-                float randomDirection = Random.Range(-1.0f, 1.0f);
-                launchDirection += Vector3.right * randomDirection;
-
-                float launchForce = 500f;
-                obstacleRigidbody.AddForce(launchDirection * launchForce);
             }
         }
     }
