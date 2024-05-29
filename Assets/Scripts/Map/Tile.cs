@@ -37,6 +37,7 @@ public class Tile : MonoBehaviour
     public float specialItemSpawnDistance = 100f;
     public int coinLineLength = 5;
     public float coinSpacing = 3.0f;
+    public int parabolicPoints = 8;
 
     private Collider[] overlapResults = new Collider[10];
 
@@ -270,7 +271,7 @@ public class Tile : MonoBehaviour
 
     private void SpawnItems(Transform tile)
     {
-        if (tile == null) return;
+        if (!tile) return;
 
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
@@ -283,17 +284,16 @@ public class Tile : MonoBehaviour
             {
                 var lanePosition = Mathf.RoundToInt((child.localPosition.x + 3.8f) / 3.8f);
                 occupiedLanes.Add(lanePosition);
-                
-                foreach (Transform obstacleChild in child)
+
+                var walkBy = GetChildWithTag(child, "WalkBy");
+                if (walkBy != null)
                 {
-                    if (obstacleChild.CompareTag("WalkBy"))
+                    var boxCollider = child.GetComponent<BoxCollider>();
+                    if (boxCollider)
                     {
-                        var boxCollider = child.GetComponent<BoxCollider>();
-                        if (boxCollider)
-                        {
-                            Vector3 spawnPosition = obstacleChild.position + Vector3.up * (boxCollider.size.y); 
-                            SpawnSingleItem(spawnPosition, tile, true);
-                        }
+                        Vector3 centerPos = child.position + boxCollider.center;
+                        float height = boxCollider.size.y;
+                        SpawnParabolicCoins(centerPos, height, parabolicPoints, tile);
                     }
                 }
             }
@@ -320,6 +320,18 @@ public class Tile : MonoBehaviour
         }
     }
 
+    private Transform GetChildWithTag(Transform parent, string tag)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.CompareTag(tag))
+            {
+                return child;
+            }
+        }
+        return null;
+    }
+
     private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile)
     {
         for (int i = 0; i < coinLineLength; i++)
@@ -330,6 +342,27 @@ public class Tile : MonoBehaviour
                 SpawnSingleItem(position, tile, true);
             }
         }
+    }
+
+    private void SpawnParabolicCoins(Vector3 centerPos, float height, int points, Transform tile)
+    {
+        for (int i = 0; i <= points; i++)
+        {
+            float t = (float)i / points;
+            Vector3 position = CalculateParabolaPoint(centerPos, height, t);
+            if (!IsObstacleAtPosition(position))
+            {
+                SpawnSingleItem(position, tile, true);
+            }
+        }
+    }
+
+    private Vector3 CalculateParabolaPoint(Vector3 centerPos, float height, float t)
+    {
+        float z = centerPos.z + (t - 0.5f) * coinSpacing * parabolicPoints; 
+        float y = centerPos.y + height * 4 * t * (1 - t); 
+
+        return new Vector3(centerPos.x, y, z);
     }
 
     private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
@@ -376,7 +409,7 @@ public class Tile : MonoBehaviour
         int numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
         for (int i = 0; i < numColliders; i++)
         {
-            if (overlapResults[i].CompareTag("Obstacle"))
+            if (overlapResults[i].CompareTag("Obstacle") || overlapResults[i].CompareTag("Item"))
             {
                 return true;
             }
