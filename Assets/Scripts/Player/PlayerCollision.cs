@@ -102,6 +102,11 @@ public class PlayerCollision : MonoBehaviour
 
     private void LaunchObstacle(GameObject obstacle)
     {
+        if (!gameManager.IsFeverModeActive.Value )
+        {
+            return;
+        }
+
         Rigidbody obstacleRigidbody = obstacle.GetComponent<Rigidbody>();
         if (obstacleRigidbody != null)
         {
@@ -140,7 +145,9 @@ public class PlayerCollision : MonoBehaviour
     
     private void OnCollisionStay(Collision other)
     {
-        if (other.collider.CompareTag("Obstacle"))
+        if (playerMovement.isInvincible) return;
+        
+        if (gameManager.IsFeverModeActive.Value && other.collider.CompareTag("Obstacle"))
         {
             Rigidbody obstacleRigidbody = other.collider.GetComponent<Rigidbody>();
             if (obstacleRigidbody != null && !obstacleRigidbody.isKinematic)
