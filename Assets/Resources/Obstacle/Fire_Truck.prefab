@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3811584, y: 0.0777483, z: 8.262695}
-  m_Center: {x: 0.012985468, y: 2.2478433, z: -0.017507792}
+  m_Size: {x: 2.4017088, y: 0.0777483, z: 8.262695}
+  m_Center: {x: 0.0027102232, y: 2.2478433, z: -0.017507553}
 --- !u!1 &3359157217230402108
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,8 +105,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.13999891, y: 2.147051, z: 8.1535}
-  m_Center: {x: -1.2529857, y: 1.0484113, z: -0.07210541}
+  m_Size: {x: 0.11753178, y: 2.147051, z: 8.1535}
+  m_Center: {x: -1.2642193, y: 1.0484113, z: -0.07210541}
 --- !u!65 &93596815606558046
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -126,8 +126,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.114350796, y: 2.0374236, z: 8.148808}
-  m_Center: {x: 1.2742176, y: 1.0369787, z: -0.01237011}
+  m_Size: {x: 0.114350796, y: 2.082358, z: 8.148808}
+  m_Center: {x: 1.2742176, y: 1.0145116, z: -0.01237011}
 --- !u!1 &7235495544061757970
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,8 +237,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.0850124, y: 2.1575859, z: 0.1808958}
-  m_Center: {x: 0.01569295, y: 1.5622102, z: 4.071037}
+  m_Size: {x: 2.3614295, y: 2.1575859, z: 0.1808958}
+  m_Center: {x: -0.0040513277, y: 1.5622102, z: 4.071037}
 --- !u!205 &-6455854095001393157
 LODGroup:
   m_ObjectHideFlags: 0
@@ -300,8 +300,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3635054, y: 2.4972155, z: 0.16529846}
-  m_Center: {x: -0.0038895607, y: 1.7464234, z: -4.0788355}
+  m_Size: {x: 2.3635054, y: 2.394463, z: 0.16529846}
+  m_Center: {x: -0.0038895607, y: 1.6950471, z: -4.0788355}
 --- !u!54 &4542466306845556280
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -327,5 +327,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0

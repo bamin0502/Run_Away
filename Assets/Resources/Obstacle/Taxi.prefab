@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.6825311, y: 0.11946964, z: 1.139291}
-  m_Center: {x: 0.0010532141, y: 0.46476853, z: -0.0659641}
+  m_Size: {x: 1.6825311, y: 0.08893365, z: 1.139291}
+  m_Center: {x: 0.0010532141, y: 0.3657637, z: -0.0659641}
 --- !u!1 &2102204373591914974
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,8 +164,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9835129, y: 0.57975507, z: 0.21016979}
-  m_Center: {x: -0.014575481, y: 0.6273266, z: 2.5887122}
+  m_Size: {x: 1.9835129, y: 0.57975507, z: 0.17097259}
+  m_Center: {x: -0.014575481, y: 0.6273266, z: 2.5691137}
 --- !u!205 &-4637144262713035651
 LODGroup:
   m_ObjectHideFlags: 0
@@ -227,8 +227,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9835129, y: 0.6040132, z: 0.2086339}
-  m_Center: {x: -0.014575481, y: 0.69261765, z: -2.882253}
+  m_Size: {x: 1.9840653, y: 0.5936649, z: 0.11435127}
+  m_Center: {x: -0.0025272667, y: 0.6977918, z: -2.8351116}
 --- !u!54 &-5359202700620843877
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -254,7 +254,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &3758012570184090771
 GameObject:
@@ -337,7 +337,7 @@ Transform:
   m_GameObject: {fileID: 4482224812382706159}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3154548, y: -0, z: -0, w: 0.9489407}
-  m_LocalPosition: {x: 0, y: 1.32, z: 0.95}
+  m_LocalPosition: {x: 0, y: 1.26, z: 0.91}
   m_LocalScale: {x: 0.19861247, y: 0.077938445, z: 0.095631965}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -466,5 +466,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.6825311, y: 0.15003657, z: 2.151752}
-  m_Center: {x: 0.0010532141, y: 0.44948506, z: -0.5721946}
+  m_Size: {x: 1.5754282, y: 0.09202242, z: 2.151752}
+  m_Center: {x: 0.0010532141, y: 0.47849214, z: -0.5721946}

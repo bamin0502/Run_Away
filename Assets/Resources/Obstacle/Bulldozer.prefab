@@ -11,11 +11,9 @@ GameObject:
   - component: {fileID: 2133594953162467821}
   - component: {fileID: 3041010411569653320}
   - component: {fileID: 997302755881079426}
-  - component: {fileID: 2984192280446373057}
   - component: {fileID: -1905177527160789200}
   - component: {fileID: -7242166217638368683}
-  - component: {fileID: 2483056610742312346}
-  - component: {fileID: 1413441240700145085}
+  - component: {fileID: 2082776507800738765}
   m_Layer: 6
   m_Name: Bulldozer
   m_TagString: Obstacle
@@ -90,27 +88,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2984192280446373057
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1646028154367701847}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.6694312, y: 4.011155, z: 0.35629463}
-  m_Center: {x: 0.020261604, y: 2.5692337, z: -3.9047775}
 --- !u!205 &-1905177527160789200
 LODGroup:
   m_ObjectHideFlags: 0
@@ -153,8 +130,8 @@ MonoBehaviour:
   obstacleType: 3
   obstacleSpeed: 0
   obstacleSection: 0
---- !u!65 &2483056610742312346
-BoxCollider:
+--- !u!64 &2082776507800738765
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -171,36 +148,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.7387862, y: 2.8042116, z: 0.6092992}
-  m_Center: {x: -0.041019715, y: 1.6084629, z: 3.7565181}
---- !u!54 &1413441240700145085
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1646028154367701847}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7475547152974703792, guid: 07997abe73b69ea43959da38e7a8a1ef, type: 3}
 --- !u!1 &3707136665477659509
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,8 +203,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.4474664, y: 0.23807526, z: 7.0012784}
-  m_Center: {x: -0.026312668, y: 4.4867835, z: -0.058470964}
+  m_Size: {x: 2.4191923, y: 0.50777775, z: 1.687645}
+  m_Center: {x: -0.047933657, y: 4.4449244, z: -1.0051901}
 --- !u!1 &7547256855454681457
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5893044963969265616}
   - component: {fileID: 4164687260567180287}
+  - component: {fileID: 2246367983288088222}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Wall
@@ -305,5 +257,26 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.4474664, y: 4.1221585, z: 7.0012784}
-  m_Center: {x: -0.026312668, y: 2.2048843, z: -0.058470964}
+  m_Size: {x: 0.3109463, y: 2.6745176, z: 6.8572917}
+  m_Center: {x: -2.0945733, y: 1.8567824, z: -0.13046432}
+--- !u!65 &2246367983288088222
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7547256855454681457}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.4318105, y: 2.9403508, z: 6.6861553}
+  m_Center: {x: 1.8031627, y: 1.7791396, z: -0.14177752}

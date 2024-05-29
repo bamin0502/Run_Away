@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5766375118860293554}
   - component: {fileID: 5099007308927749509}
+  - component: {fileID: 4042517044812796105}
   m_Layer: 6
   m_Name: ceiling
   m_TagString: WalkBy
@@ -51,8 +52,29 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3264318, y: 0.32908726, z: 5.063485}
-  m_Center: {x: -0.0074759126, y: 2.675156, z: -0.3251567}
+  m_Size: {x: 2.3264318, y: 0.32908726, z: 3.2615094}
+  m_Center: {x: -0.007475853, y: 2.675156, z: -1.2261446}
+--- !u!65 &4042517044812796105
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2527530797769965973}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8373075, y: 0.20367312, z: 0.8277509}
+  m_Center: {x: -0.04139614, y: 2.1846523, z: 0.9354104}
 --- !u!1 &2908944898091809559
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +252,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &3375802404493007050
 GameObject:
