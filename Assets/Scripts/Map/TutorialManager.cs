@@ -5,7 +5,7 @@ public class TutorialManager : MonoBehaviour
 {
     public GameObject modalPrefab;
     public Canvas canvas;
-    public TutorialStep[] tutorialSteps; // 각 튜토리얼 단계 정보 배열
+    public TutorialStep[] tutorialSteps;
 
     private int currentStep = 0;
     private bool tutorialActive = true;
@@ -68,8 +68,8 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialActive = false;
         gameManager.isTutorialActive = false;
-        gameManager.SaveGameData(); // 튜토리얼 상태를 저장
-        gameManager.ResumeGame(); // 게임 진행 재개
+        gameManager.SaveGameData();
+        gameManager.ResumeGame();
         
         onComplete?.Invoke();
 #if UNITY_EDITOR

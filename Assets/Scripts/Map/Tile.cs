@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [Header("Player and Tile Manager"), Tooltip("플레이어와 타일 매니저 오브젝트")]
+    [Header("Player and Tile Manager")]
     public Transform playerTransform;
     public Transform tileManagerTransform;
     public Vector3 startPoint = new Vector3(0, 0, 17);
@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
     public int coinLineLength = 5;
     public float coinSpacing = 3.0f;
     public int parabolicPoints = 8;
-    public float parabolicCurveHeight = 2.0f; // 포물선의 굴곡 높이 설정
+    public float parabolicCurveHeight = 2.0f;
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
@@ -54,7 +54,6 @@ public class Tile : MonoBehaviour
     private Vector3 lastCoinPosition = Vector3.zero;
     private bool hasLastCoinPosition = false;
 
-    // 포물선 점을 미리 계산하여 캐시하는 리스트
     private List<Vector3> parabolicPointsCache;
 
     void Awake()
@@ -76,7 +75,6 @@ public class Tile : MonoBehaviour
 
         otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
 
-        // 포물선 점을 미리 계산하여 캐시합니다.
         CacheParabolicPoints();
     }
 
@@ -197,15 +195,7 @@ public class Tile : MonoBehaviour
                     obstaclePrefab.SetActive(true);
                     obstaclePrefab.transform.SetParent(tile, true);
 
-                    Rigidbody rb = obstaclePrefab.GetComponent<Rigidbody>();
-                    if (rb)
-                    {
-                        rb.isKinematic = false;
-                        rb.velocity = Vector3.zero;
-                        rb.angularVelocity = Vector3.zero;
-                        rb.isKinematic = true;
-                    }
-
+                    ResetRigidbody(obstaclePrefab);
                     SetLayerRecursively(obstaclePrefab, LayerMask.NameToLayer("Obstacle"));
                 }
                 else
@@ -218,48 +208,13 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private HashSet<int> GetTwoUniqueRandomLanes()
-    {
-        var lanes = new HashSet<int>();
-        while (lanes.Count < 2)
-        {
-            lanes.Add(Random.Range(0, 3));
-        }
-        return lanes;
-    }
-
     private void ReuseTile()
     {
         var tile = tiles[0];
         tiles.RemoveAt(0);
         tiles.Add(tile);
 
-        foreach (Transform child in tile)
-        {
-            if (child.CompareTag("Obstacle"))
-            {
-                GameObject o;
-                (o = child.gameObject).SetActive(false);
-                obstaclePool.Enqueue(o);
-
-                Rigidbody rb = o.GetComponent<Rigidbody>();
-                if (rb)
-                {
-                    rb.isKinematic = false;
-                    rb.velocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                    rb.isKinematic = true;
-                }
-
-                SetLayerRecursively(o, LayerMask.NameToLayer("Obstacle"));
-            }
-            else if (child.CompareTag("Item"))
-            {
-                GameObject o;
-                (o = child.gameObject).SetActive(false);
-                itemPool.Enqueue(o);
-            }
-        }
+        ResetChildObjects(tile);
 
         tile.position = tiles[^2].position + new Vector3(0, 0, tileLength);
 
@@ -329,16 +284,16 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private Transform GetChildWithTag(Transform parent, string tag)
+    private void CacheParabolicPoints()
     {
-        foreach (Transform child in parent)
+        parabolicPointsCache = new List<Vector3>();
+        for (int i = 0; i <= parabolicPoints; i++)
         {
-            if (child.CompareTag(tag))
-            {
-                return child;
-            }
+            float t = (float)i / parabolicPoints;
+            float z = (t - 0.5f) * coinSpacing * parabolicPoints; 
+            float y = parabolicCurveHeight * 4 * t * (1 - t); 
+            parabolicPointsCache.Add(new Vector3(0, y, z));
         }
-        return null;
     }
 
     private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile)
@@ -362,18 +317,6 @@ public class Tile : MonoBehaviour
             {
                 SpawnSingleItem(position, tile, true);
             }
-        }
-    }
-
-    private void CacheParabolicPoints()
-    {
-        parabolicPointsCache = new List<Vector3>();
-        for (int i = 0; i <= parabolicPoints; i++)
-        {
-            float t = (float)i / parabolicPoints;
-            float z = (t - 0.5f) * coinSpacing * parabolicPoints; 
-            float y = parabolicCurveHeight * 4 * t * (1 - t); 
-            parabolicPointsCache.Add(new Vector3(0, y, z));
         }
     }
 
@@ -432,41 +375,78 @@ public class Tile : MonoBehaviour
     private List<Transform> GetAllChildTransforms(Transform parent, string tag)
     {
         var result = new List<Transform>();
-        var queue = new Queue<Transform>();
-
-        queue.Enqueue(parent);
-
-        while (queue.Count > 0)
+        foreach (Transform child in parent)
         {
-            var current = queue.Dequeue();
-
-            foreach (Transform child in current)
+            if (child.CompareTag(tag))
             {
-                if (child.CompareTag(tag))
-                {
-                    result.Add(child);
-                }
-                queue.Enqueue(child);
+                result.Add(child);
+            }
+            result.AddRange(GetAllChildTransforms(child, tag));
+        }
+        return result;
+    }
+
+    private Transform GetChildWithTag(Transform parent, string tag)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.CompareTag(tag))
+            {
+                return child;
             }
         }
+        return null;
+    }
 
-        return result;
+    private HashSet<int> GetTwoUniqueRandomLanes()
+    {
+        var lanes = new HashSet<int>();
+        while (lanes.Count < 2)
+        {
+            lanes.Add(Random.Range(0, 3));
+        }
+        return lanes;
+    }
+
+    private void ResetRigidbody(GameObject obj)
+    {
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb)
+        {
+            rb.isKinematic = false;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+    }
+
+    private void ResetChildObjects(Transform tile)
+    {
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Obstacle"))
+            {
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                obstaclePool.Enqueue(o);
+                ResetRigidbody(o);
+                SetLayerRecursively(o, LayerMask.NameToLayer("Obstacle"));
+            }
+            else if (child.CompareTag("Item"))
+            {
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                itemPool.Enqueue(o);
+            }
+        }
     }
 
     private void SetLayerRecursively(GameObject obj, int newLayer)
     {
-        Stack<Transform> stack = new Stack<Transform>();
-        stack.Push(obj.transform);
-
-        while (stack.Count > 0)
+        obj.layer = newLayer;
+        foreach (Transform child in obj.transform)
         {
-            Transform current = stack.Pop();
-            current.gameObject.layer = newLayer;
-
-            foreach (Transform child in current)
-            {
-                stack.Push(child);
-            }
+            SetLayerRecursively(child.gameObject, newLayer);
         }
     }
 }

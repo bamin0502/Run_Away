@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
-using MoreMountains.Feedbacks;
+using UniRx;
 using UnityEngine;
+using MoreMountains.Feedbacks;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Movement Parameters")]
     public float jumpForce = 10f;
     public float slideForce = -10f;
-    
+
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
     [SerializeField] internal int currentLaneIndex = 1;
 
@@ -35,13 +35,15 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 originalColliderCenter;
     private Vector3 originalColliderSize;
-    
+
     public bool isInvincible { get; private set; }
     private float maxJumpPower = 15f;
     private Vector2 pendingMovement;
 
     public MMF_Player Player;
-    
+
+    private CompositeDisposable disposables = new CompositeDisposable();
+
     private void Awake()
     {
         rb = GetComponentInChildren<Rigidbody>();
@@ -50,7 +52,11 @@ public class PlayerMovement : MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
-        
+    }
+
+    private void OnDestroy()
+    {
+        disposables.Dispose();
     }
 
     private void Start()
@@ -97,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Physics.gravity * rb.mass, ForceMode.Force);
         }
     }
-    
+
     public void SetPendingMovement(Vector2 movement)
     {
         pendingMovement = movement;
@@ -127,13 +133,11 @@ public class PlayerMovement : MonoBehaviour
             if (vertical > 0.5f)
             {
                 PerformJump();
-                //SoundManager.instance.PlaySfx(6);
             }
             else if (vertical < -0.5f)
             {
                 PerformSlide();
                 pendingMovement = Vector2.zero;
-                //SoundManager.instance.PlaySfx(9);
             }
         }
     }
@@ -175,7 +179,7 @@ public class PlayerMovement : MonoBehaviour
         boxCollider.size = new Vector3(0.6f, 0.6f, 0.75f);
     }
 
-    public void TryMoveToLane(int newLaneIndex)
+    private void TryMoveToLane(int newLaneIndex)
     {
         if (isCollidingFront) return;
 
@@ -196,7 +200,7 @@ public class PlayerMovement : MonoBehaviour
         currentLaneIndex = clampedLaneIndex;
         swipeDirection = Defines.SwipeDirection.RUN;
         targetPosition = potentialTargetPosition;
-        
+
         if (isSliding)
         {
             isSliding = false;
@@ -206,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public bool IsObstacleInPath(Vector3 targetPos)
+    private bool IsObstacleInPath(Vector3 targetPos)
     {
         Vector3 direction = targetPos - transform.position;
         if (Physics.Raycast(transform.position, direction, out var hit, direction.magnitude))
@@ -225,11 +229,8 @@ public class PlayerMovement : MonoBehaviour
         playerAni.SetDeathAnimation();
         SoundManager.instance.PlaySfx(1);
         Player.PlayFeedbacks();
-        
-        // 추가로 죽음 처리 로직 필요시 여기에 추가
-        //deadParticle.Play();
     }
-    
+
     public void AdjustJumpPower(float amount)
     {
         jumpForce += amount;
@@ -239,7 +240,7 @@ public class PlayerMovement : MonoBehaviour
     {
         jumpForce = originalJumpForce;
     }
-    
+
     public void Revive()
     {
         Vector3 safePosition = GetSafeRevivePosition(rb.position);
@@ -255,15 +256,21 @@ public class PlayerMovement : MonoBehaviour
         playerAni.SetRunAnimation();
 
         SetInvincible(true);
-        StartCoroutine(RemoveInvincibilityAfter(2.0f)); 
+        Observable.Timer(TimeSpan.FromSeconds(2.0f))
+            .Subscribe(_ => 
+            {
+                SetInvincible(false);
+                CheckAndMoveFromObstacle();
+            })
+            .AddTo(disposables);
     }
-    
+
     private Vector3 GetSafeRevivePosition(Vector3 startPosition)
     {
         Vector3 revivePosition = startPosition;
         for (int i = 0; i < 10; i++)
         {
-            if (IsObstacleInPath(revivePosition))
+            if (!IsObstacleInPath(revivePosition))
             {
                 return revivePosition;
             }
@@ -272,6 +279,20 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return startPosition;
+    }
+
+    private void CheckAndMoveFromObstacle()
+    {
+        if (IsObstacleInPath(rb.position))
+        {
+            Vector3 direction = rb.transform.forward;
+            Vector3 newPosition = rb.position + direction * 1.0f;
+            if (!IsObstacleInPath(newPosition))
+            {
+                rb.position = newPosition;
+                targetPosition = newPosition;
+            }
+        }
     }
 
     public void SetInvincible(bool invincible)
@@ -285,11 +306,5 @@ public class PlayerMovement : MonoBehaviour
         {
             playerAni.StopInvincibleAnimation();
         }
-    }
-
-    private IEnumerator RemoveInvincibilityAfter(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        SetInvincible(false);
     }
 }
