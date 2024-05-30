@@ -18,6 +18,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject GameMenuPanel;
     [SerializeField] public GameObject RevivePanel;
     [SerializeField] public GameObject QuitPanel;
+    [SerializeField] public GameObject TextPanel;
     
     [Header("Pause Panel Ui Button"),Tooltip("일시정지 패널 버튼들")]
     [SerializeField] public Button homeButton;
@@ -53,6 +54,12 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button QuitCheckButton;
     [SerializeField] public Button QuitBackButton;
     
+    [Header("Text Panel"),Tooltip("텍스트 패널 UI들")]
+    [SerializeField] public TextMeshProUGUI FeverTextPanel;
+    [SerializeField] public GameObject FeverTextObject;
+
+    public Tween feverTextTween;
+    
     public void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -78,11 +85,14 @@ public class UiManager : MonoBehaviour
         UpdateReviveCoinText(gameManager.TotalCoins);
         
         FeverGauge.fillAmount = 0;
+        FeverTextObject.SetActive(false);
+        //TextPanel.SetActive(false);
         
         RevivePanel.SetActive(false);
         PausePanel.SetActive(false);
         GameOverPanel.SetActive(false);
         GamePanel.SetActive(false);
+        
     }
 
     private void OnStartButtonClick()
@@ -223,11 +233,30 @@ public class UiManager : MonoBehaviour
         if (FeverGauge.fillAmount >= 1)
         {
             gameManager.ActivateFeverMode(10f);
+            ShowFeverText();
         }
     }
     
     public void ResetFeverGuage()
     {
         FeverGauge.fillAmount = 0;
+    }
+    
+    public void ShowFeverText()
+    {
+        TextPanel.SetActive(true);
+        FeverTextObject.SetActive(true);
+        FeverTextPanel.text = "FEVER TIME!!!";
+        
+        feverTextTween = FeverTextPanel.rectTransform.DOLocalMoveY(20, 0.5f)
+            .SetRelative()
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine); 
+    }
+    public void HideFeverText()
+    {
+        TextPanel.SetActive(false);
+        FeverTextObject.SetActive(false);
+        feverTextTween.Kill();
     }
 }
