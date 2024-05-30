@@ -38,26 +38,30 @@ public class SwipeDetection : MonoBehaviour
 
     private void SwipeStart(Vector2 pos, float time)
     {
+#if UNITY_EDITOR
         Debug.Log("Start");
+#endif
+        
         startPos = pos;
     }
 
     private void SwipeEnd(Vector2 pos, float time)
     {
         endPos = pos;
+#if UNITY_EDITOR
         Debug.Log("End");
+#endif
         DetectSwipe();
     }
 
     private void DetectSwipe()
     {
-        if(gameManager.isGameover || !gameManager.isPlaying) return;
+        if(gameManager.isGameover || !gameManager.isPlaying || gameManager.isPaused) return;
         var swipeVector = endPos - startPos;
-        var distance = Mathf.Clamp(swipeVector.magnitude, 0f, minSwipeDistancePixels);
-        //var distance = swipeVector.magnitude;
+        //var distance = Mathf.Clamp(swipeVector.magnitude, 0f, minSwipeDistancePixels);
+        var distance = swipeVector.magnitude;
         if (distance >= minDistance)
         {
-            swipeVector.Normalize();
             playerMovement.SetPendingMovement(swipeVector);
         }
     }

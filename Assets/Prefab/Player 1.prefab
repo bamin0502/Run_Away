@@ -1571,11 +1571,11 @@ GameObject:
   - component: {fileID: 9126386466993036448}
   - component: {fileID: 8629499426234415367}
   - component: {fileID: 1675599682775698204}
+  - component: {fileID: 6634526861616014009}
+  - component: {fileID: 6167856852685150963}
   - component: {fileID: 4872491836754293623}
   - component: {fileID: 2018289130872966514}
-  - component: {fileID: 6634526861616014009}
   - component: {fileID: 1722375430565872284}
-  - component: {fileID: 6167856852685150963}
   - component: {fileID: 603347515396380090}
   - component: {fileID: 1410470544904530589}
   m_Layer: 7
@@ -1641,6 +1641,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minDistance: 0.2
+--- !u!114 &6634526861616014009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4845182378957180857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f6500caa660144badee9e9bcbf7e61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 11
+  slideForce: -10
+  lanes:
+  - -3.8
+  - 0
+  - 3.8
+  currentLaneIndex: 1
+  swipeDirection: 0
+  slideDuration: 1
+  laneChangeSpeed: 5
+  Player: {fileID: 0}
+--- !u!114 &6167856852685150963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4845182378957180857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ee4a1e845056d4b8f3e23cb9c1a9e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4872491836754293623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1666,28 +1701,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0b9c445d3fdbc45b998e2145a57ff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6634526861616014009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4845182378957180857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1f6500caa660144badee9e9bcbf7e61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpForce: 11
-  slideForce: -10
-  lanes:
-  - -3.8
-  - 0
-  - 3.8
-  currentLaneIndex: 1
-  swipeDirection: 0
-  slideDuration: 1
-  laneChangeSpeed: 5
 --- !u!114 &1722375430565872284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1703,18 +1716,6 @@ MonoBehaviour:
   magnetRadius: 5
   magnetForce: 50
   playerTransform: {fileID: 9126386466993036448}
---- !u!114 &6167856852685150963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4845182378957180857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21ee4a1e845056d4b8f3e23cb9c1a9e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &603347515396380090
 Rigidbody:
   m_ObjectHideFlags: 0

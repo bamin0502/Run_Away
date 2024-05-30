@@ -74,8 +74,6 @@ public class PlayerAni : MonoBehaviour
             SetDeathAnimation();
             deathTrigger = true;
         }
-        
-        
     }
 
     public void SetRunAnimation()
