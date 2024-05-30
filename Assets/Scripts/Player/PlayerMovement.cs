@@ -223,6 +223,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Die()
     {
+        if(gameManager.isGameover) return;
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
         SoundManager.instance.PlaySfx(1);
