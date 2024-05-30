@@ -60,7 +60,6 @@ public class GameManager : MonoBehaviour
     public ParticleSystem jumpEffect;
     public ParticleSystem magnetEffect;
     public ParticleSystem feverEffect;
-    public ParticleSystem coinfeverEffect;
     private IDisposable blinkSubscription;
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();

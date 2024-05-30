@@ -11,7 +11,7 @@ public class IntroUI : MonoBehaviour
     public float fadeDuration = 1f;
     public Button startButton;
     private AsyncOperation asyncLoad;
-
+    public Image startImage;
     private void Start()
     {
         LoadNextSceneAsync().Forget();
@@ -48,6 +48,8 @@ public class IntroUI : MonoBehaviour
 
     private async void StartGame()
     {
+        startButton.onClick.RemoveListener(StartGame);
+        startImage.gameObject.SetActive(false);
         text.DOKill();
         text.DOFade(0, fadeDuration).SetEase(Ease.InOutQuad);
         
