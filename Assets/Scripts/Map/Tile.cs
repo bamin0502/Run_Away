@@ -38,7 +38,7 @@ public class Tile : MonoBehaviour
     private List<GameObject> otherItemPrefabs;
 
     public Queue<GameObject> itemPool = new Queue<GameObject>();
-    public Queue<GameObject> obstaclePool = new Queue<GameObject>();
+    private Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
     [SerializeField] private float totalDistance = 0f;
 
@@ -195,7 +195,7 @@ public class Tile : MonoBehaviour
                     obstaclePrefab.SetActive(true);
                     obstaclePrefab.transform.SetParent(tile, true);
 
-                    ResetRigidbody(obstaclePrefab);
+                    ResetRb(obstaclePrefab);
                     SetLayerRecursively(obstaclePrefab, LayerMask.NameToLayer("Obstacle"));
                 }
                 else
@@ -408,7 +408,7 @@ public class Tile : MonoBehaviour
         return lanes;
     }
 
-    private void ResetRigidbody(GameObject obj)
+    private void ResetRb(GameObject obj)
     {
         Rigidbody rb = obj.GetComponent<Rigidbody>();
         if (rb)
@@ -429,7 +429,7 @@ public class Tile : MonoBehaviour
                 GameObject o;
                 (o = child.gameObject).SetActive(false);
                 obstaclePool.Enqueue(o);
-                ResetRigidbody(o);
+                ResetRb(o);
                 SetLayerRecursively(o, LayerMask.NameToLayer("Obstacle"));
             }
             else if (child.CompareTag("Item"))
