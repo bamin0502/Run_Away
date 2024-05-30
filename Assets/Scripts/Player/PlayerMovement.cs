@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isJumping { get; internal set; }
     public bool isSliding { get; private set; }
     public bool isCollidingFront { get; internal set; }
+    private bool isDead;
 
     private Vector3 originalColliderCenter;
     private Vector3 originalColliderSize;
@@ -68,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
         lastLaneIndex = currentLaneIndex;
         playerAni.SetRunAnimation();
         isCollidingFront = false;
+        isDead = false;
     }
 
     private void Update()
@@ -223,11 +225,13 @@ public class PlayerMovement : MonoBehaviour
 
     public void Die()
     {
-        if(gameManager.isGameover) return;
+        if (isDead) return; 
+
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
         SoundManager.instance.PlaySfx(1);
         Player.PlayFeedbacks();
+        isDead = true;
     }
 
     public void AdjustJumpPower(float amount)
@@ -253,6 +257,8 @@ public class PlayerMovement : MonoBehaviour
         isCollidingFront = false;
         swipeDirection = Defines.SwipeDirection.RUN;
         playerAni.SetRunAnimation();
+
+        isDead = false; 
 
         SetInvincible(true);
         Observable.Timer(TimeSpan.FromSeconds(2.0f))
