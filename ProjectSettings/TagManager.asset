@@ -23,6 +23,7 @@ TagManager:
   - TileManager
   - Tutorial
   - Fever
+  - FollowCam
   layers:
   - Default
   - TransparentFX

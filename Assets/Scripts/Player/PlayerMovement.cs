@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -38,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isInvincible { get; private set; }
     private float maxJumpPower = 15f;
     private Vector2 pendingMovement;
+
+    public MMF_Player Player;
     
     private void Awake()
     {
@@ -47,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
+        
     }
 
     private void Start()
@@ -220,6 +224,8 @@ public class PlayerMovement : MonoBehaviour
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
         SoundManager.instance.PlaySfx(1);
+        Player.PlayFeedbacks();
+        
         // 추가로 죽음 처리 로직 필요시 여기에 추가
         //deadParticle.Play();
     }
