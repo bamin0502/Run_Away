@@ -192,9 +192,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsObstacleInPath(potentialTargetPosition))
         {
-            targetPosition = lastPosition;
-            currentLaneIndex = lastLaneIndex;
-            return;
+            return; 
         }
 
         currentLaneIndex = clampedLaneIndex;
@@ -285,14 +283,33 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsObstacleInPath(rb.position))
         {
-            Vector3 direction = rb.transform.forward;
-            Vector3 newPosition = rb.position + direction * 1.0f;
+            Vector3 newPosition = GetSafePosition(rb.position);
+            rb.position = newPosition;
+            targetPosition = newPosition;
+        }
+    }
+
+    private Vector3 GetSafePosition(Vector3 currentPosition)
+    {
+        var transform1 = rb.transform;
+        var forward1 = transform1.forward;
+        Vector3 forward = forward1;
+        Vector3 backward = -forward1;
+        var right1 = transform1.right;
+        Vector3 left = right1 * -1;
+        Vector3 right = right1;
+
+        Vector3[] directions = { forward, backward, left, right };
+        foreach (var direction in directions)
+        {
+            Vector3 newPosition = currentPosition + direction * 3.8f;
             if (!IsObstacleInPath(newPosition))
             {
-                rb.position = newPosition;
-                targetPosition = newPosition;
+                return newPosition;
             }
         }
+        
+        return currentPosition;
     }
 
     public void SetInvincible(bool invincible)
