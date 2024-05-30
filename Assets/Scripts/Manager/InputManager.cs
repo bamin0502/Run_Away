@@ -67,11 +67,25 @@ public class InputManager : Singleton<InputManager>
 #endif
         if (gameManager.isPlaying)
         {
-            uiManager.ShowPausePanel();
+            if (uiManager.PausePanel.activeSelf)
+            {
+                uiManager.HidePausePanel();
+            }
+            else
+            {
+                uiManager.ShowPausePanel();
+            }
         }
         else
         {
-            uiManager.ShowQuitPanel();
+            if (uiManager.QuitPanel.activeSelf)
+            {
+                uiManager.HideQuitPanel();
+            }
+            else
+            {
+                uiManager.ShowQuitPanel();
+            }
         }
     }
 

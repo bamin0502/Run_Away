@@ -55,13 +55,10 @@ public class BatteryManager : Singleton<BatteryManager>
                 SetGameSettings(60, 1, 5);
                 break;
             case BatteryStatus.Discharging when level < 0.2f:
-                SetGameSettings(15, 0, 1);
+                SetGameSettings(15, 1, 1);
                 break;
             case BatteryStatus.Discharging:
-                SetGameSettings(30, 0, 3);
-                break;
-            default:
-                SetGameSettings(60, 0, 3);
+                SetGameSettings(30, 1, 3);
                 break;
         }
     }

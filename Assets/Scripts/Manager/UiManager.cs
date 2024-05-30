@@ -93,7 +93,6 @@ public class UiManager : MonoBehaviour
         GamePanel.SetActive(false);
         QuitPanel.SetActive(false);
         TextPanel.SetActive(false);
-        
     }
 
     private void OnStartButtonClick()
@@ -259,5 +258,16 @@ public class UiManager : MonoBehaviour
         TextPanel.SetActive(false);
         FeverTextObject.SetActive(false);
         feverTextTween.Kill();
+    }
+
+    public void HidePausePanel()
+    {
+        PausePanel.SetActive(false);
+        Time.timeScale = 1;
+    }
+
+    public void HideQuitPanel()
+    {
+        QuitPanel.SetActive(false);
     }
 }

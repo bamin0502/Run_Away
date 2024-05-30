@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using Cinemachine;
-using DG.Tweening;
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -287,16 +285,7 @@ public class GameManager : MonoBehaviour
                     feverEffect.Play();
                 }
             });
-        // currentFeverEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
-        //     .Subscribe(_ =>
-        //     {                 
-        //         IsFeverModeActive.Value = false;
-        //         isFeverMode = false;
-        //         coinFeverCount = 0;
-        //         feverEffect.Stop();
-        //         uiManager.ResetFeverGuage();
-        //         uiManager.HideFeverText();
-        //     });
+
         currentFeverEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
             .ObserveOnMainThread()
             .Subscribe(_ =>
