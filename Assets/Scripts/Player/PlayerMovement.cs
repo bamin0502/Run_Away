@@ -74,6 +74,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (pendingMovement != Vector2.zero)
+        {
+            UpdateMovement(pendingMovement);
+        }
+
         if (swipeDirection == Defines.SwipeDirection.SLIDE)
         {
             slideTimer -= Time.deltaTime;
@@ -88,18 +93,16 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
-        newPosition.y = rb.position.y;
-        rb.MovePosition(newPosition);
+        if (!isJumping && !isSliding)
+        {
+            Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
+            newPosition.y = rb.position.y;
+            rb.MovePosition(newPosition);
+        }
     }
 
     private void FixedUpdate()
     {
-        if (pendingMovement != Vector2.zero)
-        {
-            UpdateMovement(pendingMovement);
-        }
-
         if (isJumping)
         {
             rb.AddForce(Physics.gravity * rb.mass, ForceMode.Force);
@@ -122,13 +125,12 @@ public class PlayerMovement : MonoBehaviour
             if (horizontal > 0.5f)
             {
                 TryMoveToLane(currentLaneIndex + 1);
-                pendingMovement = Vector2.zero;
             }
             else if (horizontal < -0.5f)
             {
                 TryMoveToLane(currentLaneIndex - 1);
-                pendingMovement = Vector2.zero;
             }
+            pendingMovement = Vector2.zero;
         }
         else
         {
@@ -139,20 +141,19 @@ public class PlayerMovement : MonoBehaviour
             else if (vertical < -0.5f)
             {
                 PerformSlide();
-                pendingMovement = Vector2.zero;
             }
+            pendingMovement = Vector2.zero;
         }
     }
 
     private void PerformJump()
     {
-        if (isJumping) return;
+        if (isJumping || isSliding) return;
 
         var velocity = rb.velocity;
         velocity = new Vector3(velocity.x, 0, velocity.z);
         rb.velocity = velocity;
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        pendingMovement = Vector2.zero;
         swipeDirection = Defines.SwipeDirection.JUMP;
         isJumping = true;
         isSliding = false;
@@ -164,7 +165,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void PerformSlide()
     {
-        
+        if (isSliding) return;
+
         if (isJumping)
         {
             var velocity = rb.velocity;
