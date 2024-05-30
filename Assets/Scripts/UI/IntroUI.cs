@@ -10,22 +10,24 @@ public class IntroUI : MonoBehaviour
     public TextMeshProUGUI text;
     public float fadeDuration = 1f;
     public Button startButton;
-    private AsyncOperation asyncLoad;
     public Image startImage;
+
     private void Start()
     {
         LoadNextSceneAsync().Forget();
-        
+
         if (text != null)
         {
             text.alpha = 0;
+            text.DOFade(1, fadeDuration).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         }
+
         startButton.gameObject.SetActive(false);
     }
 
     private async UniTaskVoid LoadNextSceneAsync()
     {
-        asyncLoad = SceneManager.LoadSceneAsync(1);
+        var asyncLoad = SceneManager.LoadSceneAsync(1);
         if (asyncLoad != null)
         {
             asyncLoad.allowSceneActivation = false;
@@ -40,30 +42,18 @@ public class IntroUI : MonoBehaviour
         {
             text.DOFade(1, fadeDuration).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         }
-        
+
         startButton.gameObject.SetActive(true);
-        
-        startButton.onClick.AddListener(StartGame);
+        startButton.onClick.AddListener(() => StartGame(asyncLoad).Forget());
     }
 
-    private async void StartGame()
+    private async UniTaskVoid StartGame(AsyncOperation asyncLoad)
     {
-        startButton.onClick.RemoveListener(StartGame);
+        startButton.onClick.RemoveAllListeners();
         startImage.gameObject.SetActive(false);
         text.DOKill();
-        text.DOFade(0, fadeDuration).SetEase(Ease.InOutQuad);
-        
-        await Delay((int)(fadeDuration * 1000));
-        
-        asyncLoad.allowSceneActivation = true;
-    }
+        await text.DOFade(0, fadeDuration).SetEase(Ease.InOutQuad).ToUniTask();
 
-    private async UniTask Delay(int milliseconds)
-    {
-        var endTime = Time.realtimeSinceStartup + milliseconds / 1000f;
-        while (Time.realtimeSinceStartup < endTime)
-        {
-            await UniTask.Yield();
-        }
+        asyncLoad.allowSceneActivation = true;
     }
 }

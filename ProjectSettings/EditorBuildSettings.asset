@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: d17cdc72b7df83d4cb346c7209078111
   - enabled: 1
-    path: Assets/Scenes/BangMinho.unity
-    guid: e65114dc6ec08a143b7d021c1803d6be
+    path: Assets/Scenes/GameScene.unity
+    guid: daba3cd67e66b0c4db2a4b3425491592
   m_configObjects: {}

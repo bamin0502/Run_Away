@@ -58,7 +58,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public TextMeshProUGUI FeverTextPanel;
     [SerializeField] public GameObject FeverTextObject;
 
-    public Tween feverTextTween;
+    private Tween feverTextTween;
     
     public void Awake()
     {
@@ -86,12 +86,13 @@ public class UiManager : MonoBehaviour
         
         FeverGauge.fillAmount = 0;
         FeverTextObject.SetActive(false);
-        //TextPanel.SetActive(false);
         
         RevivePanel.SetActive(false);
         PausePanel.SetActive(false);
         GameOverPanel.SetActive(false);
         GamePanel.SetActive(false);
+        QuitPanel.SetActive(false);
+        TextPanel.SetActive(false);
         
     }
 
