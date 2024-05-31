@@ -1,22 +1,22 @@
-using System.Collections;
+using System;
+using UniRx;
 using UnityEngine;
+using MoreMountains.Feedbacks;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Player Movement Fields")]
-    private Rigidbody rb;
+    [Header("Player Movement Fields")] internal Rigidbody rb;
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
     private GameManager gameManager;
-    private Tile tile;
-    
+
     [Header("Player Movement Parameters")]
     public float jumpForce = 10f;
     public float slideForce = -10f;
-    
+
     [SerializeField] private float[] lanes = new float[] { -3.8f, 0, 3.8f };
-    [SerializeField] private int currentLaneIndex = 1;
+    [SerializeField] internal int currentLaneIndex = 1;
 
     [Header("Player Movement States")]
     public Defines.SwipeDirection swipeDirection;
@@ -25,30 +25,39 @@ public class PlayerMovement : MonoBehaviour
     private float slideTimer;
 
     [SerializeField] private float laneChangeSpeed = 5f;
-    private Vector3 targetPosition;
-    private Vector3 lastPosition;
-    private int lastLaneIndex;
+    public Vector3 targetPosition { get; internal set; }
+    public Vector3 lastPosition { get; private set; }
+    public int lastLaneIndex { get; private set; }
 
-    private bool isJumping;
-    private bool isSliding;
-    private bool isCollidingFront;
+    public bool isJumping { get; internal set; }
+    public bool isSliding { get; private set; }
+    public bool isCollidingFront { get; internal set; }
+    private bool isDead;
 
     private Vector3 originalColliderCenter;
     private Vector3 originalColliderSize;
-    
-    private bool isInvincible;
+
+    public bool isInvincible { get; private set; }
     private float maxJumpPower = 15f;
-    
-    private Collider[] overlapResults = new Collider[10];
+    private Vector2 pendingMovement;
+
+    public MMF_Player Player;
+
+    private CompositeDisposable disposables = new CompositeDisposable();
+
     private void Awake()
     {
         rb = GetComponentInChildren<Rigidbody>();
         playerAni = GetComponent<PlayerAni>();
         boxCollider = GetComponent<BoxCollider>();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        tile = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Tile>();
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
+    }
+
+    private void OnDestroy()
+    {
+        disposables.Dispose();
     }
 
     private void Start()
@@ -60,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
         lastLaneIndex = currentLaneIndex;
         playerAni.SetRunAnimation();
         isCollidingFront = false;
+        isDead = false;
     }
 
     private void Update()
@@ -81,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 newPosition = Vector3.Lerp(rb.position, targetPosition, laneChangeSpeed * Time.deltaTime);
         newPosition.y = rb.position.y;
         rb.MovePosition(newPosition);
-        
     }
 
     private void FixedUpdate()
@@ -89,7 +98,6 @@ public class PlayerMovement : MonoBehaviour
         if (pendingMovement != Vector2.zero)
         {
             UpdateMovement(pendingMovement);
-            
         }
 
         if (isJumping)
@@ -97,8 +105,6 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Physics.gravity * rb.mass, ForceMode.Force);
         }
     }
-
-    private Vector2 pendingMovement;
 
     public void SetPendingMovement(Vector2 movement)
     {
@@ -126,15 +132,14 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (vertical > 0.5f) // 점프 중 다시 점프 불가
+            if (vertical > 0.5f)
             {
                 PerformJump();
-                //SoundManager.instance.PlaySfx(6);
             }
             else if (vertical < -0.5f)
             {
                 PerformSlide();
-                //SoundManager.instance.PlaySfx(9);
+                pendingMovement = Vector2.zero;
             }
         }
     }
@@ -147,6 +152,7 @@ public class PlayerMovement : MonoBehaviour
         velocity = new Vector3(velocity.x, 0, velocity.z);
         rb.velocity = velocity;
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        pendingMovement = Vector2.zero;
         swipeDirection = Defines.SwipeDirection.JUMP;
         isJumping = true;
         isSliding = false;
@@ -154,7 +160,6 @@ public class PlayerMovement : MonoBehaviour
 
         boxCollider.center = originalColliderCenter;
         boxCollider.size = originalColliderSize;
-        pendingMovement = Vector2.zero;
     }
 
     private void PerformSlide()
@@ -166,23 +171,12 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = velocity;
             rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
             isJumping = false;
-            pendingMovement = Vector2.zero;
-        }
-
-        if (IsObstacleInPath(rb.position + rb.transform.forward * 1.0f))
-        {
-#if UNITY_EDITOR
-            Debug.Log("Obstacle detected during slide"); 
-#endif
-            Die();
-            return;
         }
 
         swipeDirection = Defines.SwipeDirection.SLIDE;
         slideTimer = slideDuration;
         isSliding = true;
         playerAni.SetSlideAnimation();
-        pendingMovement = Vector2.zero;
         boxCollider.center = new Vector3(0, 0.45f, 0.15f);
         boxCollider.size = new Vector3(0.6f, 0.6f, 0.75f);
     }
@@ -200,14 +194,20 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsObstacleInPath(potentialTargetPosition))
         {
-            targetPosition = lastPosition;
-            currentLaneIndex = lastLaneIndex;
-            return;
+            return; 
         }
 
         currentLaneIndex = clampedLaneIndex;
         swipeDirection = Defines.SwipeDirection.RUN;
         targetPosition = potentialTargetPosition;
+
+        if (isSliding)
+        {
+            isSliding = false;
+            playerAni.SetRunAnimation();
+            boxCollider.center = originalColliderCenter;
+            boxCollider.size = originalColliderSize;
+        }
     }
 
     private bool IsObstacleInPath(Vector3 targetPos)
@@ -223,88 +223,17 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private void OnCollisionEnter(Collision other)
+    public void Die()
     {
-        if (other.collider.CompareTag("Ground"))
-        {
-            isJumping = false;
-            if (!isSliding) playerAni.SetRunAnimation();
-        }
+        if (isDead) return; 
 
-        if (other.collider.CompareTag("Obstacle"))
-        {
-#if UNITY_EDITOR
-            Debug.Log("Hit an obstacle, game over!");
-#endif
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-                return;
-            }
-
-            gameManager.GameOver();
-            Die();
-            
-        }
-
-        if (other.collider.CompareTag("Wall"))
-        {
-#if UNITY_EDITOR
-            Debug.Log("Hit a wall, returning to last position.");
-#endif
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-                return;
-            }
-            
-            targetPosition = lastPosition;
-            rb.position = lastPosition;
-            currentLaneIndex = lastLaneIndex;
-        }
-
-        if (other.collider.CompareTag("WalkBy"))
-        {
-            if(gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-
-            }
-        }
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.collider.CompareTag("Ground"))
-        {
-            isJumping = true;
-        }
-        if (other.collider.CompareTag("Obstacle"))
-        {
-            isCollidingFront = false;
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Item"))
-        {
-            GameObject o;
-            (o = other.gameObject).SetActive(false);
-            tile.itemPool.Enqueue(o);
-            other.GetComponent<Item>().Use();
-        }
-    }
-
-    private void Die()
-    {
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
         SoundManager.instance.PlaySfx(1);
-        // 추가로 죽음 처리 로직 필요시 여기에 추가
-        //deadParticle.Play();
+        Player.PlayFeedbacks();
+        isDead = true;
     }
-    
+
     public void AdjustJumpPower(float amount)
     {
         jumpForce += amount;
@@ -314,55 +243,82 @@ public class PlayerMovement : MonoBehaviour
     {
         jumpForce = originalJumpForce;
     }
-    
+
     public void Revive()
     {
-        Vector3 SafePosition= FindSafePosition();
-        transform.position = SafePosition;
+        Vector3 safePosition = GetSafeRevivePosition(rb.position);
+        rb.position = safePosition;
+
         rb.velocity = Vector3.zero;
-        
+        rb.angularVelocity = Vector3.zero;
+
         isJumping = false;
         isSliding = false;
         isCollidingFront = false;
         swipeDirection = Defines.SwipeDirection.RUN;
         playerAni.SetRunAnimation();
+
+        isDead = false; 
+
+        SetInvincible(true);
+        Observable.Timer(TimeSpan.FromSeconds(2.0f))
+            .Subscribe(_ => 
+            {
+                SetInvincible(false);
+                CheckAndMoveFromObstacle();
+            })
+            .AddTo(disposables);
     }
 
-    private Vector3 FindSafePosition()
+    private Vector3 GetSafeRevivePosition(Vector3 startPosition)
     {
-        float[] lanes = new float[] { -3.8f, 0, 3.8f };
-        Vector3 currentPosition = transform.position;
-        float bufferDistance = 10.0f; 
-        Vector3 forwardPosition = new Vector3(currentPosition.x, currentPosition.y, currentPosition.z + bufferDistance);
-
-        foreach (float lane in lanes)
+        Vector3 revivePosition = startPosition;
+        for (int i = 0; i < 10; i++)
         {
-            Vector3 potentialPosition = new Vector3(lane, currentPosition.y, forwardPosition.z);
-
-            if (IsSafePosition(potentialPosition, bufferDistance))
+            if (!IsObstacleInPath(revivePosition))
             {
-                return potentialPosition;
+                return revivePosition;
+            }
+
+            revivePosition.y += 0.5f;
+        }
+
+        return startPosition;
+    }
+
+    private void CheckAndMoveFromObstacle()
+    {
+        if (IsObstacleInPath(rb.position))
+        {
+            Vector3 newPosition = GetSafePosition(rb.position);
+            rb.position = newPosition;
+            targetPosition = newPosition;
+        }
+    }
+
+    private Vector3 GetSafePosition(Vector3 currentPosition)
+    {
+        var transform1 = rb.transform;
+        var forward1 = transform1.forward;
+        Vector3 forward = forward1;
+        Vector3 backward = -forward1;
+        var right1 = transform1.right;
+        Vector3 left = right1 * -1;
+        Vector3 right = right1;
+
+        Vector3[] directions = { forward, backward, left, right };
+        foreach (var direction in directions)
+        {
+            Vector3 newPosition = currentPosition + direction * 3.8f;
+            if (!IsObstacleInPath(newPosition))
+            {
+                return newPosition;
             }
         }
         
-        return forwardPosition;
+        return currentPosition;
     }
-    private bool IsSafePosition(Vector3 position, float bufferDistance)
-    {
-        Vector3 checkStart = position;
-        Vector3 checkEnd = new Vector3(position.x, position.y, position.z + bufferDistance);
 
-        if (Physics.Linecast(checkStart, checkEnd, out var hit))
-        {
-            if (hit.collider.CompareTag("Obstacle"))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    
     public void SetInvincible(bool invincible)
     {
         isInvincible = invincible;
@@ -373,91 +329,6 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             playerAni.StopInvincibleAnimation();
-        }
-    }
-    
-    private void LaunchObstacle(GameObject obstacle)
-    {
-        Rigidbody obstacleRb = obstacle.GetComponent<Rigidbody>();
-        if (obstacleRb == null)
-        {
-            obstacleRb = obstacle.AddComponent<Rigidbody>();
-        }
-
-        // 원래 위치와 회전 저장
-        var position = obstacle.transform.position;
-        Vector3 originalPosition = position;
-        Quaternion originalRotation = obstacle.transform.rotation;
-
-        // 장애물을 옆쪽으로 날리는 힘을 가합니다.
-        Vector3 forceDirection = (transform.right + Vector3.up) * 10f + Vector3.back * 5f;
-        obstacleRb.AddForce(forceDirection, ForceMode.Impulse);
-
-        // 장애물과 플레이어의 충돌 무시
-        Collider obstacleCollider = obstacle.GetComponent<Collider>();
-        Physics.IgnoreCollision(obstacleCollider, GetComponent<Collider>(), true);
-
-        // 장애물 주변의 모든 장애물과의 충돌 무시
-        int numObstacles = Physics.OverlapSphereNonAlloc(position, 2f, overlapResults);
-        for (int i = 0; i < numObstacles; i++)
-        {
-            Collider col = overlapResults[i];
-            if (col.CompareTag("Obstacle"))
-            {
-                Physics.IgnoreCollision(obstacleCollider, col, true);
-            }
-
-            if (col.CompareTag("Wall"))
-            {
-                Physics.IgnoreCollision(obstacleCollider, col, true);
-            }
-            
-            if(col.CompareTag("WalkBy"))
-            {
-                Physics.IgnoreCollision(obstacleCollider, col, true);
-            }
-        }
-
-        // 일정 시간 후 장애물을 비활성화하고 원래 위치와 회전으로 복원하는 코루틴 시작
-        StartCoroutine(DisableAndResetObstacle(obstacle, 2f, overlapResults, numObstacles, originalPosition, originalRotation));
-    }
-
-    private IEnumerator DisableAndResetObstacle(GameObject obstacle, float delay, Collider[] nearbyObstacles, int numObstacles, Vector3 originalPosition, Quaternion originalRotation)
-    {
-        yield return new WaitForSeconds(delay);
-        obstacle.SetActive(false);
-
-        // 원래 위치와 회전으로 복원
-        obstacle.transform.position = originalPosition;
-        obstacle.transform.rotation = originalRotation;
-
-        Rigidbody obstacleRb = obstacle.GetComponent<Rigidbody>();
-        if (obstacleRb)
-        {
-            obstacleRb.velocity = Vector3.zero;
-            obstacleRb.angularVelocity = Vector3.zero;
-        }
-        
-        // 장애물과 플레이어의 충돌 복원
-        Collider obstacleCollider = obstacle.GetComponent<Collider>();
-        Physics.IgnoreCollision(obstacleCollider, GetComponent<Collider>(), false);
-
-        // 장애물 주변의 모든 장애물과의 충돌 복원
-        for (int i = 0; i < numObstacles; i++)
-        {
-            Collider col = nearbyObstacles[i];
-            if (col && col.CompareTag("Obstacle"))
-            {
-                Physics.IgnoreCollision(obstacleCollider, col, false);
-            }
-            if(col && col.CompareTag("Wall"))
-            {
-                Physics.IgnoreCollision(obstacleCollider, col, false);
-            }
-            if(col && col.CompareTag("WalkBy"))
-            {
-                Physics.IgnoreCollision(obstacleCollider, col, false);
-            }
         }
     }
 }

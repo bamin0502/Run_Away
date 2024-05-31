@@ -22,6 +22,8 @@ TagManager:
   - UiManager
   - TileManager
   - Tutorial
+  - Fever
+  - FollowCam
   layers:
   - Default
   - TransparentFX
@@ -30,8 +32,8 @@ TagManager:
   - Water
   - UI
   - Obstacle
-  - 
-  - 
+  - Player
+  - IgnorePlayerCollision
   - 
   - 
   - 

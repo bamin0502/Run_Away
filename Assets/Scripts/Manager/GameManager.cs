@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     
     [Header("피버모드 관련 필드")]
     public bool isFeverMode = false;
+    private int coinsForFever = 100;
+    private bool feverActivatedByItem = false;
+    private int coinFeverCount = 0;
     
     [Header("코인 관련 필드")] 
     public int CurrentGameCoins = 0;
@@ -46,6 +49,10 @@ public class GameManager : MonoBehaviour
     [Header("시작후에 비출 카메라")] 
     [SerializeField] public CinemachineVirtualCamera InGameCamera;
 
+    [Header("점프 관련 필드")]
+    private float initialJumpPower;
+    private float maxJumpPower = 20f;
+    
     [Header("아이템 이펙트 관련")]
     private IDisposable currentJumpEffect;
     private IDisposable currentMagnetEffect;
@@ -56,8 +63,7 @@ public class GameManager : MonoBehaviour
     private IDisposable blinkSubscription;
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();
-    private float initialJumpPower;
-    private float maxJumpPower = 20f;
+
     public void Awake()
     {
         uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
@@ -88,6 +94,8 @@ public class GameManager : MonoBehaviour
         CurrentScore = 0;
         uiManager.UpdateScoreText(CurrentScore);
         SoundManager.Instance.PlayBgm(0);
+        
+        //tileManager.Initialize();
     }
     
 
@@ -129,7 +137,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
-        // 로비로 돌아갈 때 총 코인 업데이트
+
         uiManager.UpdateAllCoinText(TotalCoins);
         
     }
@@ -146,10 +154,23 @@ public class GameManager : MonoBehaviour
     
     public void AddCoin()
     {
-        // 코인 획득 시 처리
         CurrentGameCoins++;
         TotalCoins++;
         uiManager.UpdateCoinText(CurrentGameCoins);
+        
+        if (!isFeverMode)
+        {
+            coinFeverCount++;
+            
+            if (coinFeverCount >= coinsForFever)
+            {
+                uiManager.UpdateFeverGauge(1);
+            }
+            else
+            {
+                uiManager.UpdateFeverGauge(coinFeverCount / (float)coinsForFever);
+            }
+        }
     }
     
     public void IncreaseJumpPower(float amount, float duration)
@@ -177,16 +198,27 @@ public class GameManager : MonoBehaviour
                     jumpEffect.Play();
                 }
             });
+        if (playerMovement.jumpForce > initialJumpPower)
+        {
+            playerMovement.jumpForce = initialJumpPower;
+        }
 
         playerMovement.AdjustJumpPower(amount);
+        
+        if (playerMovement.jumpForce > maxJumpPower)
+        {
+            playerMovement.jumpForce = maxJumpPower;
+        }
+
         currentJumpEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
-            .Subscribe(_ => ResetJumpPower(amount));
+            .Subscribe(_ => ResetJumpPower());
             
     }
 
-    private void ResetJumpPower(float amount)
+    private void ResetJumpPower()
     {
-        playerMovement.AdjustJumpPower(-amount);
+        playerMovement.jumpForce = initialJumpPower;
+        jumpEffect.Stop();
     }
 
     public void ActivateMagnetEffect(float duration)
@@ -216,23 +248,30 @@ public class GameManager : MonoBehaviour
                 }
             });
         currentMagnetEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
-            .Subscribe(_ => IsMagnetEffectActive.Value = false);
+            .Subscribe(_ =>
+            {
+                IsMagnetEffectActive.Value = false;
+                magnetEffect.Stop();
+            });
             
     }
-    
+
     public void ActivateFeverMode(float duration)
     {
-        if (IsFeverModeActive.Value)
+        if (IsFeverModeActive.Value || isFeverMode)
         {
             return;
         }
-        
+
+        isFeverMode = true;
         currentFeverEffect?.Dispose();
         blinkSubscription?.Dispose();
-        
+
         IsFeverModeActive.Value = true;
         feverEffect.Play();
         
+        uiManager.ShowFeverText();
+
         blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
             .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
             .Subscribe(t =>
@@ -246,8 +285,28 @@ public class GameManager : MonoBehaviour
                     feverEffect.Play();
                 }
             });
+
         currentFeverEffect = Observable.Timer(TimeSpan.FromSeconds(duration))
-            .Subscribe(_ => IsFeverModeActive.Value = false);
+            .ObserveOnMainThread()
+            .Subscribe(_ =>
+            {
+                uiManager.HideFeverText();
+                IsFeverModeActive.Value = false;
+                isFeverMode = false;
+                coinFeverCount = 0;
+                feverEffect.Stop();
+                uiManager.ResetFeverGuage();
+            });
+    }
+    
+    public void ActivateFeverModeByItem(float duration)
+    {
+        if(isFeverMode || IsFeverModeActive.Value)
+        {
+            return;
+        }
+        
+        ActivateFeverMode(duration);
     }
     
     private void Update()
@@ -257,6 +316,7 @@ public class GameManager : MonoBehaviour
             distanceTravelled += stageSpeed * Time.deltaTime;
             CurrentScore = (int) distanceTravelled * scorePerDistance;
             uiManager.UpdateScoreText(CurrentScore);
+            
         }
         
         if(CurrentScore > HighScore)
@@ -269,6 +329,22 @@ public class GameManager : MonoBehaviour
         {
             ActivateCheat();
         } 
+        if(Input.GetKeyDown(KeyCode.F2))
+        {
+            IncreaseJumpPower(5f,10f);
+        }
+        if(Input.GetKeyDown(KeyCode.F3))
+        {
+            ActivateMagnetEffect(10f);
+        }
+        if(Input.GetKeyDown(KeyCode.F4))
+        {
+            ActivateFeverModeByItem(10f);    
+        }
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            ActivateFeverMode(10f);
+        }
 #endif
         
 
@@ -287,6 +363,8 @@ public class GameManager : MonoBehaviour
             uiManager.GameOverPanel.SetActive(false);
             isGameover = false;
             isPlaying = true;
+            isFeverMode = false;
+            IsFeverModeActive.Value = false;
             
             StartCoroutine(StartInvincibility());
             
@@ -303,7 +381,7 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
     private void ActivateCheat()
     {
-        int coinsToAdd = 1000; // Number of coins to add
+        int coinsToAdd = 1000;
         AddCheatCoins(coinsToAdd);
 
         Debug.Log("Cheat activated! Coins added: " + coinsToAdd);

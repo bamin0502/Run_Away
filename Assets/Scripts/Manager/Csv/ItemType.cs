@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class ItemType : MonoBehaviour
 {
-
-
     [SerializeField]private int itemID;
     [SerializeField]private string itemNameEnglish;
     [SerializeField]private int itemType;

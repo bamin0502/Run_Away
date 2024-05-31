@@ -3,68 +3,89 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    private List<GameObject> itemPrefabs;
-    private GameObject primaryItemPrefab; // 코인
-    private List<GameObject> specialItemPrefabs = new List<GameObject>(); // 특별 아이템
-    public float specialItemInterval = 100f; // 특별 아이템 스폰 간격
+    public GameObject primaryItemPrefab;
+    public List<GameObject> otherItemPrefabs;
 
-    private float distanceCounter = 0f;
-    private Vector3 previousItemPosition = Vector3.zero;
-    private bool isFirstItem = true;
-
+    private Queue<GameObject> itemPool = new Queue<GameObject>();
+    private float totalDistance = 0f;
+    private float lastSpecialItemSpawnDistance = 0f;
+    public float specialItemSpawnDistance = 100f;
+    public int coinLineLength = 5;
+    public float coinSpacing = 3.0f;
     private Collider[] overlapResults = new Collider[10];
 
-    void Awake()
+    public void SpawnItems(Transform tile, float totalDistance)
     {
-        var itemTable = DataManager.GetItemTable();
-        itemPrefabs = itemTable.GetLoadedItems("Item");
+        this.totalDistance = totalDistance;
 
-        primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
-        specialItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
-    }
-
-    public void SpawnItems(Transform tile)
-    {
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
-        int laneIndex = 0;
 
-        for (float z = bounds.min.z; z < bounds.max.z; z += 1f)
+        foreach (var lane in lanePositions)
         {
-            var position = new Vector3(lanePositions[laneIndex], bounds.min.y, z);
-            if (!IsObstacleAtPosition(position))
+            Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z));
+            if (!IsObstacleAtPosition(startPosition))
             {
-                SpawnSingleItem(position, tile);
-                laneIndex = (laneIndex + 1) % lanePositions.Length;
+                SpawnCoinLine(startPosition, lane, tile);
+            }
+        }
+
+        if (totalDistance - lastSpecialItemSpawnDistance > specialItemSpawnDistance)
+        {
+            Vector3 randomPosition = new Vector3(lanePositions[Random.Range(0, lanePositions.Length)], bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+            if (!IsObstacleAtPosition(randomPosition))
+            {
+                ReplaceCoinWithSpecialItem(tile);
+                lastSpecialItemSpawnDistance = totalDistance;
             }
         }
     }
 
-    private void SpawnSingleItem(Vector3 position, Transform tile)
+    private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile)
     {
-        GameObject itemPrefab;
-        distanceCounter += Vector3.Distance(previousItemPosition, position);
-
-        if (distanceCounter >= specialItemInterval)
+        for (int i = 0; i < coinLineLength; i++)
         {
-            if (specialItemPrefabs.Count > 0)
+            Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
+            if (!IsObstacleAtPosition(position))
             {
-                itemPrefab = specialItemPrefabs[Random.Range(0, specialItemPrefabs.Count)];
-                distanceCounter = 0f;
+                SpawnSingleItem(position, tile, true);
             }
-            else
-            {
-                itemPrefab = primaryItemPrefab;
-            }
+        }
+    }
+
+    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
+    {
+        var itemPrefab = isCoin ? primaryItemPrefab : otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+
+        GameObject item;
+        if (itemPool.Count > 0)
+        {
+            item = itemPool.Dequeue();
+            item.transform.position = position;
+            item.transform.rotation = Quaternion.identity;
+            item.SetActive(true);
         }
         else
         {
-            itemPrefab = primaryItemPrefab;
+            item = Instantiate(itemPrefab, position, Quaternion.identity);
         }
 
-        var item = Instantiate(itemPrefab, position, Quaternion.identity);
         item.transform.SetParent(tile, true);
-        previousItemPosition = position;
+    }
+
+    private void ReplaceCoinWithSpecialItem(Transform tile)
+    {
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Item") && child.gameObject.name.Contains("Coin"))
+            {
+                var specialItemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+                Destroy(child.gameObject);
+                var specialItem = Instantiate(specialItemPrefab, child.position, Quaternion.identity);
+                specialItem.transform.SetParent(tile, true);
+                break;
+            }
+        }
     }
 
     private bool IsObstacleAtPosition(Vector3 position)
@@ -78,5 +99,11 @@ public class ItemManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void RecycleItem(GameObject item)
+    {
+        item.SetActive(false);
+        itemPool.Enqueue(item);
     }
 }

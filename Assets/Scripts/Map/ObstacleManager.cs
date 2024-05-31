@@ -4,68 +4,86 @@ using UnityEngine;
 public class ObstacleManager : MonoBehaviour
 {
     private Dictionary<int, List<GameObject>> obstaclePrefabsBySection;
+    private Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
     private void Awake()
     {
-        var obstacleTable = DataManager.GetObstacleTable();
-        obstaclePrefabsBySection = obstacleTable.GetObstaclesBySection();
+        obstaclePrefabsBySection = DataManager.GetObstacleTable().GetObstaclesBySection();
     }
 
     public void SpawnObstacles(Transform tile, int sectionType)
     {
-        var spawnPoints = GetChildTransformsWithTag(tile, "ObstacleSpawnPoint");
+        var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
 
-        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"No obstacles found for section type: {sectionType}");
-#endif
-            return;
-        }
+        if (spawnPoints.Count == 0) return;
+
+        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles)) return;
+
+        var selectedLanes = GetTwoUniqueRandomLanes();
 
         foreach (var spawnPoint in spawnPoints)
         {
-            if (filteredObstacles.Count > 0)
+            var lanePosition = Mathf.RoundToInt((spawnPoint.localPosition.x + 3.8f) / 3.8f);
+
+            if (selectedLanes.Contains(lanePosition))
             {
-                var obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
-                var obstacleCollider = obstaclePrefab.GetComponent<Collider>();
+                GameObject obstaclePrefab;
 
-                if (obstacleCollider == null)
+                if (obstaclePool.Count > 0)
                 {
-#if UNITY_EDITOR
-                    Debug.LogWarning($"Obstacle prefab {obstaclePrefab.name} does not have a Collider component.");
-#endif
-                    continue;
-                }
-
-                var obstacleSize = obstacleCollider.bounds.size;
-                var obstacleCenter = spawnPoint.position + obstacleCollider.bounds.center;
-
-                if (!Physics.CheckBox(obstacleCenter, obstacleSize / 2, spawnPoint.rotation, LayerMask.GetMask("Obstacle")))
-                {
-                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
-                    obstacle.transform.SetParent(tile, true);
+                    obstaclePrefab = obstaclePool.Dequeue();
+                    obstaclePrefab.transform.position = spawnPoint.position;
+                    obstaclePrefab.transform.rotation = spawnPoint.rotation;
+                    obstaclePrefab.SetActive(true);
+                    obstaclePrefab.transform.SetParent(tile, true);
                 }
                 else
                 {
-#if UNITY_EDITOR
-                    Debug.LogWarning($"Spawn point at {spawnPoint.position} is already occupied by another obstacle.");
-#endif
+                    obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
+                    var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
+                    obstacle.transform.SetParent(tile, true);
                 }
             }
         }
     }
 
-    private List<Transform> GetChildTransformsWithTag(Transform parent, string tag)
+    public void RecycleObstacle(GameObject obstacle)
+    {
+        obstacle.SetActive(false);
+        obstaclePool.Enqueue(obstacle);
+    }
+
+    private HashSet<int> GetTwoUniqueRandomLanes()
+    {
+        var lanes = new HashSet<int>();
+        while (lanes.Count < 2)
+        {
+            lanes.Add(Random.Range(0, 3));
+        }
+        return lanes;
+    }
+
+    private List<Transform> GetAllChildTransforms(Transform parent, string tag)
     {
         var result = new List<Transform>();
-        foreach (Transform child in parent)
+        var queue = new Queue<Transform>();
+
+        queue.Enqueue(parent);
+
+        while (queue.Count > 0)
         {
-            if (child.CompareTag(tag))
+            var current = queue.Dequeue();
+
+            foreach (Transform child in current)
             {
-                result.Add(child);
+                if (child.CompareTag(tag))
+                {
+                    result.Add(child);
+                }
+                queue.Enqueue(child);
             }
         }
+
         return result;
     }
 }

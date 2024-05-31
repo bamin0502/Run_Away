@@ -17,6 +17,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject GamePanel;
     [SerializeField] public GameObject GameMenuPanel;
     [SerializeField] public GameObject RevivePanel;
+    [SerializeField] public GameObject QuitPanel;
+    [SerializeField] public GameObject TextPanel;
     
     [Header("Pause Panel Ui Button"),Tooltip("일시정지 패널 버튼들")]
     [SerializeField] public Button homeButton;
@@ -36,8 +38,9 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button optionButton;
     [SerializeField] public TextMeshProUGUI GameScoreText;
     [SerializeField] public TextMeshProUGUI HighGameScoreText;
+    [SerializeField] public Image FeverGauge;
     
-    [Header("Game Panel Ui Text"),Tooltip("게임 패널 텍스트들")]
+    [Header("Game Panel Ui Text"),Tooltip("게임 결과 패널 텍스트들")]
     [SerializeField] public Button startButton;
     [SerializeField] public TextMeshProUGUI HighScoreText;
     [SerializeField] public TextMeshProUGUI AllCoinText;
@@ -46,6 +49,17 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button ReviveCheckButton;
     [SerializeField] public Button BackButton;
     [SerializeField] public TextMeshProUGUI ReviveCoinText;
+    
+    [Header("Quit Panel Ui"),Tooltip("종료 패널 UI들")]
+    [SerializeField] public Button QuitCheckButton;
+    [SerializeField] public Button QuitBackButton;
+    
+    [Header("Text Panel"),Tooltip("텍스트 패널 UI들")]
+    [SerializeField] public TextMeshProUGUI FeverTextPanel;
+    [SerializeField] public GameObject FeverTextObject;
+
+    private Tween feverTextTween;
+    
     public void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
@@ -63,15 +77,22 @@ public class UiManager : MonoBehaviour
         LobbyButton.onClick.AddListener(OnHomeButtonClick);
         BackButton.onClick.AddListener(HideRevivePanel);
         ReviveCheckButton.onClick.AddListener(OnReviveButtonClick);
+        QuitCheckButton.onClick.AddListener(OnQuitButtonClick);
+        QuitBackButton.onClick.AddListener(() => QuitPanel.SetActive(false));
         
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
         UpdateReviveCoinText(gameManager.TotalCoins);
         
+        FeverGauge.fillAmount = 0;
+        FeverTextObject.SetActive(false);
+        
         RevivePanel.SetActive(false);
         PausePanel.SetActive(false);
         GameOverPanel.SetActive(false);
         GamePanel.SetActive(false);
+        QuitPanel.SetActive(false);
+        TextPanel.SetActive(false);
     }
 
     private void OnStartButtonClick()
@@ -83,12 +104,10 @@ public class UiManager : MonoBehaviour
         if (gameManager.isTutorialActive)
         {
             tutorialManager.StartTutorial(StartGame);
-            GameMenuPanel.SetActive(false);
         }
         else
         {
             StartGame();
-            GameMenuPanel.SetActive(false);
         }
            
     }
@@ -97,6 +116,11 @@ public class UiManager : MonoBehaviour
     {
         PausePanel.SetActive(true);
         Time.timeScale = 0;
+    }
+    
+    public void ShowQuitPanel()
+    {
+        QuitPanel.SetActive(true);
     }
 
     public void ShowGameOverPanel()
@@ -131,31 +155,32 @@ public class UiManager : MonoBehaviour
 #endif
     }
 
-    public void StartGame()
+    private void StartGame()
     {
         gameManager.isPlaying = true;
         gameManager.MenuCamera.enabled = false;
         gameManager.InGameCamera.enabled = true;
         GamePanel.SetActive(true);
+        GameMenuPanel.SetActive(false);
         SoundManager.Instance.PlayBgm(1);
     }
     
     public void UpdateCoinText(int coin)
     {
-        coinText.text = coin.ToString("0000");
+        coinText.text = coin.ToString("");
     }
 
     public void UpdateResultCoinText(int coin)
     {
-        resultCoinText.text = "COIN:" + coin.ToString("0000");
+        resultCoinText.text = "COIN:" + coin.ToString("");
     }
 
     public void UpdateAllCoinText(int coin)
     {
         AllCoinText.text = coin.ToString();
     }
-    
-    public void Revive()
+
+    private void Revive()
     {
         RevivePanel.SetActive(true);
         UpdateReviveButtonState(gameManager.TotalCoins);
@@ -168,31 +193,31 @@ public class UiManager : MonoBehaviour
 
     public void UpdateScoreText(int currentScore)
     {
-        GameScoreText.text = currentScore.ToString("00000");
+        GameScoreText.text = currentScore.ToString("");
         
         if(currentScore > gameManager.HighScore)
         {
-            HighGameScoreText.text = currentScore.ToString("00000");
+            HighGameScoreText.text = currentScore.ToString("");
         }
     }
     
     public void UpdateResultScoreText(int currentScore)
     {
-        scoreText.text = "SCORE: " + currentScore.ToString("00000");
+        scoreText.text = "SCORE: " + currentScore.ToString("");
     }
 
     public void UpdateHighScoreText(int highScore)
     {
-        HighScoreText.text = highScore.ToString("00000");
-        HighGameScoreText.text = highScore.ToString("00000");
+        HighScoreText.text = highScore.ToString("");
+        HighGameScoreText.text = highScore.ToString("");
     }
-    
-    public void UpdateReviveCoinText(int coin)
+
+    private void UpdateReviveCoinText(int coin)
     {
         ReviveCoinText.text = coin.ToString();
     }
 
-    public void UpdateReviveButtonState(int coin)
+    private void UpdateReviveButtonState(int coin)
     {
         ReviveCheckButton.interactable = coin >= 300;
     }
@@ -201,4 +226,48 @@ public class UiManager : MonoBehaviour
         gameManager.RevivePlayer();
     }
     
+    public void UpdateFeverGauge(float value)
+    {
+        FeverGauge.fillAmount = value;
+
+        if (FeverGauge.fillAmount >= 1)
+        {
+            gameManager.ActivateFeverMode(10f);
+            ShowFeverText();
+        }
+    }
+    
+    public void ResetFeverGuage()
+    {
+        FeverGauge.fillAmount = 0;
+    }
+    
+    public void ShowFeverText()
+    {
+        TextPanel.SetActive(true);
+        FeverTextObject.SetActive(true);
+        FeverTextPanel.text = "FEVER TIME!!!";
+        
+        feverTextTween = FeverTextPanel.rectTransform.DOLocalMoveY(20, 0.5f)
+            .SetRelative()
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine); 
+    }
+    public void HideFeverText()
+    {
+        TextPanel.SetActive(false);
+        FeverTextObject.SetActive(false);
+        feverTextTween.Kill();
+    }
+
+    public void HidePausePanel()
+    {
+        PausePanel.SetActive(false);
+        Time.timeScale = 1;
+    }
+
+    public void HideQuitPanel()
+    {
+        QuitPanel.SetActive(false);
+    }
 }

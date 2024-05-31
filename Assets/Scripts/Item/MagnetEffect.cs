@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public partial class MagnetEffect : MonoBehaviour
+public class MagnetEffect : MonoBehaviour
 {
     public float magnetRadius = 5f;
     public float magnetForce = 10f;
@@ -20,7 +19,6 @@ public partial class MagnetEffect : MonoBehaviour
 
         if (playerCollider == null)
         {
-            return;
 #if UNITY_EDITOR
             Debug.LogError("Player BoxCollider not found!");
 #endif

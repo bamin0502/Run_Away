@@ -3,17 +3,28 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [Header("Player and Tile Manager"), Tooltip("플레이어와 타일 매니저 오브젝트")]
+    [Header("Player and Tile Manager")]
     public Transform playerTransform;
     public Transform tileManagerTransform;
     public Vector3 startPoint = new Vector3(0, 0, 17);
     public int numberOfTiles = 5;
     public int noObstaclesInitially = 2;
-    public int noItemsInitially = 2; // 새 변수 선언
+    public int noItemsInitially = 2;
     public float tileLength = 17;
 
-    public float moveSpeedIncreaseDistance = 20f;
-    public float moveSpeedMultiplier = 1.05f;
+    [Header("Speed Settings")]
+    public float moveSpeedIncreaseDistance = 200f; 
+    public float moveSpeedMultiplier = 1.01f; 
+    public float initialMoveSpeed = 5f;
+    public float maxMoveSpeed = 15f; 
+    public float speedIncreaseDistanceIncrement = 50f; 
+
+    [Header("Coin Settings")]
+    public float specialItemSpawnDistance = 100f;
+    public int coinLineLength = 5;
+    public float coinSpacing = 3.0f;
+    public int parabolicPoints = 8;
+    public float parabolicCurveHeight = 2.0f;
 
     private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
@@ -29,30 +40,21 @@ public class Tile : MonoBehaviour
     public Queue<GameObject> itemPool = new Queue<GameObject>();
     private Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
-    private Vector3 previousItemPosition = Vector3.zero;
-    private bool isFirstItem = true;
-    private float totalDistance = 0f;
-    public float specialItemSpawnDistance = 100f;
-    public float initialOtherItemSpawnChance = 0.05f;
-    public float maxOtherItemSpawnChance = 0.2f;
-    public float distanceFactor = 0.0005f;
-    public int coinLineLength = 5;
-    public float coinSpacing = 3.0f;
+    [SerializeField] private float totalDistance = 0f;
 
     private Collider[] overlapResults = new Collider[10];
 
     private float moveSpeed;
-    private float distanceTravelled = 0f;
-
-    [Header("일정 거리마다 속도 증가"), Tooltip("여기서 설정한 거리마다 속도가 증가합니다.")]
-    [SerializeField] private float nextSpeedIncreaseDistance = 20f;
-    [SerializeField] public float initialMoveSpeed = 5f;
-
-    [Header("최대 속도"), Tooltip("최대 속도 조절을 여기서 하시면 됩니다.")]
-    [SerializeField] public float maxMoveSpeed = 15f;
-
-    private float itemSpawnInterval = 2f; // 2 seconds interval for testing
+    [SerializeField] private float distanceTravelled = 0f;
+    private float nextSpeedIncreaseDistance;
+    private float itemSpawnInterval = 2f;
     private float itemSpawnTimer = 0f;
+    private float lastSpecialItemSpawnDistance = 0f;
+
+    private Vector3 lastCoinPosition = Vector3.zero;
+    private bool hasLastCoinPosition = false;
+
+    private List<Vector3> parabolicPointsCache;
 
     void Awake()
     {
@@ -69,34 +71,24 @@ public class Tile : MonoBehaviour
         {
             Debug.LogError("Primary item prefab (Coin) not found!");
         }
-        else
-        {
-            Debug.Log($"Primary Item Prefab: {primaryItemPrefab.name}");
-        }
 #endif
 
         otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
-#if UNITY_EDITOR
-        foreach (var item in otherItemPrefabs)
-        {
-            Debug.Log($"Other Item Prefab: {item.name}");
-        }
-#endif
+
+        CacheParabolicPoints();
     }
 
     private void Start()
     {
         nextTilePosition = startPoint;
+        nextSpeedIncreaseDistance = moveSpeedIncreaseDistance;
+
         for (var i = 0; i < numberOfTiles; i++)
         {
             var tile = SpawnTile(i >= noObstaclesInitially);
-            if (tile != null)
+            if (tile != null && i >= noItemsInitially)
             {
-                // 처음 noItemsInitially 개의 타일에 대해서는 아이템을 스폰하지 않음
-                if (i >= noItemsInitially)
-                {
-                    SpawnItems(tile);
-                }
+                SpawnItems(tile);
             }
         }
 
@@ -118,17 +110,18 @@ public class Tile : MonoBehaviour
             if (distanceTravelled > nextSpeedIncreaseDistance)
             {
                 moveSpeed = Mathf.Min(moveSpeed * moveSpeedMultiplier, maxMoveSpeed);
-                nextSpeedIncreaseDistance += moveSpeedIncreaseDistance;
+                nextSpeedIncreaseDistance += moveSpeedIncreaseDistance + speedIncreaseDistanceIncrement;
+                moveSpeedIncreaseDistance += speedIncreaseDistanceIncrement;
             }
 
             totalDistance += moveSpeed * Time.deltaTime;
             gameManager.stageSpeed = moveSpeed;
-            
+
             itemSpawnTimer += Time.deltaTime;
             if (itemSpawnTimer >= itemSpawnInterval)
             {
                 itemSpawnTimer = 0f;
-                SpawnItems(tiles[^1]); 
+                SpawnItems(tiles[^1]);
             }
         }
     }
@@ -171,12 +164,6 @@ public class Tile : MonoBehaviour
             {
                 SpawnObstacles(newTile, sectionTypeComponent.sectionType);
             }
-            else
-            {
-#if UNITY_EDITOR
-                Debug.LogWarning("SectionType component not found on the section prefab.");
-#endif
-            }
         }
 
         return newTile;
@@ -186,30 +173,11 @@ public class Tile : MonoBehaviour
     {
         var spawnPoints = GetAllChildTransforms(tile, "ObstacleSpawnPoint");
 
-        if (spawnPoints.Count == 0)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("No ObstacleSpawnPoint found in the tile.");
-#endif
-            return;
-        }
+        if (spawnPoints.Count == 0) return;
 
-        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles))
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"No obstacles found for section type: {sectionType}");
-#endif
-            return;
-        }
-#if UNITY_EDITOR
-        Debug.Log($"Spawn points found: {spawnPoints.Count}, filtered obstacles: {filteredObstacles.Count}");
-#endif
+        if (!obstaclePrefabsBySection.TryGetValue(sectionType, out var filteredObstacles)) return;
 
-        var selectedLanes = new HashSet<int>();
-        while (selectedLanes.Count < Random.Range(1, 3))
-        {
-            selectedLanes.Add(Random.Range(0, 3));
-        }
+        var selectedLanes = GetTwoUniqueRandomLanes();
 
         foreach (var spawnPoint in spawnPoints)
         {
@@ -226,15 +194,15 @@ public class Tile : MonoBehaviour
                     obstaclePrefab.transform.rotation = spawnPoint.rotation;
                     obstaclePrefab.SetActive(true);
                     obstaclePrefab.transform.SetParent(tile, true);
+
+                    ResetRb(obstaclePrefab);
+                    SetLayerRecursively(obstaclePrefab, LayerMask.NameToLayer("Obstacle"));
                 }
                 else
                 {
                     obstaclePrefab = filteredObstacles[Random.Range(0, filteredObstacles.Count)];
                     var obstacle = Instantiate(obstaclePrefab, spawnPoint.position, spawnPoint.rotation);
                     obstacle.transform.SetParent(tile, true);
-#if UNITY_EDITOR
-                    Debug.Log($"Spawned obstacle: {obstacle.name} at position: {spawnPoint.position}");
-#endif
                 }
             }
         }
@@ -246,27 +214,10 @@ public class Tile : MonoBehaviour
         tiles.RemoveAt(0);
         tiles.Add(tile);
 
-        // 기존 타일의 장애물 및 아이템 제거
-        foreach (Transform child in tile)
-        {
-            if (child.CompareTag("Obstacle"))
-            {
-                GameObject o;
-                (o = child.gameObject).SetActive(false);
-                obstaclePool.Enqueue(o);
-            }
-            else if (child.CompareTag("Item"))
-            {
-                GameObject o;
-                (o = child.gameObject).SetActive(false);
-                itemPool.Enqueue(o);
-            }
-        }
+        ResetChildObjects(tile);
 
-        // 타일 위치 재설정
         tile.position = tiles[^2].position + new Vector3(0, 0, tileLength);
 
-        // 새로운 섹션 타입 무작위 선택
         var newSectionPrefab = sectionPrefabs[Random.Range(0, sectionPrefabs.Count)];
         var newSectionTypeComponent = newSectionPrefab.GetComponent<SectionType>();
 
@@ -275,14 +226,7 @@ public class Tile : MonoBehaviour
             tile.GetComponent<SectionType>().sectionType = newSectionTypeComponent.sectionType;
             SpawnObstacles(tile, newSectionTypeComponent.sectionType);
         }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning("SectionType component not found on the new section prefab.");
-#endif
-        }
 
-        // 처음 noItemsInitially 개의 타일을 넘어간 경우에만 아이템을 스폰
         if (tiles.IndexOf(tile) >= noItemsInitially)
         {
             SpawnItems(tile);
@@ -291,35 +235,64 @@ public class Tile : MonoBehaviour
 
     private void SpawnItems(Transform tile)
     {
-        if (tile == null)
-        {
-            return;
-        }
+        if (!tile) return;
 
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
-        foreach (var lane in lanePositions)
-        {
-            for (int attempts = 0; attempts < 10; attempts++)
-            {
-                var randomPosition = new Vector3(lane, bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+        HashSet<int> occupiedLanes = new HashSet<int>();
 
-                if (!IsObstacleAtPosition(randomPosition))
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Obstacle"))
+            {
+                var lanePosition = Mathf.RoundToInt((child.localPosition.x + 3.8f) / 3.8f);
+                occupiedLanes.Add(lanePosition);
+
+                var walkBy = GetChildWithTag(child, "WalkBy");
+                if (walkBy != null)
                 {
-                    if (isFirstItem || Random.value < initialOtherItemSpawnChance + (totalDistance * distanceFactor))
+                    var boxCollider = child.GetComponent<BoxCollider>();
+                    if (boxCollider)
                     {
-                        SpawnSingleItem(randomPosition, tile);
+                        Vector3 centerPos = child.position + boxCollider.center;
+                        float height = boxCollider.size.y;
+                        SpawnParabolicCoins(centerPos, height, tile);
                     }
-                    else
-                    {
-                        SpawnCoinLine(randomPosition, lane, tile);
-                    }
-                    previousItemPosition = randomPosition;
-                    isFirstItem = false;
-                    break;
                 }
             }
+        }
+
+        foreach (var lane in lanePositions)
+        {
+            var laneIndex = Mathf.RoundToInt((lane + 3.8f) / 3.8f);
+            if (!occupiedLanes.Contains(laneIndex))
+            {
+                Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
+                SpawnCoinLine(startPosition, lane, tile);
+            }
+        }
+
+        if (totalDistance - lastSpecialItemSpawnDistance > specialItemSpawnDistance)
+        {
+            Vector3 randomPosition = new Vector3(lanePositions[Random.Range(0, lanePositions.Length)], bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
+            if (!IsObstacleAtPosition(randomPosition))
+            {
+                SpawnSpecialItem(randomPosition, tile);
+                lastSpecialItemSpawnDistance = totalDistance;
+            }
+        }
+    }
+
+    private void CacheParabolicPoints()
+    {
+        parabolicPointsCache = new List<Vector3>();
+        for (int i = 0; i <= parabolicPoints; i++)
+        {
+            float t = (float)i / parabolicPoints;
+            float z = (t - 0.5f) * coinSpacing * parabolicPoints; 
+            float y = parabolicCurveHeight * 4 * t * (1 - t); 
+            parabolicPointsCache.Add(new Vector3(0, y, z));
         }
     }
 
@@ -335,7 +308,19 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin = false)
+    private void SpawnParabolicCoins(Vector3 centerPos, float height, Transform tile)
+    {
+        foreach (var point in parabolicPointsCache)
+        {
+            Vector3 position = centerPos + point;
+            if (!IsObstacleAtPosition(position))
+            {
+                SpawnSingleItem(position, tile, true);
+            }
+        }
+    }
+
+    private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
     {
         var itemPrefab = isCoin ? primaryItemPrefab : otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
 
@@ -351,24 +336,27 @@ public class Tile : MonoBehaviour
         {
             item = Instantiate(itemPrefab, position, Quaternion.identity);
         }
-        if (tile)
-        {
-            item.transform.SetParent(tile, true);
-        }
 
-        var itemTypeComponent = item.GetComponent<ItemType>();
-        if (itemTypeComponent)
+        item.transform.SetParent(tile, true);
+    }
+
+    private void SpawnSpecialItem(Vector3 position, Transform tile)
+    {
+        var specialItemPrefab = otherItemPrefabs[Random.Range(0, otherItemPrefabs.Count)];
+        GameObject specialItem;
+        if (itemPool.Count > 0)
         {
-#if UNITY_EDITOR
-            Debug.Log($"Spawned Item: {itemTypeComponent.ItemNameEnglish}, ID: {itemTypeComponent.ItemID}");
-#endif
+            specialItem = itemPool.Dequeue();
+            specialItem.transform.position = position;
+            specialItem.transform.rotation = Quaternion.identity;
+            specialItem.SetActive(true);
         }
         else
         {
-#if UNITY_EDITOR
-            Debug.LogWarning("ItemType component not found on the spawned item.");
-#endif
+            specialItem = Instantiate(specialItemPrefab, position, Quaternion.identity);
         }
+
+        specialItem.transform.SetParent(tile, true);
     }
 
     private bool IsObstacleAtPosition(Vector3 position)
@@ -376,7 +364,7 @@ public class Tile : MonoBehaviour
         int numColliders = Physics.OverlapSphereNonAlloc(position, 1f, overlapResults);
         for (int i = 0; i < numColliders; i++)
         {
-            if (overlapResults[i].CompareTag("Obstacle"))
+            if (overlapResults[i].CompareTag("Obstacle") || overlapResults[i].CompareTag("Item"))
             {
                 return true;
             }
@@ -387,24 +375,78 @@ public class Tile : MonoBehaviour
     private List<Transform> GetAllChildTransforms(Transform parent, string tag)
     {
         var result = new List<Transform>();
-        var queue = new Queue<Transform>();
-
-        queue.Enqueue(parent);
-
-        while (queue.Count > 0)
+        foreach (Transform child in parent)
         {
-            var current = queue.Dequeue();
-
-            foreach (Transform child in current)
+            if (child.CompareTag(tag))
             {
-                if (child.CompareTag(tag))
-                {
-                    result.Add(child);
-                }
-                queue.Enqueue(child);
+                result.Add(child);
+            }
+            result.AddRange(GetAllChildTransforms(child, tag));
+        }
+        return result;
+    }
+
+    private Transform GetChildWithTag(Transform parent, string tag)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.CompareTag(tag))
+            {
+                return child;
             }
         }
+        return null;
+    }
 
-        return result;
+    private HashSet<int> GetTwoUniqueRandomLanes()
+    {
+        var lanes = new HashSet<int>();
+        while (lanes.Count < 2)
+        {
+            lanes.Add(Random.Range(0, 3));
+        }
+        return lanes;
+    }
+
+    private void ResetRb(GameObject obj)
+    {
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb)
+        {
+            rb.isKinematic = false;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+    }
+
+    private void ResetChildObjects(Transform tile)
+    {
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Obstacle"))
+            {
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                obstaclePool.Enqueue(o);
+                ResetRb(o);
+                SetLayerRecursively(o, LayerMask.NameToLayer("Obstacle"));
+            }
+            else if (child.CompareTag("Item"))
+            {
+                GameObject o;
+                (o = child.gameObject).SetActive(false);
+                itemPool.Enqueue(o);
+            }
+        }
+    }
+
+    private void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        obj.layer = newLayer;
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
 }
