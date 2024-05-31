@@ -164,7 +164,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void PerformSlide()
     {
-        
         if (isJumping)
         {
             var velocity = rb.velocity;

@@ -87,7 +87,6 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        Application.targetFrameRate = 60;
         disableObject.SetActive(false);
         jsonData.LoadGameData();
 
