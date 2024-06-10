@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class IntroUI : MonoBehaviour
 {
     public Button startButton;
-    private static readonly int Version = 1; 
+     
     private void Start()
     {
         StartCoroutine(LoadNextSceneAsync());
-        
+            
         startButton.gameObject.SetActive(false);
     }
 
