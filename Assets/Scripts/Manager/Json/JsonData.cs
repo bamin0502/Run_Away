@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.IO;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using GooglePlayGames.BasicApi.SavedGame;
 
 [Serializable]
 public class GameData
@@ -9,7 +12,6 @@ public class GameData
     public int coin;
     public bool tutorialActive;
     public int HighScore;
-    
 }
 
 

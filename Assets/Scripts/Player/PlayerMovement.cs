@@ -229,7 +229,7 @@ public class PlayerMovement : MonoBehaviour
 
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
-        SoundManager.instance.PlaySfx(1);
+        SoundManager.Instance.PlaySfx(1);
         Player.PlayFeedbacks();
         isDead = true;
     }
