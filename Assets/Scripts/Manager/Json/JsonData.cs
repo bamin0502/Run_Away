@@ -19,13 +19,19 @@ public class JsonData : MonoBehaviour
     private GameData gameData;
     private GameManager gameManager;
     private bool isSaving;
-
+    
+    
+    
     private void Awake()
     {
-        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        
         PlayGamesPlatform.Activate();
+        gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
         
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager not found!");
+            return;
+        }
         SignInToGPGS();
     }
 
@@ -46,6 +52,14 @@ public class JsonData : MonoBehaviour
 
     public void SaveGameData()
     {
+        if (isSaving) return;
+
+        if (gameManager == null || gameData == null)
+        {
+            Debug.LogError("GameManager or GameData not initialized!");
+            return;
+        }
+
         gameData.coin = gameManager.TotalCoins;
         gameData.tutorialActive = gameManager.isTutorialActive;
         gameData.HighScore = gameManager.HighScore;
@@ -64,12 +78,13 @@ public class JsonData : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("저장 게임을 열기 실패");
+                    Debug.LogError("Failed to open saved game");
+                    isSaving = false;
                 }
             });
         }
 #if UNITY_EDITOR
-        Debug.Log("데이터 저장됨: " + jsonData);    
+        Debug.Log("Data saved: " + jsonData);    
 #endif
     }
 
@@ -85,7 +100,7 @@ public class JsonData : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("저장 게임을 열기 실패");
+                    Debug.LogError("Failed to open saved game");
                     InitializeDefaultGameData();
                 }
             });
@@ -99,12 +114,20 @@ public class JsonData : MonoBehaviour
     private void InitializeDefaultGameData()
     {
         gameData = new GameData { coin = 1000, tutorialActive = true, HighScore = 0 };
-        gameManager.TotalCoins = gameData.coin;
-        gameManager.isTutorialActive = gameData.tutorialActive;
-        gameManager.HighScore = gameData.HighScore;
+        ApplyGameDataToManager();
 #if UNITY_EDITOR
-        Debug.Log("저장 데이터 없음, 기본 게임 데이터 초기화");
+        Debug.Log("No saved data, initialized default game data");
 #endif
+    }
+
+    private void ApplyGameDataToManager()
+    {
+        if (gameManager)
+        {
+            gameManager.TotalCoins = gameData.coin;
+            gameManager.isTutorialActive = gameData.tutorialActive;
+            gameManager.HighScore = gameData.HighScore;
+        }
     }
 
     private void OpenSavedGame(string filename, Action<SavedGameRequestStatus, ISavedGameMetadata> callback)
@@ -121,11 +144,11 @@ public class JsonData : MonoBehaviour
         {
             if (status == SavedGameRequestStatus.Success)
             {
-                Debug.Log("게임 데이터가 Google Play Games Services에 성공적으로 저장됨");
+                Debug.Log("Game data successfully saved to Google Play Games Services");
             }
             else
             {
-                Debug.LogError("게임 데이터 저장 실패");
+                Debug.LogError("Failed to save game data");
             }
             isSaving = false;
         });
@@ -140,18 +163,15 @@ public class JsonData : MonoBehaviour
             {
                 string jsonData = System.Text.Encoding.UTF8.GetString(data);
                 gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
-
-                gameManager.TotalCoins = gameData.coin;
-                gameManager.isTutorialActive = gameData.tutorialActive;
-                gameManager.HighScore = gameData.HighScore;
+                ApplyGameDataToManager();
 
 #if UNITY_EDITOR
-                Debug.Log("데이터 로드됨: " + jsonData);
+                Debug.Log("Data loaded: " + jsonData);
 #endif
             }
             else
             {
-                Debug.LogError("게임 데이터 로드 실패");
+                Debug.LogError("Failed to load game data");
                 InitializeDefaultGameData();
             }
         });
@@ -160,12 +180,10 @@ public class JsonData : MonoBehaviour
     private void ResetGameData()
     {
         gameData = new GameData { coin = 0, tutorialActive = true, HighScore = 0 };
-        gameManager.TotalCoins = gameData.coin;
-        gameManager.isTutorialActive = gameData.tutorialActive;
-        gameManager.HighScore = gameData.HighScore;
+        ApplyGameDataToManager();
         SaveGameData();
 #if UNITY_EDITOR
-        Debug.Log("게임 데이터 리셋됨");
+        Debug.Log("Game data reset");
 #endif
     }
 }

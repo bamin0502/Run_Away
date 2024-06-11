@@ -162,7 +162,7 @@ public class UiManager : MonoBehaviour
         gameManager.InGameCamera.enabled = true;
         GamePanel.SetActive(true);
         GameMenuPanel.SetActive(false);
-        SoundManager.Instance.PlayBgm(1);
+        
     }
     
     public void UpdateCoinText(int coin)

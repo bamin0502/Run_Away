@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
     private GameManager gameManager;
+    private SoundManager soundManager;
 
     [Header("Player Movement Parameters")]
     public float jumpForce = 10f;
@@ -33,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isSliding { get; private set; }
     public bool isCollidingFront { get; internal set; }
     private bool isDead;
+    public bool isGrounded { get; internal set; }
 
     private Vector3 originalColliderCenter;
     private Vector3 originalColliderSize;
@@ -50,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponentInChildren<Rigidbody>();
         playerAni = GetComponent<PlayerAni>();
         boxCollider = GetComponent<BoxCollider>();
+        soundManager = GameObject.FindGameObjectWithTag("Sound").GetComponent<SoundManager>();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         originalColliderCenter = boxCollider.center;
         originalColliderSize = boxCollider.size;
@@ -70,10 +73,13 @@ public class PlayerMovement : MonoBehaviour
         playerAni.SetRunAnimation();
         isCollidingFront = false;
         isDead = false;
+        isGrounded = true; // 초기에는 땅에 닿아있다고 가정
     }
 
     private void Update()
     {
+        HandleMovement();
+
         if (swipeDirection == Defines.SwipeDirection.SLIDE)
         {
             slideTimer -= Time.deltaTime;
@@ -95,14 +101,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (pendingMovement != Vector2.zero)
-        {
-            UpdateMovement(pendingMovement);
-        }
-
         if (isJumping)
         {
             rb.AddForce(Physics.gravity * rb.mass, ForceMode.Force);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (rb.position == targetPosition)
+        {
+            swipeDirection = Defines.SwipeDirection.RUN;
         }
     }
 
@@ -111,50 +120,60 @@ public class PlayerMovement : MonoBehaviour
         pendingMovement = movement;
     }
 
+    private void HandleMovement()
+    {
+        if (pendingMovement == Vector2.zero) return;
+        UpdateMovement(pendingMovement);
+        pendingMovement = Vector2.zero;
+    }
+
     private void UpdateMovement(Vector2 swipeDir)
     {
         if (gameManager.isGameover || isCollidingFront) return;
-        var horizontal = swipeDir.x;
-        var vertical = swipeDir.y;
 
-        if (Mathf.Abs(horizontal) > Mathf.Abs(vertical))
+        Debug.Log($"Swipe Direction: {swipeDir}"); // 스와이프 방향 로그
+
+        // 민감도를 설정하여 작은 변화를 무시
+        if (Mathf.Abs(swipeDir.x) > 0.1f || Mathf.Abs(swipeDir.y) > 0.1f)
         {
-            if (horizontal > 0.5f)
+            // 주 방향 결정
+            if (Mathf.Abs(swipeDir.x) > Mathf.Abs(swipeDir.y))
             {
-                TryMoveToLane(currentLaneIndex + 1);
-                pendingMovement = Vector2.zero;
+                // 좌우 방향
+                if (swipeDir.x > 0.1f)
+                {
+                    TryMoveToLane(currentLaneIndex + 1); // 오른쪽
+                }
+                else if (swipeDir.x < -0.1f)
+                {
+                    TryMoveToLane(currentLaneIndex - 1); // 왼쪽
+                }
             }
-            else if (horizontal < -0.5f)
+            else
             {
-                TryMoveToLane(currentLaneIndex - 1);
-                pendingMovement = Vector2.zero;
-            }
-        }
-        else
-        {
-            if (vertical > 0.5f)
-            {
-                PerformJump();
-            }
-            else if (vertical < -0.5f)
-            {
-                PerformSlide();
-                pendingMovement = Vector2.zero;
+                // 상하 방향
+                if (swipeDir.y > 0.1f && isGrounded)
+                {
+                    PerformJump(); // 점프
+                }
+                else if (swipeDir.y < -0.1f)
+                {
+                    PerformSlide(); // 슬라이드
+                }
             }
         }
     }
 
     private void PerformJump()
     {
-        if (isJumping) return;
+        if (!isGrounded) return; // isGrounded 상태 체크
 
-        var velocity = rb.velocity;
-        velocity = new Vector3(velocity.x, 0, velocity.z);
-        rb.velocity = velocity;
+        Debug.Log("Perform Jump"); // 점프 실행 로그
+
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        pendingMovement = Vector2.zero;
         swipeDirection = Defines.SwipeDirection.JUMP;
         isJumping = true;
+        isGrounded = false; // 점프 상태로 변경
         isSliding = false;
         playerAni.SetJumpAnimation();
 
@@ -164,14 +183,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void PerformSlide()
     {
-        if (isJumping)
-        {
-            var velocity = rb.velocity;
-            velocity = new Vector3(velocity.x, 0, velocity.z);
-            rb.velocity = velocity;
-            rb.AddForce(Vector3.up * slideForce, ForceMode.Impulse);
-            isJumping = false;
-        }
+        if (isSliding) return;
+
+        Debug.Log("Perform Slide"); // 슬라이드 실행 로그
 
         swipeDirection = Defines.SwipeDirection.SLIDE;
         slideTimer = slideDuration;
@@ -185,17 +199,22 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isCollidingFront) return;
 
-        lastPosition = rb.position;
-        lastLaneIndex = currentLaneIndex;
+        Debug.Log("Move to Lane: " + newLaneIndex); // 레인 이동 로그
+
         int clampedLaneIndex = Mathf.Clamp(newLaneIndex, 0, lanes.Length - 1);
+
+        if (clampedLaneIndex == currentLaneIndex) return;
 
         Vector3 potentialTargetPosition = rb.position;
         potentialTargetPosition.x = lanes[clampedLaneIndex];
 
         if (IsObstacleInPath(potentialTargetPosition))
         {
-            return; 
+            return;
         }
+
+        lastPosition = rb.position;
+        lastLaneIndex = currentLaneIndex;
 
         currentLaneIndex = clampedLaneIndex;
         swipeDirection = Defines.SwipeDirection.RUN;
@@ -225,11 +244,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Die()
     {
-        if (isDead) return; 
+        if (isDead) return;
 
         swipeDirection = Defines.SwipeDirection.DEAD;
         playerAni.SetDeathAnimation();
-        SoundManager.Instance.PlaySfx(1);
+        soundManager.PlaySfx(1);
         Player.PlayFeedbacks();
         isDead = true;
     }
@@ -258,11 +277,11 @@ public class PlayerMovement : MonoBehaviour
         swipeDirection = Defines.SwipeDirection.RUN;
         playerAni.SetRunAnimation();
 
-        isDead = false; 
+        isDead = false;
 
         SetInvincible(true);
         Observable.Timer(TimeSpan.FromSeconds(2.0f))
-            .Subscribe(_ => 
+            .Subscribe(_ =>
             {
                 SetInvincible(false);
                 CheckAndMoveFromObstacle();
@@ -315,7 +334,7 @@ public class PlayerMovement : MonoBehaviour
                 return newPosition;
             }
         }
-        
+
         return currentPosition;
     }
 

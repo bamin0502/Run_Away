@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private UiManager uiManager;
     private JsonData jsonData;
     private PlayerMovement playerMovement;
+    private SoundManager soundManager;
     
     [Header("게임 속도 관련 필드")]
     public float stageSpeed = 5f;
@@ -69,6 +70,7 @@ public class GameManager : MonoBehaviour
         uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
         jsonData = GameObject.FindGameObjectWithTag("UiManager").GetComponent<JsonData>();
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        soundManager = GameObject.FindGameObjectWithTag("Sound").GetComponent<SoundManager>();
         initialJumpPower = playerMovement.jumpForce;
     }
 
@@ -93,7 +95,7 @@ public class GameManager : MonoBehaviour
         InGameCamera.enabled = false;
         CurrentScore = 0;
         uiManager.UpdateScoreText(CurrentScore);
-        SoundManager.Instance.PlayBgm(0);
+        soundManager.PlayBgm(0);
         
         //tileManager.Initialize();
     }

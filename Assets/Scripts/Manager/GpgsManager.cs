@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class GpgsManager : MonoBehaviour
 {
-    public TextMeshProUGUI log;
-
     private string savedGameFilename = "save.bin";
     private string saveData = "세이브 로드 확인";
 
@@ -28,12 +26,11 @@ public class GpgsManager : MonoBehaviour
     {
         if (result == SignInStatus.Success)
         {
-            log.text = "Signed in successfully.";
-            // Signed in successfully, we can now proceed with saving or loading
+            Debug.Log("Signed in!");
         }
         else
         {
-            log.text = "Failed to sign in.";
+            Debug.Log("Failed to sign in: " + result);
         }
     }
 
@@ -57,12 +54,13 @@ public class GpgsManager : MonoBehaviour
         {
             // handle selected game save
             OpenSavedGame(game.Filename, OnSavedGameOpenedForLoad);
-
+            Debug.Log("Selected game: " + game.Description);
 
         }
         else
         {
             // handle cancel or error
+            Debug.Log("Select UI error: " + status);
         }
     }
 
@@ -84,20 +82,13 @@ public class GpgsManager : MonoBehaviour
         }
         else
         {
-            log.text = "Failed to open saved game.";
+            Debug.Log("Failed to open saved game");
         }
     }
 
     void OnSavedGameCommit(SavedGameRequestStatus commitStatus, ISavedGameMetadata updatedGame)
     {
-        if (commitStatus == SavedGameRequestStatus.Success)
-        {
-            log.text = "Game saved successfully.";
-        }
-        else
-        {
-            log.text = "Failed to save game.";
-        }
+        Debug.Log(commitStatus == SavedGameRequestStatus.Success ? "Game saved successfully" : "Failed to save game");
     }
 
     public void LoadGame()
@@ -113,7 +104,7 @@ public class GpgsManager : MonoBehaviour
         }
         else
         {
-            log.text = "Failed to open saved game.";
+            Debug.Log("Failed to open saved game");
         }
     }
 
@@ -122,11 +113,11 @@ public class GpgsManager : MonoBehaviour
         if (readStatus == SavedGameRequestStatus.Success)
         {
             string loadedData = System.Text.Encoding.UTF8.GetString(data);
-            log.text = "Game loaded successfully: " + loadedData;
+            Debug.Log("Loaded data: " + loadedData);
         }
         else
         {
-            log.text = "Failed to load game.";
+            Debug.Log("Failed to read saved game data");
         }
     }
 

@@ -41,7 +41,9 @@ public static class DataManager
     {
         if (!tables.TryGetValue(id, out var table))
         {
-            Debug.LogWarning("Table not found: " + id);
+#if UNITY_EDITOR
+            Debug.LogError("Table not found: " + id);
+#endif
             return null;
         }
         return table as T;

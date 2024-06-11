@@ -10,6 +10,7 @@ public class PlayerCollision : MonoBehaviour
     private Tile tile;
 
     private CompositeDisposable disposables = new CompositeDisposable();
+    private int groundContactCount = 0;
 
     private void Awake()
     {
@@ -21,57 +22,63 @@ public class PlayerCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        switch (other.collider.tag)
+        if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
         {
-            case "Ground":
-            case "WalkBy":
+            groundContactCount++;
+            if (groundContactCount > 0)
+            {
+                playerMovement.isGrounded = true;
                 playerMovement.isJumping = false;
                 if (!playerMovement.isSliding) playerAni.SetRunAnimation();
-                break;
-            case "Obstacle":
+            }
+        }
+        else if (other.collider.CompareTag("Obstacle"))
+        {
 #if UNITY_EDITOR
-                Debug.Log("Hit an obstacle, game over!");
+            Debug.Log("Hit an obstacle, game over!");
 #endif
-                if (gameManager.IsFeverModeActive.Value)
-                {
-                    LaunchObstacle(other.gameObject);
-                }
-                else if (!playerMovement.isInvincible)
-                {
-                    gameManager.GameOver();
-                    playerMovement.Die();
-                }
-                break;
-            case "Wall":
+            if (gameManager.IsFeverModeActive.Value)
+            {
+                LaunchObstacle(other.gameObject);
+            }
+            else if (!playerMovement.isInvincible)
+            {
+                gameManager.GameOver();
+                playerMovement.Die();
+            }
+        }
+        else if (other.collider.CompareTag("Wall"))
+        {
 #if UNITY_EDITOR
-                Debug.Log("Hit a wall, returning to last position.");
+            Debug.Log("Hit a wall, returning to last position.");
 #endif
-                if (gameManager.IsFeverModeActive.Value)
-                {
-                    LaunchObstacle(other.gameObject);
-                }
-                else
-                {
-                    playerMovement.targetPosition = playerMovement.lastPosition;
-                    playerMovement.rb.position = playerMovement.lastPosition;
-                    playerMovement.currentLaneIndex = playerMovement.lastLaneIndex;
-                }
-                break;
+            if (gameManager.IsFeverModeActive.Value)
+            {
+                LaunchObstacle(other.gameObject);
+            }
+            else
+            {
+                playerMovement.targetPosition = playerMovement.lastPosition;
+                playerMovement.rb.position = playerMovement.lastPosition;
+                playerMovement.currentLaneIndex = playerMovement.lastLaneIndex;
+            }
         }
     }
 
     private void OnCollisionExit(Collision other)
     {
-        switch (other.collider.tag)
+        if (other.collider.CompareTag("Ground") || other.collider.CompareTag("WalkBy"))
         {
-            case "Ground":
-            case "WalkBy":
+            groundContactCount--;
+            if (groundContactCount == 0)
+            {
+                playerMovement.isGrounded = false;
                 playerMovement.isJumping = true;
-                break;
-            case "Obstacle":
-            case "Wall":
-                playerMovement.isCollidingFront = false;
-                break;
+            }
+        }
+        else if (other.collider.CompareTag("Obstacle") || other.collider.CompareTag("Wall"))
+        {
+            playerMovement.isCollidingFront = false;
         }
     }
 
