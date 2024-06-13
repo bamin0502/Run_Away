@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    private static GameManager Instance { get; set; }
     
     [Header("불러올 스크립트")]
     private UiManager uiManager;
@@ -106,12 +106,16 @@ public class GameManager : MonoBehaviour
     {
         if (result == SignInStatus.Success)
         {
-            Debug.Log("Signed in!");
+#if UNITY_EDITOR
+            Debug.Log("Signed in!"); 
+#endif
             gameDatas.LoadData();
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("Failed to sign in: " + result);
+#endif
             gameDatas.LoadFromLocal();
         }
     }
@@ -142,11 +146,15 @@ public class GameManager : MonoBehaviour
 
         if (PlayGamesPlatform.Instance.localUser.authenticated)
         {
+#if UNITY_EDITOR
             Debug.Log("사용자가 구글 플레이에 로그인되어 있습니다.");
+#endif
         }
         else
         {
-            Debug.LogError("사용자가 구글 플레이에 로그인되어 있지 않습니다.");
+#if UNITY_EDITOR
+            Debug.Log("사용자가 구글 플레이에 로그인되어 있지 않습니다.");
+#endif
         }
 
         if (gameDatas != null)
@@ -164,7 +172,7 @@ public class GameManager : MonoBehaviour
         soundManager.PlayBgm(0);
     }
 
-    public void ApplyLoadedData()
+    private void ApplyLoadedData()
     {
         if (gameDatas != null)
         {
@@ -223,7 +231,10 @@ public class GameManager : MonoBehaviour
     {
         if (gameDatas != null)
         {
+#if UNITY_EDITOR
             Debug.Log("게임 데이터 저장 중...");
+#endif
+            
             gameDatas.dataSettings.gold = TotalCoins;
             gameDatas.dataSettings.highScore = HighScore;
             gameDatas.dataSettings.isTutorial = isTutorialActive;
@@ -231,7 +242,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogError("GameDatas가 초기화되지 않았습니다!");
+#endif
         }
     }
 

@@ -11,6 +11,7 @@ public class DataSettings
     public int gold = 0;
     public int highScore = 0;
     public bool isTutorial = true;
+    
 }
 
 public class GameDatas : MonoBehaviour
@@ -142,12 +143,10 @@ public class GameDatas : MonoBehaviour
             string data = Encoding.UTF8.GetString(loadedData);
             if (string.IsNullOrEmpty(data))
             {
-
                 SaveToCloud();
             }
             else
             {
-
                 dataSettings = JsonUtility.FromJson<DataSettings>(data);
                 SaveToLocal();  // 로컬 데이터를 클라우드 데이터로 업데이트
                 OnDataLoaded?.Invoke(); 

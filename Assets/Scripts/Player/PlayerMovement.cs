@@ -6,7 +6,8 @@ using MoreMountains.Feedbacks;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Player Movement Fields")] internal Rigidbody rb;
+    [Header("Player Movement Fields")] 
+    internal Rigidbody rb;
     private PlayerAni playerAni;
     private BoxCollider boxCollider;
     private GameManager gameManager;
@@ -183,12 +184,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void PerformSlide()
     {
+        // 이미 슬라이드 중인지 확인
         if (isSliding) return;
+
+        // 현재 점프 중인지 확인하고 전환 처리
+        if (isJumping)
+        {
+            // 플레이어를 즉시 땅으로 이동
+            rb.position = new Vector3(rb.position.x, 0, rb.position.z);
+            rb.velocity = Vector3.zero; // 상승 움직임을 즉시 멈추기 위해 속도 초기화
+            isGrounded = true;
+            isJumping = false;
+        }
+
+        // 슬라이드 실행
 #if UNITY_EDITOR
         Debug.Log("Perform Slide"); // 슬라이드 실행 로그
 #endif
-        
-
         swipeDirection = Defines.SwipeDirection.SLIDE;
         slideTimer = slideDuration;
         isSliding = true;
