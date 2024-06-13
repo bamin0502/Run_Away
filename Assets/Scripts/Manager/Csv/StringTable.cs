@@ -23,7 +23,7 @@ public class StringTable : DataTable
         var textAsset = Resources.Load<TextAsset>(path);
         //var textAsset = Addressables.LoadAssetAsync<TextAsset>(path).WaitForCompletion();
         //Debug.Log(textAsset.text);
-
+        
         using (var reader = new StreamReader(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(textAsset.text)), System.Text.Encoding.UTF8))
         using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
         {

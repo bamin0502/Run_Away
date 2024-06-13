@@ -73,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
         playerAni.SetRunAnimation();
         isCollidingFront = false;
         isDead = false;
-        isGrounded = true; // 초기에는 땅에 닿아있다고 가정
+        isGrounded = true;
     }
 
     private void Update()
@@ -130,9 +130,9 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateMovement(Vector2 swipeDir)
     {
         if (gameManager.isGameover || isCollidingFront) return;
-
+#if UNITY_EDITOR
         Debug.Log($"Swipe Direction: {swipeDir}"); // 스와이프 방향 로그
-
+#endif
         // 민감도를 설정하여 작은 변화를 무시
         if (Mathf.Abs(swipeDir.x) > 0.1f || Mathf.Abs(swipeDir.y) > 0.1f)
         {
@@ -167,9 +167,9 @@ public class PlayerMovement : MonoBehaviour
     private void PerformJump()
     {
         if (!isGrounded) return; // isGrounded 상태 체크
-
+#if UNITY_EDITOR
         Debug.Log("Perform Jump"); // 점프 실행 로그
-
+#endif
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         swipeDirection = Defines.SwipeDirection.JUMP;
         isJumping = true;
@@ -184,8 +184,10 @@ public class PlayerMovement : MonoBehaviour
     private void PerformSlide()
     {
         if (isSliding) return;
-
+#if UNITY_EDITOR
         Debug.Log("Perform Slide"); // 슬라이드 실행 로그
+#endif
+        
 
         swipeDirection = Defines.SwipeDirection.SLIDE;
         slideTimer = slideDuration;
@@ -198,9 +200,10 @@ public class PlayerMovement : MonoBehaviour
     private void TryMoveToLane(int newLaneIndex)
     {
         if (isCollidingFront) return;
-
+#if UNITY_EDITOR
         Debug.Log("Move to Lane: " + newLaneIndex); // 레인 이동 로그
-
+#endif
+        
         int clampedLaneIndex = Mathf.Clamp(newLaneIndex, 0, lanes.Length - 1);
 
         if (clampedLaneIndex == currentLaneIndex) return;

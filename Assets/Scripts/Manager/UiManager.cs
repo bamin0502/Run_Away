@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -162,7 +163,7 @@ public class UiManager : MonoBehaviour
         gameManager.InGameCamera.enabled = true;
         GamePanel.SetActive(true);
         GameMenuPanel.SetActive(false);
-        
+        GC.Collect();
     }
     
     public void UpdateCoinText(int coin)

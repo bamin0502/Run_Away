@@ -36,6 +36,9 @@ public class IntroUI : MonoBehaviour
         startButton.interactable = false;
         asyncLoad.allowSceneActivation = true;
         
+
+        
+        
         yield return null;
     }
 }

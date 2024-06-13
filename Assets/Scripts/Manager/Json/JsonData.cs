@@ -1,12 +1,11 @@
 using System;
-using UnityEngine;
-using Newtonsoft.Json;
 using System.IO;
+using Newtonsoft.Json;
+using UnityEngine;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
 
-[Serializable]
 public class GameData
 {
     public int coin;
@@ -16,38 +15,44 @@ public class GameData
 
 public class JsonData : MonoBehaviour
 {
-    private GameData gameData;
+    private GameData gameData=new GameData();
+    
     private GameManager gameManager;
     private bool isSaving;
-    
-    
-    
+    private const string localFileName = "localGameData.json";
+
     private void Awake()
     {
-        PlayGamesPlatform.Activate();
+        SignIn();
+    }
+
+    private void Start()
+    {
         gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
         
         if (gameManager == null)
         {
-            Debug.LogError("GameManager not found!");
-            return;
+#if UNITY_EDITOR
+            Debug.Log("GameManager not found!");
+#endif
         }
-        SignInToGPGS();
     }
 
-    private void SignInToGPGS()
+    public void SignIn()
     {
-        Social.localUser.Authenticate(success =>
+        PlayGamesPlatform.Instance.Authenticate(OnAuthentication);
+    }
+    
+    void OnAuthentication(SignInStatus result)
+    {
+        if (result == SignInStatus.Success)
         {
-            if (success)
-            {
-                LoadGameData();
-            }
-            else
-            {
-                InitializeDefaultGameData();
-            }
-        });
+            LoadGameData();
+        }
+        else
+        {
+            LoadLocalGameData();
+        }
     }
 
     public void SaveGameData()
@@ -56,7 +61,7 @@ public class JsonData : MonoBehaviour
 
         if (gameManager == null || gameData == null)
         {
-            Debug.LogError("GameManager or GameData not initialized!");
+            Debug.Log("GameManager or GameData not initialized!");
             return;
         }
 
@@ -83,9 +88,25 @@ public class JsonData : MonoBehaviour
                 }
             });
         }
+        else
+        {
+            SaveLocalGameData(jsonData);
 #if UNITY_EDITOR
-        Debug.Log("Data saved: " + jsonData);    
+            Debug.Log("Data saved locally: " + jsonData);    
 #endif
+        }
+    }
+
+    private void SaveLocalGameData(string jsonData)
+    {
+        try
+        {
+            File.WriteAllText(Path.Combine(Application.persistentDataPath, localFileName), jsonData);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Failed to save local game data: " + e.Message);
+        }
     }
 
     public void LoadGameData()
@@ -101,9 +122,34 @@ public class JsonData : MonoBehaviour
                 else
                 {
                     Debug.LogError("Failed to open saved game");
-                    InitializeDefaultGameData();
+                    LoadLocalGameData();
                 }
             });
+        }
+    }
+
+    private void LoadLocalGameData()
+    {
+        string filePath = Path.Combine(Application.persistentDataPath, localFileName);
+        if (File.Exists(filePath))
+        {
+            try
+            {
+                string jsonData = File.ReadAllText(filePath);
+                gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
+                ApplyGameDataToManager();
+#if UNITY_EDITOR
+                Debug.Log("Data loaded from local file: " + jsonData);
+#endif
+            }
+            catch (Exception e)
+            {
+#if UNITY_EDITOR
+                Debug.Log("Failed to load local game data: " + e.Message);   
+#endif
+                
+                InitializeDefaultGameData();
+            }
         }
         else
         {
@@ -113,7 +159,7 @@ public class JsonData : MonoBehaviour
 
     private void InitializeDefaultGameData()
     {
-        gameData = new GameData { coin = 1000, tutorialActive = true, HighScore = 0 };
+        gameData = new GameData { coin = 0, tutorialActive = true, HighScore = 0 };
         ApplyGameDataToManager();
 #if UNITY_EDITOR
         Debug.Log("No saved data, initialized default game data");
@@ -144,11 +190,17 @@ public class JsonData : MonoBehaviour
         {
             if (status == SavedGameRequestStatus.Success)
             {
+#if UNITY_EDITOR
                 Debug.Log("Game data successfully saved to Google Play Games Services");
+#endif
+                
             }
             else
             {
-                Debug.LogError("Failed to save game data");
+#if UNITY_EDITOR
+                Debug.Log("Failed to save game data");   
+#endif
+                
             }
             isSaving = false;
         });
@@ -164,15 +216,17 @@ public class JsonData : MonoBehaviour
                 string jsonData = System.Text.Encoding.UTF8.GetString(data);
                 gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
                 ApplyGameDataToManager();
-
 #if UNITY_EDITOR
                 Debug.Log("Data loaded: " + jsonData);
 #endif
             }
             else
             {
-                Debug.LogError("Failed to load game data");
-                InitializeDefaultGameData();
+#if UNITY_EDITOR
+                Debug.Log("Failed to load game data");
+#endif
+                
+                LoadLocalGameData();
             }
         });
     }

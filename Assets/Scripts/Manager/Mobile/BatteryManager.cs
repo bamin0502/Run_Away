@@ -33,10 +33,7 @@ public class BatteryManager : Singleton<BatteryManager>
         }
     }
 
-    private void OnDestroy()
-    {
-        disposables.Dispose();
-    }
+
 
     private void CheckBatteryStatus()
     {

@@ -19,7 +19,7 @@ public class InputManager : MonoBehaviour
     private UiManager uiManager;
     private GameManager gameManager;
     
-    private new void Awake()
+    private void Awake()
     {
         playerControls = new PlayerControls();
         mainCamera = Camera.main;

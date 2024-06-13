@@ -25,6 +25,7 @@ TagManager:
   - Fever
   - FollowCam
   - Sound
+  - Data
   layers:
   - Default
   - TransparentFX
