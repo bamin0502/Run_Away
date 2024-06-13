@@ -2,17 +2,19 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using TMPro;
 using UnityEngine.SceneManagement;
 
 public class UiManager : MonoBehaviour
 {
-    [Header("Game Manager"),Tooltip("게임 매니저 오브젝트")]
+    [Header("Game Manager"), Tooltip("게임 매니저 오브젝트")]
     private GameManager gameManager;
-    [Header("Tutorial Manager"),Tooltip("튜토리얼 매니저 오브젝트")]
+    [Header("Tutorial Manager"), Tooltip("튜토리얼 매니저 오브젝트")]
     private TutorialManager tutorialManager;
-    
-    [Header("UI Elements"),Tooltip("패널 관련 오브젝트들")] 
+
+    [Header("UI Elements"), Tooltip("패널 관련 오브젝트들")]
     [SerializeField] public GameObject PausePanel;
     [SerializeField] public GameObject GameOverPanel;
     [SerializeField] public GameObject GamePanel;
@@ -20,51 +22,51 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject RevivePanel;
     [SerializeField] public GameObject QuitPanel;
     [SerializeField] public GameObject TextPanel;
-    
-    [Header("Pause Panel Ui Button"),Tooltip("일시정지 패널 버튼들")]
+
+    [Header("Pause Panel Ui Button"), Tooltip("일시정지 패널 버튼들")]
     [SerializeField] public Button homeButton;
     [SerializeField] public Button resumeButton;
     [SerializeField] public Button quitButton;
-    
-    [Header("Game Over Panel Ui Button"),Tooltip("게임오버 패널 버튼들")]
+
+    [Header("Game Over Panel Ui Button"), Tooltip("게임오버 패널 버튼들")]
     [SerializeField] private Button ReviveButton;
     [SerializeField] private Button LobbyButton;
 
-    [Header("Game Over Panel Ui Text"),Tooltip("게임오버 패널 텍스트들")]
+    [Header("Game Over Panel Ui Text"), Tooltip("게임오버 패널 텍스트들")]
     [SerializeField] public TextMeshProUGUI scoreText;
     [SerializeField] public TextMeshProUGUI resultCoinText;
 
-    [Header("Game UI"),Tooltip("게임 패널 텍스트들")]
+    [Header("Game UI"), Tooltip("게임 패널 텍스트들")]
     [SerializeField] public TextMeshProUGUI coinText;
     [SerializeField] public Button optionButton;
     [SerializeField] public TextMeshProUGUI GameScoreText;
     [SerializeField] public TextMeshProUGUI HighGameScoreText;
     [SerializeField] public Image FeverGauge;
-    
-    [Header("Game Panel Ui Text"),Tooltip("게임 결과 패널 텍스트들")]
+
+    [Header("Game Panel Ui Text"), Tooltip("게임 결과 패널 텍스트들")]
     [SerializeField] public Button startButton;
     [SerializeField] public TextMeshProUGUI HighScoreText;
     [SerializeField] public TextMeshProUGUI AllCoinText;
-    
-    [Header("Revive Panel Ui"),Tooltip("부활 패널 UI들")]
+
+    [Header("Revive Panel Ui"), Tooltip("부활 패널 UI들")]
     [SerializeField] public Button ReviveCheckButton;
     [SerializeField] public Button BackButton;
     [SerializeField] public TextMeshProUGUI ReviveCoinText;
-    
-    [Header("Quit Panel Ui"),Tooltip("종료 패널 UI들")]
+
+    [Header("Quit Panel Ui"), Tooltip("종료 패널 UI들")]
     [SerializeField] public Button QuitCheckButton;
     [SerializeField] public Button QuitBackButton;
-    
-    [Header("Text Panel"),Tooltip("텍스트 패널 UI들")]
+
+    [Header("Text Panel"), Tooltip("텍스트 패널 UI들")]
     [SerializeField] public TextMeshProUGUI FeverTextPanel;
     [SerializeField] public GameObject FeverTextObject;
 
     private Tween feverTextTween;
-    
+
     public void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
-        tutorialManager=GameObject.FindGameObjectWithTag("Tutorial").GetComponent<TutorialManager>();
+        tutorialManager = GameObject.FindGameObjectWithTag("Tutorial").GetComponent<TutorialManager>();
     }
 
     public void Start()
@@ -80,20 +82,27 @@ public class UiManager : MonoBehaviour
         ReviveCheckButton.onClick.AddListener(OnReviveButtonClick);
         QuitCheckButton.onClick.AddListener(OnQuitButtonClick);
         QuitBackButton.onClick.AddListener(() => QuitPanel.SetActive(false));
-        
+
+        startButton.interactable = false;
+
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
         UpdateReviveCoinText(gameManager.TotalCoins);
-        
+
         FeverGauge.fillAmount = 0;
         FeverTextObject.SetActive(false);
-        
+
         RevivePanel.SetActive(false);
         PausePanel.SetActive(false);
         GameOverPanel.SetActive(false);
         GamePanel.SetActive(false);
         QuitPanel.SetActive(false);
         TextPanel.SetActive(false);
+    }
+
+    public void EnableStartButton()
+    {
+        startButton.interactable = true;
     }
 
     private void OnStartButtonClick()
@@ -110,7 +119,6 @@ public class UiManager : MonoBehaviour
         {
             StartGame();
         }
-           
     }
 
     public void ShowPausePanel()
@@ -118,10 +126,11 @@ public class UiManager : MonoBehaviour
         PausePanel.SetActive(true);
         Time.timeScale = 0;
     }
-    
+
     public void ShowQuitPanel()
     {
         QuitPanel.SetActive(true);
+        
     }
 
     public void ShowGameOverPanel()
@@ -131,13 +140,11 @@ public class UiManager : MonoBehaviour
         GameOverPanel.SetActive(true);
         Time.timeScale = 0;
     }
-    
 
     public void OnHomeButtonClick()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
-
     }
 
     public void OnResumeButtonClick()
@@ -165,7 +172,7 @@ public class UiManager : MonoBehaviour
         GameMenuPanel.SetActive(false);
         GC.Collect();
     }
-    
+
     public void UpdateCoinText(int coin)
     {
         coinText.text = coin.ToString("");
@@ -195,13 +202,13 @@ public class UiManager : MonoBehaviour
     public void UpdateScoreText(int currentScore)
     {
         GameScoreText.text = currentScore.ToString("");
-        
-        if(currentScore > gameManager.HighScore)
+
+        if (currentScore > gameManager.HighScore)
         {
             HighGameScoreText.text = currentScore.ToString("");
         }
     }
-    
+
     public void UpdateResultScoreText(int currentScore)
     {
         scoreText.text = "SCORE: " + currentScore.ToString("");
@@ -226,7 +233,7 @@ public class UiManager : MonoBehaviour
     {
         gameManager.RevivePlayer();
     }
-    
+
     public void UpdateFeverGauge(float value)
     {
         FeverGauge.fillAmount = value;
@@ -237,22 +244,22 @@ public class UiManager : MonoBehaviour
             ShowFeverText();
         }
     }
-    
+
     public void ResetFeverGuage()
     {
         FeverGauge.fillAmount = 0;
     }
-    
+
     public void ShowFeverText()
     {
         TextPanel.SetActive(true);
         FeverTextObject.SetActive(true);
         FeverTextPanel.text = "FEVER TIME!!!";
-        
+
         feverTextTween = FeverTextPanel.rectTransform.DOLocalMoveY(20, 0.5f)
             .SetRelative()
             .SetLoops(-1, LoopType.Yoyo)
-            .SetEase(Ease.InOutSine); 
+            .SetEase(Ease.InOutSine);
     }
     public void HideFeverText()
     {
