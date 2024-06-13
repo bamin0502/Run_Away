@@ -9,8 +9,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager Instance { get; set; }
-    
     [Header("불러올 스크립트")]
     private UiManager uiManager;
     private PlayerMovement playerMovement;
@@ -69,14 +67,12 @@ public class GameManager : MonoBehaviour
     public ReactiveProperty<bool> IsMagnetEffectActive { get; private set; } = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsFeverModeActive { get; private set; } = new ReactiveProperty<bool>();
 
-    private bool isDataLoaded;
-
     public void Awake()
     {
-        uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
-        soundManager = GameObject.FindGameObjectWithTag("Sound").GetComponent<SoundManager>();
-        gameDatas = GameObject.FindGameObjectWithTag("Data").GetComponent<GameDatas>();
+        uiManager = GameObject.FindGameObjectWithTag("UiManager")?.GetComponent<UiManager>();
+        playerMovement = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerMovement>();
+        soundManager = GameObject.FindGameObjectWithTag("Sound")?.GetComponent<SoundManager>();
+        gameDatas = GameObject.FindGameObjectWithTag("Data")?.GetComponent<GameDatas>();
 
         if (playerMovement != null)
         {
@@ -86,15 +82,6 @@ public class GameManager : MonoBehaviour
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
         SignIn();
-        
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
     }
 
     private void SignIn()
@@ -106,25 +93,16 @@ public class GameManager : MonoBehaviour
     {
         if (result == SignInStatus.Success)
         {
-#if UNITY_EDITOR
-            Debug.Log("Signed in!"); 
-#endif
+            Debug.Log("Signed in!");
             gameDatas.LoadData();
+            gameDatas.OnDataLoaded += OnDataLoaded; // 데이터 로드 완료시 호출
         }
         else
         {
-#if UNITY_EDITOR
             Debug.Log("Failed to sign in: " + result);
-#endif
             gameDatas.LoadFromLocal();
+            OnDataLoaded(); // 로컬 데이터 로드 완료시 호출
         }
-    }
-
-    private void OnDataLoaded()
-    {
-        isDataLoaded = true;
-        ApplyLoadedData();
-        uiManager.EnableStartButton();
     }
 
     private void OnApplicationPause(bool pauseStatus)
@@ -132,7 +110,7 @@ public class GameManager : MonoBehaviour
         if (pauseStatus)
         {
             isPaused = true;
-            uiManager.ShowPausePanel();
+            uiManager?.ShowPausePanel();
         }
         else
         {
@@ -142,24 +120,21 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        disableObject.SetActive(false);
+        disableObject?.SetActive(false);
 
         if (PlayGamesPlatform.Instance.localUser.authenticated)
         {
-#if UNITY_EDITOR
             Debug.Log("사용자가 구글 플레이에 로그인되어 있습니다.");
-#endif
         }
         else
         {
-#if UNITY_EDITOR
-            Debug.Log("사용자가 구글 플레이에 로그인되어 있지 않습니다.");
-#endif
+            Debug.LogError("사용자가 구글 플레이에 로그인되어 있지 않습니다.");
         }
 
         if (gameDatas != null)
         {
-            gameDatas.OnDataLoaded += OnDataLoaded;
+            ApplyLoadedData();
+            Debug.Log("데이터 로드 완료" + JsonUtility.ToJson(gameDatas.dataSettings));
         }
 
         if (InGameCamera != null)
@@ -168,7 +143,7 @@ public class GameManager : MonoBehaviour
         }
 
         CurrentScore = 0;
-        uiManager.UpdateScoreText(CurrentScore);
+        uiManager?.UpdateScoreText(CurrentScore);
         soundManager.PlayBgm(0);
     }
 
@@ -181,8 +156,8 @@ public class GameManager : MonoBehaviour
             HighScore = loadedData.highScore;
             isTutorialActive = loadedData.isTutorial;
 
-            uiManager.UpdateAllCoinText(TotalCoins);
-            uiManager.UpdateHighScoreText(HighScore);
+            uiManager?.UpdateAllCoinText(TotalCoins);
+            uiManager?.UpdateHighScoreText(HighScore);
         }
     }
 
@@ -201,7 +176,7 @@ public class GameManager : MonoBehaviour
         if (CurrentScore > HighScore)
         {
             HighScore = CurrentScore;
-            uiManager.UpdateHighScoreText(HighScore);
+            uiManager?.UpdateHighScoreText(HighScore);
         }
 
         SaveGameData();
@@ -214,9 +189,9 @@ public class GameManager : MonoBehaviour
     private IEnumerator ShowGameOverPanelAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
-        uiManager.UpdateResultCoinText(CurrentGameCoins);
-        uiManager.UpdateResultScoreText(CurrentScore);
-        uiManager.ShowGameOverPanel();
+        uiManager?.UpdateResultCoinText(CurrentGameCoins);
+        uiManager?.UpdateResultScoreText(CurrentScore);
+        uiManager?.ShowGameOverPanel();
     }
 
     public void OnHomeButtonClick()
@@ -224,17 +199,14 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
 
-        uiManager.UpdateAllCoinText(TotalCoins);
+        uiManager?.UpdateAllCoinText(TotalCoins);
     }
 
     public void SaveGameData()
     {
         if (gameDatas != null)
         {
-#if UNITY_EDITOR
             Debug.Log("게임 데이터 저장 중...");
-#endif
-            
             gameDatas.dataSettings.gold = TotalCoins;
             gameDatas.dataSettings.highScore = HighScore;
             gameDatas.dataSettings.isTutorial = isTutorialActive;
@@ -242,9 +214,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR
             Debug.LogError("GameDatas가 초기화되지 않았습니다!");
-#endif
         }
     }
 
@@ -258,7 +228,7 @@ public class GameManager : MonoBehaviour
     {
         CurrentGameCoins++;
         TotalCoins++;
-        uiManager.UpdateCoinText(CurrentGameCoins);
+        uiManager?.UpdateCoinText(CurrentGameCoins);
 
         if (!isFeverMode)
         {
@@ -266,11 +236,11 @@ public class GameManager : MonoBehaviour
 
             if (coinFeverCount >= coinsForFever)
             {
-                uiManager.UpdateFeverGauge(1);
+                uiManager?.UpdateFeverGauge(1);
             }
             else
             {
-                uiManager.UpdateFeverGauge(coinFeverCount / (float)coinsForFever);
+                uiManager?.UpdateFeverGauge(coinFeverCount / (float)coinsForFever);
             }
         }
     }
@@ -279,10 +249,10 @@ public class GameManager : MonoBehaviour
     {
         if (playerMovement != null && playerMovement.jumpForce < maxJumpPower)
         {
-            currentJumpEffect.Dispose();
-            blinkSubscription.Dispose();
+            currentJumpEffect?.Dispose();
+            blinkSubscription?.Dispose();
 
-            jumpEffect.Play();
+            jumpEffect?.Play();
 
             blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
                 .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
@@ -323,7 +293,7 @@ public class GameManager : MonoBehaviour
         if (playerMovement != null)
         {
             playerMovement.jumpForce = initialJumpPower;
-            jumpEffect.Stop();
+            jumpEffect?.Stop();
         }
     }
 
@@ -331,11 +301,11 @@ public class GameManager : MonoBehaviour
     {
         if (!IsMagnetEffectActive.Value)
         {
-            currentMagnetEffect.Dispose();
-            blinkSubscription.Dispose();
+            currentMagnetEffect?.Dispose();
+            blinkSubscription?.Dispose();
 
             IsMagnetEffectActive.Value = true;
-            magnetEffect.Play();
+            magnetEffect?.Play();
 
             blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
                 .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
@@ -358,7 +328,7 @@ public class GameManager : MonoBehaviour
                 .Subscribe(_ =>
                 {
                     IsMagnetEffectActive.Value = false;
-                    magnetEffect.Stop();
+                    magnetEffect?.Stop();
                 });
         }
     }
@@ -368,13 +338,13 @@ public class GameManager : MonoBehaviour
         if (!IsFeverModeActive.Value && !isFeverMode)
         {
             isFeverMode = true;
-            currentFeverEffect.Dispose();
-            blinkSubscription.Dispose();
+            currentFeverEffect?.Dispose();
+            blinkSubscription?.Dispose();
 
             IsFeverModeActive.Value = true;
-            feverEffect.Play();
+            feverEffect?.Play();
 
-            uiManager.ShowFeverText();
+            uiManager?.ShowFeverText();
 
             blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
                 .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
@@ -397,12 +367,12 @@ public class GameManager : MonoBehaviour
                 .ObserveOnMainThread()
                 .Subscribe(_ =>
                 {
-                    uiManager.HideFeverText();
+                    uiManager?.HideFeverText();
                     IsFeverModeActive.Value = false;
                     isFeverMode = false;
                     coinFeverCount = 0;
-                    feverEffect.Stop();
-                    uiManager.ResetFeverGuage();
+                    feverEffect?.Stop();
+                    uiManager?.ResetFeverGuage();
                 });
         }
     }
@@ -421,13 +391,13 @@ public class GameManager : MonoBehaviour
         {
             distanceTravelled += stageSpeed * Time.deltaTime;
             CurrentScore = (int)distanceTravelled * scorePerDistance;
-            uiManager.UpdateScoreText(CurrentScore);
+            uiManager?.UpdateScoreText(CurrentScore);
         }
 
         if (CurrentScore > HighScore)
         {
             HighScore = CurrentScore;
-            uiManager.UpdateHighScoreText(HighScore);
+            uiManager?.UpdateHighScoreText(HighScore);
         }
 
 #if UNITY_EDITOR
@@ -459,11 +429,11 @@ public class GameManager : MonoBehaviour
         if (TotalCoins >= 300)
         {
             TotalCoins -= 300;
-            uiManager.UpdateAllCoinText(TotalCoins);
+            uiManager?.UpdateAllCoinText(TotalCoins);
 
-            playerMovement.Revive();
+            playerMovement?.Revive();
 
-            uiManager.HideRevivePanel();
+            uiManager?.HideRevivePanel();
             if (uiManager != null) uiManager.GameOverPanel.SetActive(false);
             isGameover = false;
             isPlaying = true;
@@ -498,7 +468,13 @@ public class GameManager : MonoBehaviour
     private void AddCheatCoins(int coinsToAdd)
     {
         TotalCoins += coinsToAdd;
-        uiManager.UpdateAllCoinText(TotalCoins);
+        uiManager?.UpdateAllCoinText(TotalCoins);
     }
 #endif
+
+    private void OnDataLoaded()
+    {
+        ApplyLoadedData();
+        uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
+    }
 }

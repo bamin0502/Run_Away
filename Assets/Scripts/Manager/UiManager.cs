@@ -2,8 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using GooglePlayGames;
-using GooglePlayGames.BasicApi;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -67,6 +65,8 @@ public class UiManager : MonoBehaviour
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         tutorialManager = GameObject.FindGameObjectWithTag("Tutorial").GetComponent<TutorialManager>();
+
+        startButton.interactable = false; 
     }
 
     public void Start()
@@ -83,8 +83,6 @@ public class UiManager : MonoBehaviour
         QuitCheckButton.onClick.AddListener(OnQuitButtonClick);
         QuitBackButton.onClick.AddListener(() => QuitPanel.SetActive(false));
 
-        startButton.interactable = false;
-
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
         UpdateReviveCoinText(gameManager.TotalCoins);
@@ -100,17 +98,12 @@ public class UiManager : MonoBehaviour
         TextPanel.SetActive(false);
     }
 
-    public void EnableStartButton()
-    {
-        startButton.interactable = true;
-    }
-
     private void OnStartButtonClick()
     {
 #if UNITY_EDITOR
         Debug.Log("Start");
 #endif
-
+        startButton.interactable = false; 
         if (gameManager.isTutorialActive)
         {
             tutorialManager.StartTutorial(StartGame);
@@ -130,7 +123,6 @@ public class UiManager : MonoBehaviour
     public void ShowQuitPanel()
     {
         QuitPanel.SetActive(true);
-        
     }
 
     public void ShowGameOverPanel()
@@ -194,6 +186,7 @@ public class UiManager : MonoBehaviour
         UpdateReviveButtonState(gameManager.TotalCoins);
         UpdateReviveCoinText(gameManager.TotalCoins);
     }
+
     public void HideRevivePanel()
     {
         RevivePanel.SetActive(false);
@@ -229,6 +222,7 @@ public class UiManager : MonoBehaviour
     {
         ReviveCheckButton.interactable = coin >= 300;
     }
+
     private void OnReviveButtonClick()
     {
         gameManager.RevivePlayer();
@@ -261,6 +255,7 @@ public class UiManager : MonoBehaviour
             .SetLoops(-1, LoopType.Yoyo)
             .SetEase(Ease.InOutSine);
     }
+
     public void HideFeverText()
     {
         TextPanel.SetActive(false);
@@ -277,5 +272,10 @@ public class UiManager : MonoBehaviour
     public void HideQuitPanel()
     {
         QuitPanel.SetActive(false);
+    }
+
+    public void EnableStartButton()
+    {
+        startButton.interactable = true; 
     }
 }
