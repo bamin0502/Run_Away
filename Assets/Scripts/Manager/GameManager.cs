@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+    
     [Header("불러올 스크립트")]
     private UiManager uiManager;
     private PlayerMovement playerMovement;
@@ -82,6 +84,15 @@ public class GameManager : MonoBehaviour
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
         SignIn();
+        
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void SignIn()
@@ -147,7 +158,7 @@ public class GameManager : MonoBehaviour
         soundManager.PlayBgm(0);
     }
 
-    private void ApplyLoadedData()
+    public void ApplyLoadedData()
     {
         if (gameDatas != null)
         {

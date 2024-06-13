@@ -14,13 +14,23 @@ public class DataSettings
 
 public class GameDatas : MonoBehaviour
 {
+    public static GameDatas Instance { get; private set; }
     public DataSettings dataSettings = new DataSettings();
     private string fileName = "saveData.dat";
     private string localFilePath;
 
     private void Awake()
     {
-        localFilePath = Path.Combine(Application.persistentDataPath, fileName);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            localFilePath = Path.Combine(Application.persistentDataPath, fileName);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void SaveData()
@@ -154,12 +164,14 @@ public class GameDatas : MonoBehaviour
                 Debug.Log("클라우드 데이터 로드 완료: " + data);
                 dataSettings = JsonUtility.FromJson<DataSettings>(data);
                 SaveToLocal();  // 로컬 데이터를 클라우드 데이터로 업데이트
+                ApplyLoadedData();
             }
         }
         else
         {
             Debug.LogError("클라우드 데이터 읽기 실패: " + status);
             LoadFromLocal();  // 로컬 데이터로 대체
+            ApplyLoadedData();
         }
     }
 
@@ -190,5 +202,10 @@ public class GameDatas : MonoBehaviour
         {
             Debug.LogError("게임 데이터 삭제 실패: " + status);
         }
+    }
+
+    private void ApplyLoadedData()
+    {
+        GameManager.Instance?.ApplyLoadedData();
     }
 }
