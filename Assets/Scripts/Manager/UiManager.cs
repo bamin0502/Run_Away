@@ -13,7 +13,7 @@ public class UiManager : MonoBehaviour
     private TutorialManager tutorialManager;
     
     [Header("Sound Manager")]
-    public SoundManager soundManager;
+    private SoundManager soundManager;
     
 
     [Header("UI Elements"), Tooltip("패널 관련 오브젝트들")]
@@ -49,6 +49,9 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button startButton;
     [SerializeField] public TextMeshProUGUI HighScoreText;
     [SerializeField] public TextMeshProUGUI AllCoinText;
+    [SerializeField] public Button LeaderBoardButton;
+    [SerializeField] public Button AchievementsButton;
+    [SerializeField] public Image LoadingImage;
 
     [Header("Revive Panel Ui"), Tooltip("부활 패널 UI들")]
     [SerializeField] public Button ReviveCheckButton;

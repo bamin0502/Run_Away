@@ -18,7 +18,10 @@ public class IntroUI : MonoBehaviour
 
     private void Start()
     {
-        //StartCoroutine(LoadNextSceneAsync());
+#if UNITY_EDITOR
+        StartCoroutine(LoadNextSceneAsync());
+#endif
+        
         //startButton.gameObject.SetActive(false);
     }
     IEnumerator CheckForUpdate()
@@ -78,6 +81,7 @@ public class IntroUI : MonoBehaviour
         else
         {
             // Log appUpdateInfoOperation.Error.
+            
         }
     }
     private IEnumerator LoadNextSceneAsync()
