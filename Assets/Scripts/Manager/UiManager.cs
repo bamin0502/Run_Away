@@ -11,6 +11,10 @@ public class UiManager : MonoBehaviour
     private GameManager gameManager;
     [Header("Tutorial Manager"), Tooltip("튜토리얼 매니저 오브젝트")]
     private TutorialManager tutorialManager;
+    
+    [Header("Sound Manager")]
+    public SoundManager soundManager;
+    
 
     [Header("UI Elements"), Tooltip("패널 관련 오브젝트들")]
     [SerializeField] public GameObject PausePanel;
@@ -65,7 +69,7 @@ public class UiManager : MonoBehaviour
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
         tutorialManager = GameObject.FindGameObjectWithTag("Tutorial").GetComponent<TutorialManager>();
-
+        soundManager = GameObject.FindGameObjectWithTag("Sound").GetComponent<SoundManager>();
         startButton.interactable = false; 
     }
 
@@ -163,6 +167,8 @@ public class UiManager : MonoBehaviour
         GamePanel.SetActive(true);
         GameMenuPanel.SetActive(false);
         GC.Collect();
+        soundManager.StopBgm();
+        soundManager.PlayBgm(1);
     }
 
     public void UpdateCoinText(int coin)

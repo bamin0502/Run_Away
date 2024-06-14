@@ -11,14 +11,14 @@ public class TutorialManager : MonoBehaviour
     private bool tutorialActive = true;
     private GameManager gameManager;
     private ModalWindow currentModal;
-    private UiManager uiManager;
-
+    private SoundManager soundManager;
+    
     private Action onComplete;
 
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager")?.GetComponent<GameManager>();
-        uiManager = GameObject.FindGameObjectWithTag("UiManager")?.GetComponent<UiManager>();
+        soundManager = GameObject.FindGameObjectWithTag("Sound")?.GetComponent<SoundManager>();
     }
 
     public void StartTutorial(Action onCompleteAction)
@@ -27,6 +27,12 @@ public class TutorialManager : MonoBehaviour
         tutorialActive = true;
         currentStep = 0;
         ShowNextStep();
+        
+        if (soundManager != null)
+        {
+            soundManager.StopBgm();
+            soundManager.PlayBgm(1);
+        }
     }
 
     private void ShowNextStep()

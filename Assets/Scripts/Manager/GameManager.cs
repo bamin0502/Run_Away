@@ -144,7 +144,9 @@ public class GameManager : MonoBehaviour
 
         CurrentScore = 0;
         uiManager?.UpdateScoreText(CurrentScore);
-        soundManager.PlayBgm(0);
+        soundManager?.StopBgm();
+        soundManager?.PlayBgm(0);
+        
     }
 
     private void ApplyLoadedData()
@@ -229,7 +231,8 @@ public class GameManager : MonoBehaviour
         CurrentGameCoins++;
         TotalCoins++;
         uiManager?.UpdateCoinText(CurrentGameCoins);
-
+        soundManager?.PlaySfx(0);
+        
         if (!isFeverMode)
         {
             coinFeverCount++;
