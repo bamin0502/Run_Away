@@ -167,7 +167,6 @@ public class UiManager : MonoBehaviour
         GamePanel.SetActive(true);
         GameMenuPanel.SetActive(false);
         GC.Collect();
-        soundManager.StopBgm();
         soundManager.PlayBgm(1);
     }
 

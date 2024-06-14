@@ -144,7 +144,6 @@ public class GameManager : MonoBehaviour
 
         CurrentScore = 0;
         uiManager?.UpdateScoreText(CurrentScore);
-        soundManager?.StopBgm();
         soundManager?.PlayBgm(0);
         
     }
