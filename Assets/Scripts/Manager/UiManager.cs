@@ -91,7 +91,9 @@ public class UiManager : MonoBehaviour
         ReviveCheckButton.onClick.AddListener(OnReviveButtonClick);
         QuitCheckButton.onClick.AddListener(OnQuitButtonClick);
         QuitBackButton.onClick.AddListener(() => QuitPanel.SetActive(false));
-
+        LeaderBoardButton.onClick.AddListener(ShowLeaderBoard);
+        AchievementsButton.onClick.AddListener(ShowAchievements);
+        
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
         UpdateReviveCoinText(gameManager.TotalCoins);
@@ -330,5 +332,15 @@ public class UiManager : MonoBehaviour
         {
             loadingTween.Kill();
         }
+    }
+
+    private void ShowAchievements()
+    {
+        gameManager.ShowAchievements();
+    }
+
+    private void ShowLeaderBoard()
+    {
+        gameManager.ShowLeaderBoard();
     }
 }

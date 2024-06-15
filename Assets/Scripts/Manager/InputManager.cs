@@ -65,18 +65,12 @@ public class InputManager : MonoBehaviour
 #if UNITY_EDITOR
         Debug.Log("Back button pressed");
 #endif
-        if (gameManager.isPlaying)
+        if(uiManager.GameOverPanel.activeSelf)
         {
-            if (uiManager.PausePanel.activeSelf)
-            {
-                uiManager.HidePausePanel();
-            }
-            else
-            {
-                uiManager.ShowPausePanel();
-            }
+            return;
         }
-        else
+        
+        if (uiManager.GameMenuPanel.activeSelf)
         {
             if (uiManager.QuitPanel.activeSelf)
             {
@@ -86,6 +80,23 @@ public class InputManager : MonoBehaviour
             {
                 uiManager.ShowQuitPanel();
             }
+            return; 
+        }
+    
+        if (uiManager.GamePanel.activeSelf)
+        {
+            if (uiManager.PausePanel.activeSelf)
+            {
+                uiManager.HidePausePanel();
+            }
+            else if (!uiManager.QuitPanel.activeSelf) 
+            {
+                uiManager.ShowPausePanel();
+            }
+        }
+        else if (uiManager.QuitPanel.activeSelf)
+        {
+            uiManager.HideQuitPanel();
         }
     }
 

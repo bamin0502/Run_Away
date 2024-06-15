@@ -113,7 +113,12 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationPause(bool pauseStatus)
     {
-        if (pauseStatus)
+        if(uiManager.GameMenuPanel.activeSelf)
+        {
+            return;
+        }
+        
+        if (pauseStatus || !uiManager.PausePanel.activeSelf || !uiManager.GameOverPanel.activeSelf)
         {
             isPaused = true;
             uiManager?.ShowPausePanel();
@@ -128,9 +133,15 @@ public class GameManager : MonoBehaviour
     {
         disableObject?.SetActive(false);
 
+        //튜토리얼 완료확인 후에 업적 갱신
+        if (isTutorialActive)
+        {
+            Social.ReportProgress(GPGSIds.achievement, 100f, success => { });
+        }
+        
         if (PlayGamesPlatform.Instance.localUser.authenticated)
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_ANDROID
             Debug.Log("사용자가 구글 플레이에 로그인되어 있습니다.");
 #endif
         }
@@ -190,6 +201,8 @@ public class GameManager : MonoBehaviour
         {
             HighScore = CurrentScore;
             uiManager?.UpdateHighScoreText(HighScore);
+            //리더보드 업데이트
+            ReportScoreToLeaderboard(HighScore);
         }
 
         SaveGameData();
@@ -197,6 +210,28 @@ public class GameManager : MonoBehaviour
         Handheld.Vibrate();
 #endif
         StartCoroutine(ShowGameOverPanelAfterDelay(2f));
+    }
+
+    private void ReportScoreToLeaderboard(int score)
+    {
+        if (PlayGamesPlatform.Instance.localUser.authenticated)
+        {
+#if UNITY_EDITOR
+            Debug.Log("Reporting score to leaderboard: " + score);
+#endif
+            Social.ReportScore(score, GPGSIds.leaderboard, success =>
+            {
+#if UNITY_EDITOR
+                Debug.Log(success ? "Successfully reported score to leaderboard" : "Failed to report score to leaderboard");
+#endif
+            });
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogError("User is not authenticated. Cannot report score to leaderboard.");
+#endif
+        }
     }
 
     private IEnumerator ShowGameOverPanelAfterDelay(float delay)
@@ -495,5 +530,36 @@ public class GameManager : MonoBehaviour
         ApplyLoadedData();
         uiManager?.HideLoadingImage();
         if (uiManager != null) uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
+    }
+
+    public void ShowAchievements()
+    {
+        PlayGamesPlatform.Instance.ShowAchievementsUI();
+        isPaused = false;
+        uiManager?.HidePausePanel();
+    }
+
+    public void ShowLeaderBoard()
+    {
+        PlayGamesPlatform.Instance.ShowLeaderboardUI();
+        Social.LoadScores(GPGSIds.leaderboard, scores =>
+        {
+            if (scores.Length > 0)
+            {
+#if UNITY_EDITOR
+                Debug.Log("Leaderboard loaded");  
+#endif
+               
+            }
+            else
+            {
+#if UNITY_EDITOR
+                Debug.Log("Failed to load leaderboard");
+#endif
+                
+            }
+        });
+        isPaused = false;
+        uiManager?.HidePausePanel();
     }
 }

@@ -37,15 +37,24 @@ public class GameDatas : MonoBehaviour
 
     private void SaveToLocal()
     {
+#if UNITY_EDITOR
         Debug.Log("로컬에 데이터 저장 중...");
+#endif
+        
         var json = JsonUtility.ToJson(dataSettings);
         File.WriteAllText(localFilePath, json);
+#if UNITY_EDITOR
         Debug.Log("로컬 데이터 저장 완료: " + json);
+#endif
+        
     }
 
     private void SaveToCloud()
     {
+#if UNITY_EDITOR
         Debug.Log("클라우드에 데이터 저장 중...");
+#endif
+        
         OpenSaveGame();
     }
 
@@ -61,16 +70,25 @@ public class GameDatas : MonoBehaviour
         ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
         if (status == SavedGameRequestStatus.Success)
         {
-            Debug.Log("게임 데이터 열기 성공");
+#if UNITY_EDITOR
+            Debug.Log("게임 데이터 열기 성공"); 
+#endif
+            
             var update = new SavedGameMetadataUpdate.Builder().Build();
             var json = JsonUtility.ToJson(dataSettings);
             byte[] bytes = Encoding.UTF8.GetBytes(json);
-            Debug.Log("클라우드에 데이터 저장 중: " + json);
+#if UNITY_EDITOR
+            Debug.Log("클라우드에 데이터 저장 중: " + json); 
+#endif
+            
             savedGameClient.CommitUpdate(game, update, bytes, OnSavedGameWritten);
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogError("게임 데이터 열기 실패: " + status);
+#endif
+            
         }
     }
 
@@ -78,11 +96,17 @@ public class GameDatas : MonoBehaviour
     {
         if (status == SavedGameRequestStatus.Success)
         {
+#if UNITY_EDITOR
             Debug.Log("게임 데이터 클라우드 저장 성공");
+#endif
+            
         }
         else
         {
-            Debug.LogError("게임 데이터 클라우드 저장 실패: " + status);
+#if UNITY_EDITOR
+            Debug.LogError("게임 데이터 클라우드 저장 실패: " + status); 
+#endif
+            
         }
     }
 
@@ -105,12 +129,18 @@ public class GameDatas : MonoBehaviour
         {
             var json = File.ReadAllText(localFilePath);
             dataSettings = JsonUtility.FromJson<DataSettings>(json);
+#if UNITY_EDITOR
             Debug.Log("로컬 데이터 로드 완료: " + json);
+#endif
+            
             OnDataLoaded?.Invoke();
         }
         else
         {
-            Debug.Log("로컬 데이터 없음, 새로운 저장 생성.");
+#if UNITY_EDITOR
+            Debug.Log("로컬 데이터 없음, 새로운 저장 생성."); 
+#endif
+            
             SaveToLocal();
             OnDataLoaded?.Invoke();
         }
@@ -118,7 +148,10 @@ public class GameDatas : MonoBehaviour
 
     private void LoadFromCloud()
     {
-        Debug.Log("클라우드에서 데이터 로드 중...");
+#if UNITY_EDITOR
+        Debug.Log("클라우드에서 데이터 로드 중..."); 
+#endif
+        
         OpenLoadGame();
     }
 
@@ -134,12 +167,17 @@ public class GameDatas : MonoBehaviour
         ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
         if (status == SavedGameRequestStatus.Success)
         {
+#if UNITY_EDITOR
             Debug.Log("게임 데이터 로드 성공");
+#endif
+            
             savedGameClient.ReadBinaryData(data, OnSavedGameDataRead);
         }
         else
         {
-            Debug.LogError("게임 데이터 로드 실패: " + status);
+#if UNITY_EDITOR
+            Debug.LogError("게임 데이터 로드 실패: " + status); 
+#endif 
             LoadFromLocal();  // 로컬 데이터로 대체
         }
     }
@@ -151,12 +189,18 @@ public class GameDatas : MonoBehaviour
             string data = Encoding.UTF8.GetString(loadedData);
             if (string.IsNullOrEmpty(data))
             {
-                Debug.Log("클라우드 데이터 없음, 새로운 저장 생성.");
+#if UNITY_EDITOR
+                Debug.Log("클라우드 데이터 없음, 새로운 저장 생성."); 
+#endif
+               
                 SaveToCloud();
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.Log("클라우드 데이터 로드 완료: " + data);
+#endif
+                
                 dataSettings = JsonUtility.FromJson<DataSettings>(data);
                 SaveToLocal();  // 로컬 데이터를 클라우드 데이터로 업데이트
                 OnDataLoaded?.Invoke();
@@ -164,7 +208,10 @@ public class GameDatas : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogError("클라우드 데이터 읽기 실패: " + status);
+#endif
+            
             LoadFromLocal();  // 로컬 데이터로 대체
         }
     }
@@ -177,7 +224,10 @@ public class GameDatas : MonoBehaviour
 
     private void DeleteGameData()
     {
+#if UNITY_EDITOR
         Debug.Log("게임 데이터 삭제를 위해 열기...");
+#endif
+        
         ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
         savedGameClient.OpenWithAutomaticConflictResolution(fileName, DataSource.ReadCacheOrNetwork,
             ConflictResolutionStrategy.UseLastKnownGood, DeleteSaveGame);
@@ -188,13 +238,19 @@ public class GameDatas : MonoBehaviour
         ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
         if (status == SavedGameRequestStatus.Success)
         {
-            Debug.Log("게임 데이터 삭제 성공");
+#if UNITY_EDITOR
+            Debug.Log("게임 데이터 삭제 성공"); 
+#endif
+            
             savedGameClient.Delete(data);
             File.Delete(localFilePath);  
         }
         else
         {
-            Debug.LogError("게임 데이터 삭제 실패: " + status);
+#if UNITY_EDITOR
+            Debug.LogError("게임 데이터 삭제 실패: " + status); 
+#endif
+            
         }
     }
 }
