@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Signed in!");
 #endif
+            uiManager.ShowLoadingImage();
             gameDatas.LoadData();
             gameDatas.OnDataLoaded += OnDataLoaded; // 데이터 로드 완료시 호출
         }
@@ -104,6 +105,7 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("Failed to sign in: " + result);
 #endif
+            uiManager.ShowLoadingImage();
             gameDatas.LoadFromLocal();
             OnDataLoaded(); // 로컬 데이터 로드 완료시 호출
         }
@@ -491,6 +493,7 @@ public class GameManager : MonoBehaviour
     private void OnDataLoaded()
     {
         ApplyLoadedData();
-        uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
+        uiManager?.HideLoadingImage();
+        if (uiManager != null) uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
     }
 }

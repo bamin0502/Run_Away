@@ -52,6 +52,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button LeaderBoardButton;
     [SerializeField] public Button AchievementsButton;
     [SerializeField] public Image LoadingImage;
+    [SerializeField] public TextMeshProUGUI LoadingText;
 
     [Header("Revive Panel Ui"), Tooltip("부활 패널 UI들")]
     [SerializeField] public Button ReviveCheckButton;
@@ -67,6 +68,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject FeverTextObject;
 
     private Tween feverTextTween;
+    private Tween loadingTween;
 
     public void Awake()
     {
@@ -285,5 +287,48 @@ public class UiManager : MonoBehaviour
     public void EnableStartButton()
     {
         startButton.interactable = true; 
+    }
+    
+    public void ShowLoadingImage()
+    {
+        if (LoadingImage != null)
+        {
+            LoadingImage.gameObject.SetActive(true);
+            LoadingText.gameObject.SetActive(true);
+            StartLoadingAnimation();
+        }
+    }
+
+    private void StartLoadingAnimation()
+    {
+        loadingTween = LoadingImage.DOFillAmount(1, 1f)
+            .SetLoops(-1, LoopType.Restart)
+            .OnComplete(() =>
+            {
+                LoadingImage.gameObject.SetActive(false);
+                LoadingText.gameObject.SetActive(false);
+            });
+    }
+
+    public void HideLoadingImage()
+    {
+        if (loadingTween != null)
+        {
+            loadingTween.Kill();
+        }
+        if (LoadingImage != null)
+        {
+            LoadingImage.fillAmount = 0;
+            LoadingImage.gameObject.SetActive(false);
+            LoadingText.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (loadingTween != null)
+        {
+            loadingTween.Kill();
+        }
     }
 }
