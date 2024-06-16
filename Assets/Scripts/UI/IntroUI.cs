@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,6 +25,12 @@ public class IntroUI : MonoBehaviour
         
         //startButton.gameObject.SetActive(false);
     }
+
+    private void Update()
+    {
+        
+    }
+
     IEnumerator CheckForUpdate()
     {
         appUpdateManager = new AppUpdateManager();

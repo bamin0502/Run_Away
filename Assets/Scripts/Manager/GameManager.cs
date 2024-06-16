@@ -6,6 +6,7 @@ using GooglePlayGames.BasicApi;
 using UnityEngine;
 using UniRx;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms;
 
 public class GameManager : MonoBehaviour
 {
@@ -132,12 +133,6 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         disableObject?.SetActive(false);
-
-        //튜토리얼 완료확인 후에 업적 갱신
-        if (isTutorialActive)
-        {
-            Social.ReportProgress(GPGSIds.achievement, 100f, success => { });
-        }
         
         if (PlayGamesPlatform.Instance.localUser.authenticated)
         {
@@ -170,7 +165,7 @@ public class GameManager : MonoBehaviour
         soundManager?.PlayBgm(0);
         
     }
-
+    
     private void ApplyLoadedData()
     {
         if (gameDatas != null)
@@ -201,9 +196,9 @@ public class GameManager : MonoBehaviour
         {
             HighScore = CurrentScore;
             uiManager?.UpdateHighScoreText(HighScore);
-            //리더보드 업데이트
-            ReportScoreToLeaderboard(HighScore);
         }
+        
+        
 
         SaveGameData();
 #if UNITY_ANDROID
@@ -212,27 +207,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(ShowGameOverPanelAfterDelay(2f));
     }
 
-    private void ReportScoreToLeaderboard(int score)
-    {
-        if (PlayGamesPlatform.Instance.localUser.authenticated)
-        {
-#if UNITY_EDITOR
-            Debug.Log("Reporting score to leaderboard: " + score);
-#endif
-            Social.ReportScore(score, GPGSIds.leaderboard, success =>
-            {
-#if UNITY_EDITOR
-                Debug.Log(success ? "Successfully reported score to leaderboard" : "Failed to report score to leaderboard");
-#endif
-            });
-        }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogError("User is not authenticated. Cannot report score to leaderboard.");
-#endif
-        }
-    }
+    
 
     private IEnumerator ShowGameOverPanelAfterDelay(float delay)
     {
@@ -451,6 +426,12 @@ public class GameManager : MonoBehaviour
         {
             HighScore = CurrentScore;
             uiManager?.UpdateHighScoreText(HighScore);
+            
+        }
+        
+        if (isTutorialActive)
+        {
+            Social.ReportProgress(GPGSIds.achievement, 100f, success => { });
         }
 
 #if UNITY_EDITOR
@@ -530,6 +511,7 @@ public class GameManager : MonoBehaviour
         ApplyLoadedData();
         uiManager?.HideLoadingImage();
         if (uiManager != null) uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
+        PlayGamesPlatform.Instance.ReportScore(CurrentScore, GPGSIds.leaderboard, success => { });
     }
 
     public void ShowAchievements()
@@ -541,24 +523,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowLeaderBoard()
     {
-        PlayGamesPlatform.Instance.ShowLeaderboardUI();
-        Social.LoadScores(GPGSIds.leaderboard, scores =>
-        {
-            if (scores.Length > 0)
-            {
-#if UNITY_EDITOR
-                Debug.Log("Leaderboard loaded");  
-#endif
-               
-            }
-            else
-            {
-#if UNITY_EDITOR
-                Debug.Log("Failed to load leaderboard");
-#endif
-                
-            }
-        });
+        PlayGamesPlatform.Instance.ShowLeaderboardUI(GPGSIds.leaderboard);
         isPaused = false;
         uiManager?.HidePausePanel();
     }
