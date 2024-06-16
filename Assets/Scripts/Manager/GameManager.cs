@@ -39,9 +39,9 @@ public class GameManager : MonoBehaviour
     public int TotalCoins = 1000;
 
     [Header("게임 점수 관련 필드")]
-    public int CurrentScore = 0;
+    public int CurrentScore;
     public int scorePerDistance = 10;
-    public int HighScore = 0;
+    public int HighScore;
 
     [Header("부활 관련 무적 시간")]
     public float invincibilityDuration = 2f;
@@ -197,9 +197,12 @@ public class GameManager : MonoBehaviour
             HighScore = CurrentScore;
             uiManager?.UpdateHighScoreText(HighScore);
         }
-        
-        
 
+        if (CurrentGameCoins >= 100)
+        {
+            PlayGamesPlatform.Instance.IncrementAchievement(GPGSIds.achievement__100,1, success => { }); 
+        }
+        
         SaveGameData();
 #if UNITY_ANDROID
         Handheld.Vibrate();
@@ -214,6 +217,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(delay);
         uiManager?.UpdateResultCoinText(CurrentGameCoins);
         uiManager?.UpdateResultScoreText(CurrentScore);
+        
         uiManager?.ShowGameOverPanel();
     }
 
@@ -235,6 +239,7 @@ public class GameManager : MonoBehaviour
             gameDatas.dataSettings.gold = TotalCoins;
             gameDatas.dataSettings.highScore = HighScore;
             gameDatas.dataSettings.isTutorial = isTutorialActive;
+            
             gameDatas.SaveData();
         }
         else
@@ -511,7 +516,8 @@ public class GameManager : MonoBehaviour
         ApplyLoadedData();
         uiManager?.HideLoadingImage();
         if (uiManager != null) uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
-        PlayGamesPlatform.Instance.ReportScore(CurrentScore, GPGSIds.leaderboard, success => { });
+        
+        PlayGamesPlatform.Instance.ReportScore(gameDatas.dataSettings.highScore, GPGSIds.leaderboard, success => { });
     }
 
     public void ShowAchievements()
