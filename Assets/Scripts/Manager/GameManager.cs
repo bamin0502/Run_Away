@@ -561,7 +561,7 @@ public class GameManager : MonoBehaviour
         if (uiManager != null) uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
         
         PlayGamesPlatform.Instance.ReportScore(gameDatas.dataSettings.highScore, GPGSIds.leaderboard, success => { });
-        
+        //PlayGamesPlatform.Instance.ReportScore(gameDatas.dataSettings.gold, GPGSIds.leaderboard_2, success => { });
         CheckAchievements();
     }
 

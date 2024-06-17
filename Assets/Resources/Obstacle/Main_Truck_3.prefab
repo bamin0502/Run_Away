@@ -119,8 +119,6 @@ GameObject:
   - component: {fileID: 7702805750725692244}
   - component: {fileID: 7462836006682451739}
   - component: {fileID: -958529083741663076}
-  - component: {fileID: 5955639456323699683}
-  - component: {fileID: 4399422176924577296}
   - component: {fileID: -5101129602074256586}
   m_Layer: 6
   m_Name: Main_Truck_3
@@ -220,42 +218,6 @@ BoxCollider:
   m_Size: {x: 2.4051394, y: 2.181651, z: 0.12658405}
   m_Center: {x: 0.01088053, y: 1.525022, z: -3.268983}
 --- !u!114 &-958529083741663076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8207002681667545729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  obstacleID: 10411
-  obstacleNameEnglish: Main_Truck_3
-  obstacleCoin: 1
-  obstacleType: 4
-  obstacleSpeed: 10
-  obstacleSection: 3
---- !u!114 &5955639456323699683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8207002681667545729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5c3df21678d14d47b4a29d1317dc39a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  obstacleID: 10411
-  obstacleNameEnglish: Main_Truck_3
-  obstacleCoin: 1
-  obstacleType: 4
-  obstacleSpeed: 10
-  obstacleSection: 3
---- !u!114 &4399422176924577296
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

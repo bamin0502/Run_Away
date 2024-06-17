@@ -130,10 +130,12 @@ public class Tile : MonoBehaviour
             }
         }
     }
+
     public void ResumeTileMovement()
     {
         isPaused = false;
     }
+
     private void MoveTiles()
     {
         foreach (var tile in tiles)
@@ -248,30 +250,60 @@ public class Tile : MonoBehaviour
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
-        // 코인이 나올 레인 선택
         float chosenLane = lanePositions[Random.Range(0, lanePositions.Length)];
 
-        // 선택된 레인에 장애물이 있는지 확인
         bool hasObstacleInLane = IsObstacleInLane(tile, chosenLane);
+        var obstacle = GetObstacleInLane(tile, chosenLane);
 
-        if (hasObstacleInLane)
+        if (hasObstacleInLane && obstacle != null)
         {
-            // 장애물이 있는 경우, 장애물 중심을 기준으로 포물선 형태로 코인 생성
-            var obstacle = GetObstacleInLane(tile, chosenLane);
-            if (obstacle != null)
+            var obstacleTypeComponent = obstacle.GetComponent<ObstacleType>();
+            if (obstacleTypeComponent != null)
             {
-                var boxCollider = obstacle.GetComponent<BoxCollider>();
-                if (boxCollider)
+                if (obstacleTypeComponent.ObstacleTypeNum == 5)
                 {
-                    Vector3 centerPos = obstacle.position + new Vector3(0, boxCollider.size.y / 2, 0); // 장애물의 중심을 기준으로 포물선 생성
-                    float height = boxCollider.size.y;
-                    SpawnParabolicCoins(centerPos, height, tile);
+                    Vector3 startPosition = new Vector3(chosenLane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
+                    SpawnCoinLine(startPosition, chosenLane, tile);
+                }
+                else if (obstacleTypeComponent.ObstacleTypeNum == 6)
+                {
+                    var walkByCollider = obstacle.Find("WalkBy").GetComponent<Collider>();
+                    if (walkByCollider != null)
+                    {
+                        var bounds1 = walkByCollider.bounds;
+                        Vector3 walkByBoundsMin = bounds1.min;
+                        Vector3 walkByBoundsMax = bounds1.max;
+                        float walkByHeight = walkByBoundsMax.y - walkByBoundsMin.y;
+
+                        for (int i = 0; i < coinLineLength; i++)
+                        {
+                            Vector3 position = new Vector3(
+                                chosenLane, 
+                                walkByBoundsMin.y + walkByHeight + 0.5f, 
+                                walkByBoundsMin.z + i * coinSpacing);
+
+                            if (!IsObstacleAtPosition(position))
+                            {
+                                SpawnSingleItem(position, tile, true);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var boxCollider = obstacle.GetComponent<BoxCollider>();
+                    if (boxCollider)
+                    {
+                        var size = boxCollider.size;
+                        Vector3 centerPos = obstacle.position + new Vector3(0, size.y / 2, 0);
+                        float height = size.y;
+                        SpawnParabolicCoins(centerPos, height, tile);
+                    }
                 }
             }
         }
         else
         {
-            // 장애물이 없는 경우, 연속적으로 코인 생성
             Vector3 startPosition = new Vector3(chosenLane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
             SpawnCoinLine(startPosition, chosenLane, tile);
         }
