@@ -53,7 +53,7 @@ public class Tile : MonoBehaviour
 
     private Vector3 lastCoinPosition = Vector3.zero;
     private bool hasLastCoinPosition = false;
-
+    private bool isPaused = false;
     private List<Vector3> parabolicPointsCache;
 
     void Awake()
@@ -97,7 +97,12 @@ public class Tile : MonoBehaviour
 
     private void Update()
     {
-        if (!gameManager.isGameover && !gameManager.isPaused && gameManager.isPlaying)
+        if (isPaused)
+        {
+            return;
+        }
+        
+        if (!gameManager.isGameover && gameManager.isPlaying)
         {
             MoveTiles();
             if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
@@ -125,7 +130,10 @@ public class Tile : MonoBehaviour
             }
         }
     }
-
+    public void ResumeTileMovement()
+    {
+        isPaused = false;
+    }
     private void MoveTiles()
     {
         foreach (var tile in tiles)

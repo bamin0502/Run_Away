@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-1)]
 public class InputManager : MonoBehaviour
@@ -69,6 +70,7 @@ public class InputManager : MonoBehaviour
         {
             return;
         }
+        
         
         if (uiManager.GameMenuPanel.activeSelf)
         {

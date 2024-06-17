@@ -154,6 +154,7 @@ public class UiManager : MonoBehaviour
     {
         Time.timeScale = 1;
         PausePanel.SetActive(false);
+        gameManager.isPlaying = true;
         Debug.Log("Resume");
     }
 
@@ -278,7 +279,8 @@ public class UiManager : MonoBehaviour
     public void HidePausePanel()
     {
         PausePanel.SetActive(false);
-        Time.timeScale = 1;
+        Time.timeScale = 1; 
+        
     }
 
     public void HideQuitPanel()
@@ -343,4 +345,6 @@ public class UiManager : MonoBehaviour
     {
         gameManager.ShowLeaderBoard();
     }
+    
+    
 }

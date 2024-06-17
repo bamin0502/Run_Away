@@ -163,7 +163,6 @@ public class GameManager : MonoBehaviour
         CurrentScore = 0;
         uiManager?.UpdateScoreText(CurrentScore);
         soundManager?.PlayBgm(0);
-        
     }
     
     private void ApplyLoadedData()
@@ -202,6 +201,12 @@ public class GameManager : MonoBehaviour
         {
             PlayGamesPlatform.Instance.IncrementAchievement(GPGSIds.achievement__100,1, success => { }); 
         }
+        if(CurrentGameCoins >= 300)
+        {
+            PlayGamesPlatform.Instance.IncrementAchievement(GPGSIds.achievement__300,1, success => { }); 
+        }
+        
+        
         
         SaveGameData();
 #if UNITY_ANDROID
@@ -254,6 +259,9 @@ public class GameManager : MonoBehaviour
     {
         isPaused = false;
         Time.timeScale = 1;
+        
+        var tileManager = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Tile>();
+        tileManager?.ResumeTileMovement();
     }
 
     public void AddCoin()
@@ -434,11 +442,11 @@ public class GameManager : MonoBehaviour
             
         }
         
-        if (isTutorialActive)
+        if (!isTutorialActive)
         {
             Social.ReportProgress(GPGSIds.achievement, 100f, success => { });
         }
-
+        
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F1))
         {
@@ -463,6 +471,40 @@ public class GameManager : MonoBehaviour
 #endif
     }
 
+    private void CheckAchievements()
+    {
+        if (TotalCoins >= 100000)
+        {
+            PlayGamesPlatform.Instance.UnlockAchievement(GPGSIds.achievement_8, success => { });
+            Social.ReportProgress(GPGSIds.achievement_8, 100f, success => { });
+        }
+        else if (TotalCoins >= 50000)
+        {
+            PlayGamesPlatform.Instance.UnlockAchievement(GPGSIds.achievement_7, success => { });
+            Social.ReportProgress(GPGSIds.achievement_7, 100f, success => { });
+        }
+        else if (TotalCoins >= 10000)
+        {
+            PlayGamesPlatform.Instance.UnlockAchievement(GPGSIds.achievement_6, success => { });
+            Social.ReportProgress(GPGSIds.achievement_6, 100f, success => { });
+        }
+        else if (TotalCoins >= 5000)
+        {
+            PlayGamesPlatform.Instance.UnlockAchievement(GPGSIds.achievement_5, success => { });
+            Social.ReportProgress(GPGSIds.achievement_5, 100f, success => { });
+        }
+        else if (TotalCoins >= 3000)
+        {
+            PlayGamesPlatform.Instance.UnlockAchievement(GPGSIds.achievement_4, success => { });
+            Social.ReportProgress(GPGSIds.achievement_4, 100f, success => { });
+        }
+        else if (TotalCoins >= 1000)
+        {
+            PlayGamesPlatform.Instance.UnlockAchievement(GPGSIds.achievement_3, success => { });
+            Social.ReportProgress(GPGSIds.achievement_3, 100f, success => { });
+        }
+    }
+
     public void RevivePlayer()
     {
         if (TotalCoins >= 300)
@@ -478,9 +520,10 @@ public class GameManager : MonoBehaviour
             isPlaying = true;
             isFeverMode = false;
             IsFeverModeActive.Value = false;
-
+            
+            PlayGamesPlatform.Instance.IncrementAchievement(GPGSIds.achievement_2,1, success => { }); 
+            
             StartCoroutine(StartInvincibility());
-
             Time.timeScale = 1;
         }
     }
@@ -518,6 +561,8 @@ public class GameManager : MonoBehaviour
         if (uiManager != null) uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
         
         PlayGamesPlatform.Instance.ReportScore(gameDatas.dataSettings.highScore, GPGSIds.leaderboard, success => { });
+        
+        CheckAchievements();
     }
 
     public void ShowAchievements()
