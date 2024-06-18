@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
     public bool isGameover;
     public bool isPaused;
     public bool isPlaying = false;
-
+    public bool isAd = false;
+    
     [Header("튜토리얼 관련 진행여부 필드")]
     public bool isTutorialActive = true;
 
@@ -118,22 +119,13 @@ public class GameManager : MonoBehaviour
     public void AdsLoadHomeScene()
     {
         //20퍼 확률로 광고 보여주기
-        if (UnityEngine.Random.Range(0, 100) < 20)
-        {
-            adMobManager.ShowInterstitialAd();
-            SceneManager.LoadScene(1);
-            Time.timeScale = 1;
-        }
-        else
-        {
-            SceneManager.LoadScene(1);
-            Time.timeScale = 1;
-        }
+        SceneManager.LoadScene(1);
+        Time.timeScale = 1;
     }
     
     private void OnApplicationPause(bool pauseStatus)
     {
-        if(uiManager.GameMenuPanel.activeSelf)
+        if(isAd || uiManager.GameMenuPanel.activeSelf )
         {
             return;
         }
@@ -224,7 +216,10 @@ public class GameManager : MonoBehaviour
         {
             PlayGamesPlatform.Instance.IncrementAchievement(GPGSIds.achievement__300,1, success => { }); 
         }
-        
+        if (UnityEngine.Random.Range(0, 100) < 20)
+        {
+            adMobManager.ShowInterstitialAd();
+        }
         
         
         SaveGameData();
@@ -525,6 +520,7 @@ public class GameManager : MonoBehaviour
     }
     public void OnReviveButtonClicked()
     {
+        isAd = true;
         adMobManager.ShowRewardedAd(); // 보상형 광고 표시
     }
     public void RevivePlayer()
@@ -560,7 +556,8 @@ public class GameManager : MonoBehaviour
         isPlaying = true;
         isFeverMode = false;
         IsFeverModeActive.Value = false;
-        
+        uiManager.AdsReviveCheckButton.interactable = false;
+        PlayGamesPlatform.Instance.IncrementAchievement(GPGSIds.achievement_2,1, success => { }); 
         StartCoroutine(StartInvincibility());
         Time.timeScale = 1;
     }

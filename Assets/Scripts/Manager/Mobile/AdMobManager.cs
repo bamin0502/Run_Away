@@ -9,9 +9,15 @@ public class AdMobManager : MonoBehaviour
     private InterstitialAd interstitial;
     public string adUnitId;
     private RewardedAd _rewardedAd;
-
-    public event Action OnUserEarnedReward; // 보상 이벤트
+    private GameManager gameManager;
     
+    public event Action OnUserEarnedReward; // 보상 이벤트
+
+    public void Awake()
+    {
+        gameManager =GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>(); 
+    }
+
     public void Start()
     {
         MobileAds.Initialize(initStatus => { });
@@ -82,7 +88,7 @@ public class AdMobManager : MonoBehaviour
             DestroyAd();
         }
 
-        _bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Top);
+        _bannerView = new BannerView(adUnitId, AdSize.IABBanner, AdPosition.Top);
     }
 
     public void DestroyAd()
@@ -91,6 +97,7 @@ public class AdMobManager : MonoBehaviour
         {
             _bannerView.Destroy();
             _bannerView = null;
+            gameManager.isAd=false;
         }
     }
 
@@ -98,7 +105,7 @@ public class AdMobManager : MonoBehaviour
     {
         if (_bannerView == null)
         {
-            _bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Top);
+            _bannerView = new BannerView(adUnitId, AdSize.IABBanner, AdPosition.Top);
         }
 
         var adRequest = new AdRequest();
@@ -131,6 +138,7 @@ public class AdMobManager : MonoBehaviour
     {
         if (interstitial != null && interstitial.CanShowAd())
         {
+            gameManager.isAd=true;
             interstitial.Show();
         }
 
@@ -163,6 +171,7 @@ public class AdMobManager : MonoBehaviour
     {
         if (_rewardedAd != null && _rewardedAd.CanShowAd())
         {
+            gameManager.isAd=true;
             _rewardedAd.Show(reward =>
             {
                 OnUserEarnedReward?.Invoke();
