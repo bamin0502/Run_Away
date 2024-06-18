@@ -58,7 +58,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] public Button ReviveCheckButton;
     [SerializeField] public Button BackButton;
     [SerializeField] public TextMeshProUGUI ReviveCoinText;
-
+    [SerializeField] public Button AdsReviveCheckButton;
+ 
     [Header("Quit Panel Ui"), Tooltip("종료 패널 UI들")]
     [SerializeField] public Button QuitCheckButton;
     [SerializeField] public Button QuitBackButton;
@@ -86,13 +87,14 @@ public class UiManager : MonoBehaviour
         startButton.onClick.AddListener(OnStartButtonClick);
         optionButton.onClick.AddListener(ShowPausePanel);
         ReviveButton.onClick.AddListener(Revive);
-        LobbyButton.onClick.AddListener(OnHomeButtonClick);
+        LobbyButton.onClick.AddListener(() => gameManager.AdsLoadHomeScene());
         BackButton.onClick.AddListener(HideRevivePanel);
         ReviveCheckButton.onClick.AddListener(OnReviveButtonClick);
         QuitCheckButton.onClick.AddListener(OnQuitButtonClick);
         QuitBackButton.onClick.AddListener(() => QuitPanel.SetActive(false));
         LeaderBoardButton.onClick.AddListener(ShowLeaderBoard);
         AchievementsButton.onClick.AddListener(ShowAchievements);
+        AdsReviveCheckButton.onClick.AddListener(() => gameManager.OnReviveButtonClicked());
         
         UpdateAllCoinText(gameManager.TotalCoins);
         UpdateHighScoreText(gameManager.HighScore);
@@ -149,7 +151,7 @@ public class UiManager : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
     }
-
+    
     public void OnResumeButtonClick()
     {
         Time.timeScale = 1;

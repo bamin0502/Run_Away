@@ -6,7 +6,6 @@ using GooglePlayGames.BasicApi;
 using UnityEngine;
 using UniRx;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class GameManager : MonoBehaviour
     private PlayerMovement playerMovement;
     private SoundManager soundManager;
     private GameDatas gameDatas;
+    private AdMobManager adMobManager;
 
     [Header("게임 속도 관련 필드")]
     public float stageSpeed = 5f;
@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
         soundManager = GameObject.FindGameObjectWithTag("Sound").GetComponent<SoundManager>();
         gameDatas = GameObject.FindGameObjectWithTag("Data").GetComponent<GameDatas>();
-
+        adMobManager = GameObject.FindGameObjectWithTag("AdMob").GetComponent<AdMobManager>();
         if (playerMovement != null)
         {
             initialJumpPower = playerMovement.jumpForce;
@@ -83,8 +83,11 @@ public class GameManager : MonoBehaviour
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
         SignIn();
+        
+        adMobManager.OnUserEarnedReward += AdsRevive;
+        
     }
-
+    
     private void SignIn()
     {
         PlayGamesPlatform.Instance.Authenticate(OnAuthentication);
@@ -111,7 +114,23 @@ public class GameManager : MonoBehaviour
             OnDataLoaded(); // 로컬 데이터 로드 완료시 호출
         }
     }
-
+    
+    public void AdsLoadHomeScene()
+    {
+        //20퍼 확률로 광고 보여주기
+        if (UnityEngine.Random.Range(0, 100) < 20)
+        {
+            adMobManager.ShowInterstitialAd();
+            SceneManager.LoadScene(1);
+            Time.timeScale = 1;
+        }
+        else
+        {
+            SceneManager.LoadScene(1);
+            Time.timeScale = 1;
+        }
+    }
+    
     private void OnApplicationPause(bool pauseStatus)
     {
         if(uiManager.GameMenuPanel.activeSelf)
@@ -504,7 +523,10 @@ public class GameManager : MonoBehaviour
             Social.ReportProgress(GPGSIds.achievement_3, 100f, success => { });
         }
     }
-
+    public void OnReviveButtonClicked()
+    {
+        adMobManager.ShowRewardedAd(); // 보상형 광고 표시
+    }
     public void RevivePlayer()
     {
         if (TotalCoins >= 300)
@@ -526,6 +548,21 @@ public class GameManager : MonoBehaviour
             StartCoroutine(StartInvincibility());
             Time.timeScale = 1;
         }
+    }
+    
+    public void AdsRevive()
+    {
+        playerMovement.Revive();
+
+        uiManager.HideRevivePanel();
+        if (uiManager != null) uiManager.GameOverPanel.SetActive(false);
+        isGameover = false;
+        isPlaying = true;
+        isFeverMode = false;
+        IsFeverModeActive.Value = false;
+        
+        StartCoroutine(StartInvincibility());
+        Time.timeScale = 1;
     }
 
     private IEnumerator StartInvincibility()
