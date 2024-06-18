@@ -30,12 +30,12 @@ public class GameManager : MonoBehaviour
 
     [Header("피버모드 관련 필드")]
     public bool isFeverMode = false;
-    private int coinsForFever = 100;
+    private readonly int coinsForFever = 100;
     private bool feverActivatedByItem = false;
-    private int coinFeverCount = 0;
+    private int coinFeverCount;
 
     [Header("코인 관련 필드")]
-    public int CurrentGameCoins = 0;
+    public int CurrentGameCoins;
     public int TotalCoins = 1000;
 
     [Header("게임 점수 관련 필드")]
@@ -70,10 +70,10 @@ public class GameManager : MonoBehaviour
 
     public void Awake()
     {
-        uiManager = GameObject.FindGameObjectWithTag("UiManager")?.GetComponent<UiManager>();
-        playerMovement = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerMovement>();
-        soundManager = GameObject.FindGameObjectWithTag("Sound")?.GetComponent<SoundManager>();
-        gameDatas = GameObject.FindGameObjectWithTag("Data")?.GetComponent<GameDatas>();
+        uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        soundManager = GameObject.FindGameObjectWithTag("Sound").GetComponent<SoundManager>();
+        gameDatas = GameObject.FindGameObjectWithTag("Data").GetComponent<GameDatas>();
 
         if (playerMovement != null)
         {
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
         if (pauseStatus || !uiManager.PausePanel.activeSelf || !uiManager.GameOverPanel.activeSelf)
         {
             isPaused = true;
-            uiManager?.ShowPausePanel();
+            uiManager.ShowPausePanel();
         }
         else
         {
@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        disableObject?.SetActive(false);
+        disableObject.SetActive(false);
         
         if (PlayGamesPlatform.Instance.localUser.authenticated)
         {
@@ -161,8 +161,8 @@ public class GameManager : MonoBehaviour
         }
 
         CurrentScore = 0;
-        uiManager?.UpdateScoreText(CurrentScore);
-        soundManager?.PlayBgm(0);
+        uiManager.UpdateScoreText(CurrentScore);
+        soundManager.PlayBgm(0);
     }
     
     private void ApplyLoadedData()
@@ -174,8 +174,8 @@ public class GameManager : MonoBehaviour
             HighScore = loadedData.highScore;
             isTutorialActive = loadedData.isTutorial;
 
-            uiManager?.UpdateAllCoinText(TotalCoins);
-            uiManager?.UpdateHighScoreText(HighScore);
+            uiManager.UpdateAllCoinText(TotalCoins);
+            uiManager.UpdateHighScoreText(HighScore);
         }
     }
 
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour
         if (CurrentScore > HighScore)
         {
             HighScore = CurrentScore;
-            uiManager?.UpdateHighScoreText(HighScore);
+            uiManager.UpdateHighScoreText(HighScore);
         }
 
         if (CurrentGameCoins >= 100)
@@ -220,10 +220,10 @@ public class GameManager : MonoBehaviour
     private IEnumerator ShowGameOverPanelAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
-        uiManager?.UpdateResultCoinText(CurrentGameCoins);
-        uiManager?.UpdateResultScoreText(CurrentScore);
+        uiManager.UpdateResultCoinText(CurrentGameCoins);
+        uiManager.UpdateResultScoreText(CurrentScore);
         
-        uiManager?.ShowGameOverPanel();
+        uiManager.ShowGameOverPanel();
     }
 
     public void OnHomeButtonClick()
@@ -231,7 +231,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(1);
 
-        uiManager?.UpdateAllCoinText(TotalCoins);
+        uiManager.UpdateAllCoinText(TotalCoins);
     }
 
     public void SaveGameData()
@@ -261,15 +261,15 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         
         var tileManager = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Tile>();
-        tileManager?.ResumeTileMovement();
+        tileManager.ResumeTileMovement();
     }
 
     public void AddCoin()
     {
         CurrentGameCoins++;
         TotalCoins++;
-        uiManager?.UpdateCoinText(CurrentGameCoins);
-        soundManager?.PlaySfx(0);
+        uiManager.UpdateCoinText(CurrentGameCoins);
+        soundManager.PlaySfx(0);
         
         if (!isFeverMode)
         {
@@ -277,11 +277,11 @@ public class GameManager : MonoBehaviour
 
             if (coinFeverCount >= coinsForFever)
             {
-                uiManager?.UpdateFeverGauge(1);
+                uiManager.UpdateFeverGauge(1);
             }
             else
             {
-                uiManager?.UpdateFeverGauge(coinFeverCount / (float)coinsForFever);
+                uiManager.UpdateFeverGauge(coinFeverCount / (float)coinsForFever);
             }
         }
     }
@@ -293,7 +293,7 @@ public class GameManager : MonoBehaviour
             currentJumpEffect?.Dispose();
             blinkSubscription?.Dispose();
 
-            jumpEffect?.Play();
+            jumpEffect.Play();
 
             blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
                 .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
@@ -334,7 +334,7 @@ public class GameManager : MonoBehaviour
         if (playerMovement != null)
         {
             playerMovement.jumpForce = initialJumpPower;
-            jumpEffect?.Stop();
+            jumpEffect.Stop();
         }
     }
 
@@ -346,7 +346,7 @@ public class GameManager : MonoBehaviour
             blinkSubscription?.Dispose();
 
             IsMagnetEffectActive.Value = true;
-            magnetEffect?.Play();
+            magnetEffect.Play();
 
             blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
                 .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
@@ -369,7 +369,7 @@ public class GameManager : MonoBehaviour
                 .Subscribe(_ =>
                 {
                     IsMagnetEffectActive.Value = false;
-                    magnetEffect?.Stop();
+                    magnetEffect.Stop();
                 });
         }
     }
@@ -383,9 +383,9 @@ public class GameManager : MonoBehaviour
             blinkSubscription?.Dispose();
 
             IsFeverModeActive.Value = true;
-            feverEffect?.Play();
+            feverEffect.Play();
 
-            uiManager?.ShowFeverText();
+            uiManager.ShowFeverText();
 
             blinkSubscription = Observable.Timer(TimeSpan.FromSeconds(duration - 3))
                 .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(0.1f)).TakeWhile(t => t < 10))
@@ -408,12 +408,12 @@ public class GameManager : MonoBehaviour
                 .ObserveOnMainThread()
                 .Subscribe(_ =>
                 {
-                    uiManager?.HideFeverText();
+                    uiManager.HideFeverText();
                     IsFeverModeActive.Value = false;
                     isFeverMode = false;
                     coinFeverCount = 0;
-                    feverEffect?.Stop();
-                    uiManager?.ResetFeverGuage();
+                    feverEffect.Stop();
+                    uiManager.ResetFeverGuage();
                 });
         }
     }
@@ -432,13 +432,13 @@ public class GameManager : MonoBehaviour
         {
             distanceTravelled += stageSpeed * Time.deltaTime;
             CurrentScore = (int)distanceTravelled * scorePerDistance;
-            uiManager?.UpdateScoreText(CurrentScore);
+            uiManager.UpdateScoreText(CurrentScore);
         }
 
         if (CurrentScore > HighScore)
         {
             HighScore = CurrentScore;
-            uiManager?.UpdateHighScoreText(HighScore);
+            uiManager.UpdateHighScoreText(HighScore);
             
         }
         
@@ -510,11 +510,11 @@ public class GameManager : MonoBehaviour
         if (TotalCoins >= 300)
         {
             TotalCoins -= 300;
-            uiManager?.UpdateAllCoinText(TotalCoins);
+            uiManager.UpdateAllCoinText(TotalCoins);
 
-            playerMovement?.Revive();
+            playerMovement.Revive();
 
-            uiManager?.HideRevivePanel();
+            uiManager.HideRevivePanel();
             if (uiManager != null) uiManager.GameOverPanel.SetActive(false);
             isGameover = false;
             isPlaying = true;
@@ -550,14 +550,14 @@ public class GameManager : MonoBehaviour
     private void AddCheatCoins(int coinsToAdd)
     {
         TotalCoins += coinsToAdd;
-        uiManager?.UpdateAllCoinText(TotalCoins);
+        uiManager.UpdateAllCoinText(TotalCoins);
     }
 #endif
 
     private void OnDataLoaded()
     {
         ApplyLoadedData();
-        uiManager?.HideLoadingImage();
+        uiManager.HideLoadingImage();
         if (uiManager != null) uiManager.EnableStartButton(); // 데이터가 로드된 후에 시작 버튼 활성화
         
         PlayGamesPlatform.Instance.ReportScore(gameDatas.dataSettings.highScore, GPGSIds.leaderboard, success => { });
@@ -569,13 +569,13 @@ public class GameManager : MonoBehaviour
     {
         PlayGamesPlatform.Instance.ShowAchievementsUI();
         isPaused = false;
-        uiManager?.HidePausePanel();
+        uiManager.HidePausePanel();
     }
 
     public void ShowLeaderBoard()
     {
         PlayGamesPlatform.Instance.ShowLeaderboardUI(GPGSIds.leaderboard);
         isPaused = false;
-        uiManager?.HidePausePanel();
+        uiManager.HidePausePanel();
     }
 }

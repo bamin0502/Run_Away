@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
     public int parabolicPoints = 8;
     public float parabolicCurveHeight = 2.0f;
 
-    private List<Transform> tiles = new List<Transform>();
+    private readonly List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
     private GameManager gameManager;
 
@@ -263,7 +263,10 @@ public class Tile : MonoBehaviour
                 if (obstacleTypeComponent.ObstacleTypeNum == 5)
                 {
                     Vector3 startPosition = new Vector3(chosenLane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
-                    SpawnCoinLine(startPosition, chosenLane, tile);
+                    if (CanSpawnCoinLine(startPosition, chosenLane))
+                    {
+                        SpawnCoinLine(startPosition, chosenLane, tile);
+                    }
                 }
                 else if (obstacleTypeComponent.ObstacleTypeNum == 6)
                 {
@@ -278,8 +281,8 @@ public class Tile : MonoBehaviour
                         for (int i = 0; i < coinLineLength; i++)
                         {
                             Vector3 position = new Vector3(
-                                chosenLane, 
-                                walkByBoundsMin.y + walkByHeight + 0.5f, 
+                                chosenLane,
+                                walkByBoundsMin.y + walkByHeight + 0.5f,
                                 walkByBoundsMin.z + i * coinSpacing);
 
                             if (!IsObstacleAtPosition(position))
@@ -297,7 +300,10 @@ public class Tile : MonoBehaviour
                         var size = boxCollider.size;
                         Vector3 centerPos = obstacle.position + new Vector3(0, size.y / 2, 0);
                         float height = size.y;
-                        SpawnParabolicCoins(centerPos, height, tile);
+                        if (CanSpawnParabolicCoins(centerPos, height))
+                        {
+                            SpawnParabolicCoins(centerPos, height, tile);
+                        }
                     }
                 }
             }
@@ -305,7 +311,10 @@ public class Tile : MonoBehaviour
         else
         {
             Vector3 startPosition = new Vector3(chosenLane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
-            SpawnCoinLine(startPosition, chosenLane, tile);
+            if (CanSpawnCoinLine(startPosition, chosenLane))
+            {
+                SpawnCoinLine(startPosition, chosenLane, tile);
+            }
         }
 
         if (totalDistance - lastSpecialItemSpawnDistance > specialItemSpawnDistance)
@@ -323,7 +332,7 @@ public class Tile : MonoBehaviour
         {
             float t = (float)i / parabolicPoints;
             float z = (t - 0.5f) * coinSpacing * parabolicPoints;
-            float y = parabolicCurveHeight * 4 * t * (1 - t);
+            float y = (parabolicCurveHeight * 4 * t * (1 - t));
             parabolicPointsCache.Add(new Vector3(0, y, z));
         }
     }
@@ -340,6 +349,19 @@ public class Tile : MonoBehaviour
         }
     }
 
+    private bool CanSpawnCoinLine(Vector3 startPosition, float lane)
+    {
+        for (int i = 0; i < coinLineLength; i++)
+        {
+            Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
+            if (IsObstacleAtPosition(position))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void SpawnParabolicCoins(Vector3 centerPos, float height, Transform tile)
     {
         foreach (var point in parabolicPointsCache)
@@ -350,6 +372,19 @@ public class Tile : MonoBehaviour
                 SpawnSingleItem(position, tile, true);
             }
         }
+    }
+
+    private bool CanSpawnParabolicCoins(Vector3 centerPos, float height)
+    {
+        foreach (var point in parabolicPointsCache)
+        {
+            Vector3 position = centerPos + point;
+            if (IsObstacleAtPosition(position))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
@@ -501,6 +536,7 @@ public class Tile : MonoBehaviour
                 GameObject o;
                 (o = child.gameObject).SetActive(false);
                 itemPool.Enqueue(o);
+                o.transform.localPosition = Vector3.zero; // 위치 초기화
             }
         }
     }
