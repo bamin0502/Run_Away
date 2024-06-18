@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
     public int parabolicPoints = 8;
     public float parabolicCurveHeight = 2.0f;
 
-    private readonly List<Transform> tiles = new List<Transform>();
+    private List<Transform> tiles = new List<Transform>();
     private Vector3 nextTilePosition;
     private GameManager gameManager;
 
@@ -101,7 +101,7 @@ public class Tile : MonoBehaviour
         {
             return;
         }
-        
+
         if (!gameManager.isGameover && gameManager.isPlaying)
         {
             MoveTiles();
@@ -273,9 +273,8 @@ public class Tile : MonoBehaviour
                     var walkByCollider = obstacle.Find("WalkBy").GetComponent<Collider>();
                     if (walkByCollider != null)
                     {
-                        var bounds1 = walkByCollider.bounds;
-                        Vector3 walkByBoundsMin = bounds1.min;
-                        Vector3 walkByBoundsMax = bounds1.max;
+                        Vector3 walkByBoundsMin = walkByCollider.bounds.min;
+                        Vector3 walkByBoundsMax = walkByCollider.bounds.max;
                         float walkByHeight = walkByBoundsMax.y - walkByBoundsMin.y;
 
                         for (int i = 0; i < coinLineLength; i++)
@@ -297,9 +296,8 @@ public class Tile : MonoBehaviour
                     var boxCollider = obstacle.GetComponent<BoxCollider>();
                     if (boxCollider)
                     {
-                        var size = boxCollider.size;
-                        Vector3 centerPos = obstacle.position + new Vector3(0, size.y / 2, 0);
-                        float height = size.y;
+                        Vector3 centerPos = obstacle.position + new Vector3(0, boxCollider.size.y / 2, 0);
+                        float height = boxCollider.size.y;
                         if (CanSpawnParabolicCoins(centerPos, height))
                         {
                             SpawnParabolicCoins(centerPos, height, tile);
@@ -332,18 +330,32 @@ public class Tile : MonoBehaviour
         {
             float t = (float)i / parabolicPoints;
             float z = (t - 0.5f) * coinSpacing * parabolicPoints;
-            float y = (parabolicCurveHeight * 4 * t * (1 - t));
+            float y = parabolicCurveHeight * 4 * t * (1 - t);
             parabolicPointsCache.Add(new Vector3(0, y, z));
         }
     }
 
     private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile)
     {
+        bool canSpawnFullLine = true;
+
+        // Check if all positions are valid
         for (int i = 0; i < coinLineLength; i++)
         {
             Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
-            if (!IsObstacleAtPosition(position))
+            if (IsObstacleAtPosition(position))
             {
+                canSpawnFullLine = false;
+                break;
+            }
+        }
+
+        // Spawn coins if all positions are valid
+        if (canSpawnFullLine)
+        {
+            for (int i = 0; i < coinLineLength; i++)
+            {
+                Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
                 SpawnSingleItem(position, tile, true);
             }
         }
@@ -364,11 +376,25 @@ public class Tile : MonoBehaviour
 
     private void SpawnParabolicCoins(Vector3 centerPos, float height, Transform tile)
     {
+        bool canSpawnFullParabola = true;
+
+        // Check if all positions are valid
         foreach (var point in parabolicPointsCache)
         {
             Vector3 position = centerPos + point;
-            if (!IsObstacleAtPosition(position))
+            if (IsObstacleAtPosition(position))
             {
+                canSpawnFullParabola = false;
+                break;
+            }
+        }
+
+        // Spawn coins if all positions are valid
+        if (canSpawnFullParabola)
+        {
+            foreach (var point in parabolicPointsCache)
+            {
+                Vector3 position = centerPos + point;
                 SpawnSingleItem(position, tile, true);
             }
         }
