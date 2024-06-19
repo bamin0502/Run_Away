@@ -1,5 +1,6 @@
 using GoogleMobileAds.Api;
 using System;
+using System.Collections;
 using UnityEngine;
 using GoogleMobileAds;
 
@@ -9,13 +10,17 @@ public class AdMobManager : MonoBehaviour
     private InterstitialAd interstitial;
     public string adUnitId;
     private RewardedAd _rewardedAd;
+    
     private GameManager gameManager;
+    private UiManager uiManager;
     
     public event Action OnUserEarnedReward; // 보상 이벤트
-
+    public event Action OnAdClosed; // 광고 닫힘 이벤트
+    public event Action boolCheck;
     public void Awake()
     {
-        gameManager =GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>(); 
+        gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>(); 
+        uiManager = GameObject.FindGameObjectWithTag("UiManager").GetComponent<UiManager>();
     }
 
     public void Start()
@@ -35,19 +40,27 @@ public class AdMobManager : MonoBehaviour
             _rewardedAd.Destroy();
             _rewardedAd = null;
         }
-
+#if UNITY_EDITOR
         Debug.Log("보상형 광고를 로드 중입니다.");
+#endif
+        
         var adRequest = new AdRequest();
         RewardedAd.Load(adUnitId, adRequest,
             (RewardedAd ad, LoadAdError error) =>
             {
                 if (error != null || ad == null)
                 {
-                    Debug.LogError("보상형 광고 로드 실패: " + error);
+#if UNITY_EDITOR
+                    Debug.LogError("보상형 광고 로드 실패: " + error); 
+#endif
+                    
                     return;
                 }
 
+#if UNITY_EDITOR
                 Debug.Log("보상형 광고 로드 완료: " + ad.GetResponseInfo());
+#endif
+                
                 _rewardedAd = ad;
             });
     }
@@ -60,25 +73,37 @@ public class AdMobManager : MonoBehaviour
         {
             interstitial.Destroy();
             interstitial = null;
+            uiManager.AdsPanel.SetActive(false);
         }
-
+#if UNITY_EDITOR
         Debug.Log("전면 광고를 로드 중입니다.");
+#endif
+        
         var adRequest = new AdRequest();
         InterstitialAd.Load(adUnitId, adRequest,
             (InterstitialAd ad, LoadAdError error) =>
             {
                 if (error != null || ad == null)
                 {
-                    Debug.LogError("전면 광고 로드 실패: " + error);
+#if UNITY_EDITOR
+                    Debug.LogError("전면 광고 로드 실패: " + error); 
+#endif
+                    
                     return;
                 }
-
-                Debug.Log("전면 광고 로드 완료: " + ad.GetResponseInfo());
+#if UNITY_EDITOR
+                Debug.Log("전면 광고 로드 완료: " + ad.GetResponseInfo()); 
+#endif
+                
                 interstitial = ad;
-
+                interstitial.OnAdFullScreenContentClosed += (() =>
+                {
+                    OnAdClosed?.Invoke();
+                    Invoke("boolCheck", 3f);
+                });
             });
     }
-
+    
     private void RequestBanner()
     {
         string adUnitId = "ca-app-pub-3940256099942544/9214589741";
@@ -131,17 +156,22 @@ public class AdMobManager : MonoBehaviour
 
                 interstitial = ad;
                
+                
             });
     }
-
+    
     public void ShowInterstitialAd()
     {
         if (interstitial != null && interstitial.CanShowAd())
         {
             gameManager.isAd=true;
+            uiManager.AdsPanel.SetActive(true);
             interstitial.Show();
         }
-
+        else
+        {
+            OnAdClosed?.Invoke();
+        }
     }
 
     public void LoadRewardedAd()
@@ -162,8 +192,6 @@ public class AdMobManager : MonoBehaviour
                 }
 
                 _rewardedAd = ad;
-                
-                
             });
     }
 
@@ -172,8 +200,11 @@ public class AdMobManager : MonoBehaviour
         if (_rewardedAd != null && _rewardedAd.CanShowAd())
         {
             gameManager.isAd=true;
+            uiManager.AdsPanel.SetActive(true);
             _rewardedAd.Show(reward =>
             {
+                OnAdClosed?.Invoke();
+                Invoke("boolCheck", 3f);
                 OnUserEarnedReward?.Invoke();
             });
         }

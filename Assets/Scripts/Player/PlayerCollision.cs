@@ -32,7 +32,7 @@ public class PlayerCollision : MonoBehaviour
                 if (!playerMovement.isSliding) playerAni.SetRunAnimation();
             }
         }
-        else if (other.collider.CompareTag("Obstacle"))
+        else if (other.collider.CompareTag("Obstacle") || other.collider.CompareTag("Wall"))
         {
 #if UNITY_EDITOR
             Debug.Log("Hit an obstacle, game over!");
@@ -46,21 +46,12 @@ public class PlayerCollision : MonoBehaviour
                 gameManager.GameOver();
                 playerMovement.Die();
             }
-        }
-        else if (other.collider.CompareTag("Wall"))
-        {
-#if UNITY_EDITOR
-            Debug.Log("Hit a wall, returning to last position.");
-#endif
-            if (gameManager.IsFeverModeActive.Value)
-            {
-                LaunchObstacle(other.gameObject);
-            }
             else
             {
                 playerMovement.targetPosition = playerMovement.lastPosition;
                 playerMovement.rb.position = playerMovement.lastPosition;
                 playerMovement.currentLaneIndex = playerMovement.lastLaneIndex;
+                playerMovement.isCollidingFront = true;
             }
         }
     }

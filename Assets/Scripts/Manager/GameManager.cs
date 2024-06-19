@@ -86,7 +86,14 @@ public class GameManager : MonoBehaviour
         SignIn();
         
         adMobManager.OnUserEarnedReward += AdsRevive;
-        
+        adMobManager.OnAdClosed += () =>
+        {
+            uiManager.AdsPanel.SetActive(false);
+        };
+        adMobManager.boolCheck += () =>
+        {
+            isAd = false;
+        };
     }
     
     private void SignIn()
@@ -560,6 +567,7 @@ public class GameManager : MonoBehaviour
         PlayGamesPlatform.Instance.IncrementAchievement(GPGSIds.achievement_2,1, success => { }); 
         StartCoroutine(StartInvincibility());
         Time.timeScale = 1;
+        
     }
 
     private IEnumerator StartInvincibility()
@@ -569,6 +577,7 @@ public class GameManager : MonoBehaviour
             playerMovement.SetInvincible(true);
             yield return new WaitForSeconds(invincibilityDuration);
             playerMovement.SetInvincible(false);
+            isAd = false;
         }
     }
 

@@ -24,6 +24,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject RevivePanel;
     [SerializeField] public GameObject QuitPanel;
     [SerializeField] public GameObject TextPanel;
+    [SerializeField] public GameObject AdsPanel;
 
     [Header("Pause Panel Ui Button"), Tooltip("일시정지 패널 버튼들")]
     [SerializeField] public Button homeButton;
