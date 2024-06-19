@@ -1,0 +1,40 @@
+{
+    "name": "BackButton",
+    "maps": [
+        {
+            "name": "Back",
+            "id": "ba2e34fa-5d0a-4920-9684-126e8926df4e",
+            "actions": [
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "5cfc1ea9-cb4a-4ef7-810c-b4c54815ed28",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6fc61b14-23b4-413a-958d-6c5d9e81f3af",
+                    "path": "*/<Android>/back",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "New control scheme",
+            "bindingGroup": "New control scheme",
+            "devices": []
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SoundManager : Singleton<SoundManager>
+public class SoundManager : MonoBehaviour
 {
     public AudioSource[] BgmSources;
     public AudioSource[] SfxSources;

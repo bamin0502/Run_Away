@@ -31,7 +31,7 @@ public class Item : MonoBehaviour
                 Debug.Log("코인 획득");  
 #endif
                 gameManager.AddCoin();
-                SoundManager.Instance.PlaySfx(0);
+                
                 break;
             case ItemType.JumpUp:
 #if UNITY_EDITOR

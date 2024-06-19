@@ -13,11 +13,11 @@ public class Tile : MonoBehaviour
     public float tileLength = 17;
 
     [Header("Speed Settings")]
-    public float moveSpeedIncreaseDistance = 200f; 
-    public float moveSpeedMultiplier = 1.01f; 
+    public float moveSpeedIncreaseDistance = 200f;
+    public float moveSpeedMultiplier = 1.01f;
     public float initialMoveSpeed = 5f;
-    public float maxMoveSpeed = 15f; 
-    public float speedIncreaseDistanceIncrement = 50f; 
+    public float maxMoveSpeed = 15f;
+    public float speedIncreaseDistanceIncrement = 50f;
 
     [Header("Coin Settings")]
     public float specialItemSpawnDistance = 100f;
@@ -40,20 +40,16 @@ public class Tile : MonoBehaviour
     public Queue<GameObject> itemPool = new Queue<GameObject>();
     private Queue<GameObject> obstaclePool = new Queue<GameObject>();
 
-    [SerializeField] private float totalDistance = 0f;
-
     private Collider[] overlapResults = new Collider[10];
 
     private float moveSpeed;
-    [SerializeField] private float distanceTravelled = 0f;
+    private float distanceTravelled = 0f;
     private float nextSpeedIncreaseDistance;
-    private float itemSpawnInterval = 2f;
     private float itemSpawnTimer = 0f;
     private float lastSpecialItemSpawnDistance = 0f;
+    private float itemSpawnInterval = 2f;
 
-    private Vector3 lastCoinPosition = Vector3.zero;
-    private bool hasLastCoinPosition = false;
-
+    private bool isPaused = false;
     private List<Vector3> parabolicPointsCache;
 
     void Awake()
@@ -65,14 +61,6 @@ public class Tile : MonoBehaviour
         obstaclePrefabsBySection = DataManager.GetObstacleTable().GetObstaclesBySection();
 
         primaryItemPrefab = itemPrefabs.Find(item => item.name == "Coin");
-
-#if UNITY_EDITOR
-        if (primaryItemPrefab == null)
-        {
-            Debug.LogError("Primary item prefab (Coin) not found!");
-        }
-#endif
-
         otherItemPrefabs = itemPrefabs.FindAll(item => item.name != "Coin");
 
         CacheParabolicPoints();
@@ -97,7 +85,12 @@ public class Tile : MonoBehaviour
 
     private void Update()
     {
-        if (!gameManager.isGameover && !gameManager.isPaused && gameManager.isPlaying)
+        if (isPaused)
+        {
+            return;
+        }
+
+        if (!gameManager.isGameover && gameManager.isPlaying)
         {
             MoveTiles();
             if (tiles.Count > 0 && tiles[0].position.z < playerTransform.position.z - 50)
@@ -114,9 +107,6 @@ public class Tile : MonoBehaviour
                 moveSpeedIncreaseDistance += speedIncreaseDistanceIncrement;
             }
 
-            totalDistance += moveSpeed * Time.deltaTime;
-            gameManager.stageSpeed = moveSpeed;
-
             itemSpawnTimer += Time.deltaTime;
             if (itemSpawnTimer >= itemSpawnInterval)
             {
@@ -124,6 +114,11 @@ public class Tile : MonoBehaviour
                 SpawnItems(tiles[^1]);
             }
         }
+    }
+
+    public void ResumeTileMovement()
+    {
+        isPaused = false;
     }
 
     private void MoveTiles()
@@ -240,47 +235,71 @@ public class Tile : MonoBehaviour
         var bounds = tile.GetComponentInChildren<Collider>().bounds;
         float[] lanePositions = { -3.8f, 0f, 3.8f };
 
-        HashSet<int> occupiedLanes = new HashSet<int>();
+        float chosenLane = lanePositions[Random.Range(0, lanePositions.Length)];
 
-        foreach (Transform child in tile)
+        bool hasObstacleInLane = IsObstacleInLane(tile, chosenLane);
+        var obstacle = GetObstacleInLane(tile, chosenLane);
+
+        if (hasObstacleInLane && obstacle)
         {
-            if (child.CompareTag("Obstacle"))
+            var obstacleTypeComponent = obstacle.GetComponent<ObstacleType>();
+            if (obstacleTypeComponent)
             {
-                var lanePosition = Mathf.RoundToInt((child.localPosition.x + 3.8f) / 3.8f);
-                occupiedLanes.Add(lanePosition);
-
-                var walkBy = GetChildWithTag(child, "WalkBy");
-                if (walkBy != null)
+                if (obstacleTypeComponent.ObstacleTypeNum == 5)
                 {
-                    var boxCollider = child.GetComponent<BoxCollider>();
+                    Vector3 startPosition = new Vector3(chosenLane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
+                    if (CanSpawnCoinLine(startPosition, chosenLane))
+                    {
+                        SpawnCoinLine(startPosition, chosenLane, tile);
+                    }
+                }
+                else if (obstacleTypeComponent.ObstacleTypeNum == 6)
+                {
+                    var walkByCollider = obstacle.Find("WalkBy").GetComponent<Collider>();
+                    if (walkByCollider)
+                    {
+                        var bounds1 = walkByCollider.bounds;
+                        Vector3 walkByBoundsMin = bounds1.min;
+                        Vector3 walkByBoundsMax = bounds1.max;
+                        float walkByHeight = walkByBoundsMax.y - walkByBoundsMin.y;
+
+                        Vector3 startPosition = new Vector3(chosenLane, walkByBoundsMin.y + walkByHeight + 0.5f, walkByBoundsMin.z);
+                        if (CanSpawnCoinLine(startPosition, chosenLane, walkByBoundsMax.z - walkByBoundsMin.z))
+                        {
+                            SpawnCoinLine(startPosition, chosenLane, tile, walkByBoundsMax.z - walkByBoundsMin.z);
+                        }
+                    }
+                }
+                else
+                {
+                    var boxCollider = obstacle.GetComponent<BoxCollider>();
                     if (boxCollider)
                     {
-                        Vector3 centerPos = child.position + boxCollider.center;
-                        float height = boxCollider.size.y;
-                        SpawnParabolicCoins(centerPos, height, tile);
+                        var size = boxCollider.size;
+                        Vector3 centerPos = obstacle.position + new Vector3(0, size.y / 2, 0);
+                        float height = size.y;
+                        if (CanSpawnParabolicCoins(centerPos, height))
+                        {
+                            SpawnParabolicCoins(centerPos, height, tile);
+                        }
                     }
                 }
             }
         }
-
-        foreach (var lane in lanePositions)
+        else
         {
-            var laneIndex = Mathf.RoundToInt((lane + 3.8f) / 3.8f);
-            if (!occupiedLanes.Contains(laneIndex))
+            Vector3 startPosition = new Vector3(chosenLane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
+            if (CanSpawnCoinLine(startPosition, chosenLane))
             {
-                Vector3 startPosition = new Vector3(lane, bounds.min.y, bounds.min.z + Random.Range(0, bounds.size.z - coinSpacing * coinLineLength));
-                SpawnCoinLine(startPosition, lane, tile);
+                SpawnCoinLine(startPosition, chosenLane, tile);
             }
         }
 
-        if (totalDistance - lastSpecialItemSpawnDistance > specialItemSpawnDistance)
+        if (distanceTravelled - lastSpecialItemSpawnDistance > specialItemSpawnDistance)
         {
             Vector3 randomPosition = new Vector3(lanePositions[Random.Range(0, lanePositions.Length)], bounds.min.y, Random.Range(bounds.min.z, bounds.max.z));
-            if (!IsObstacleAtPosition(randomPosition))
-            {
-                SpawnSpecialItem(randomPosition, tile);
-                lastSpecialItemSpawnDistance = totalDistance;
-            }
+            SpawnSpecialItem(randomPosition, tile);
+            lastSpecialItemSpawnDistance = distanceTravelled;
         }
     }
 
@@ -290,34 +309,91 @@ public class Tile : MonoBehaviour
         for (int i = 0; i <= parabolicPoints; i++)
         {
             float t = (float)i / parabolicPoints;
-            float z = (t - 0.5f) * coinSpacing * parabolicPoints; 
-            float y = parabolicCurveHeight * 4 * t * (1 - t); 
+            float z = (t - 0.5f) * coinSpacing * parabolicPoints;
+            float y = parabolicCurveHeight * 4 * t * (1 - t);
             parabolicPointsCache.Add(new Vector3(0, y, z));
         }
     }
 
-    private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile)
+    private void SpawnCoinLine(Vector3 startPosition, float lane, Transform tile, float lineLength = -1)
     {
+        if (lineLength < 0) lineLength = coinLineLength * coinSpacing;
+
+        bool canSpawnFullLine = true;
+        
         for (int i = 0; i < coinLineLength; i++)
         {
             Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
-            if (!IsObstacleAtPosition(position))
+            if (position.z > startPosition.z + lineLength || IsObstacleAtPosition(position))
             {
+                canSpawnFullLine = false;
+                break;
+            }
+        }
+        
+        if (canSpawnFullLine)
+        {
+            for (int i = 0; i < coinLineLength; i++)
+            {
+                Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
+                if (position.z <= startPosition.z + lineLength)
+                {
+                    SpawnSingleItem(position, tile, true);
+                }
+            }
+        }
+    }
+
+    private bool CanSpawnCoinLine(Vector3 startPosition, float lane, float lineLength = -1)
+    {
+        if (lineLength < 0) lineLength = coinLineLength * coinSpacing;
+
+        for (int i = 0; i < coinLineLength; i++)
+        {
+            Vector3 position = new Vector3(lane, startPosition.y, startPosition.z + i * coinSpacing);
+            if (position.z > startPosition.z + lineLength || IsObstacleAtPosition(position))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void SpawnParabolicCoins(Vector3 centerPos, float height, Transform tile)
+    {
+        bool canSpawnFullParabola = true;
+        
+        foreach (var point in parabolicPointsCache)
+        {
+            Vector3 position = centerPos + point;
+            if (IsObstacleAtPosition(position))
+            {
+                canSpawnFullParabola = false;
+                break;
+            }
+        }
+        
+        if (canSpawnFullParabola)
+        {
+            foreach (var point in parabolicPointsCache)
+            {
+                Vector3 position = centerPos + point;
                 SpawnSingleItem(position, tile, true);
             }
         }
     }
 
-    private void SpawnParabolicCoins(Vector3 centerPos, float height, Transform tile)
+    private bool CanSpawnParabolicCoins(Vector3 centerPos, float height)
     {
         foreach (var point in parabolicPointsCache)
         {
             Vector3 position = centerPos + point;
-            if (!IsObstacleAtPosition(position))
+            if (IsObstacleAtPosition(position))
             {
-                SpawnSingleItem(position, tile, true);
+                return false;
             }
         }
+        return true;
     }
 
     private void SpawnSingleItem(Vector3 position, Transform tile, bool isCoin)
@@ -372,6 +448,38 @@ public class Tile : MonoBehaviour
         return false;
     }
 
+    private bool IsObstacleInLane(Transform tile, float lane)
+    {
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Obstacle"))
+            {
+                float lanePosition = Mathf.Round((child.localPosition.x + 3.8f) / 3.8f) * 3.8f - 3.8f;
+                if (Mathf.Approximately(lanePosition, lane))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Transform GetObstacleInLane(Transform tile, float lane)
+    {
+        foreach (Transform child in tile)
+        {
+            if (child.CompareTag("Obstacle"))
+            {
+                float lanePosition = Mathf.Round((child.localPosition.x + 3.8f) / 3.8f) * 3.8f - 3.8f;
+                if (Mathf.Approximately(lanePosition, lane))
+                {
+                    return child;
+                }
+            }
+        }
+        return null;
+    }
+
     private List<Transform> GetAllChildTransforms(Transform parent, string tag)
     {
         var result = new List<Transform>();
@@ -384,18 +492,6 @@ public class Tile : MonoBehaviour
             result.AddRange(GetAllChildTransforms(child, tag));
         }
         return result;
-    }
-
-    private Transform GetChildWithTag(Transform parent, string tag)
-    {
-        foreach (Transform child in parent)
-        {
-            if (child.CompareTag(tag))
-            {
-                return child;
-            }
-        }
-        return null;
     }
 
     private HashSet<int> GetTwoUniqueRandomLanes()
@@ -437,6 +533,7 @@ public class Tile : MonoBehaviour
                 GameObject o;
                 (o = child.gameObject).SetActive(false);
                 itemPool.Enqueue(o);
+                o.transform.localPosition = Vector3.zero; // 위치 초기화
             }
         }
     }

@@ -14,7 +14,7 @@ public class SwipeDetection : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = InputManager.Instance;
+        inputManager = GetComponent<InputManager>();
         playerMovement = GetComponent<PlayerMovement>();
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>();
     }
@@ -38,14 +38,18 @@ public class SwipeDetection : MonoBehaviour
 
     private void SwipeStart(Vector2 pos, float time)
     {
+#if UNITY_EDITOR
         Debug.Log("Start");
+#endif
         startPos = pos;
     }
 
     private void SwipeEnd(Vector2 pos, float time)
     {
         endPos = pos;
+#if UNITY_EDITOR
         Debug.Log("End");
+#endif
         DetectSwipe();
     }
 

@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-1)]
-public class InputManager : Singleton<InputManager>
+public class InputManager : MonoBehaviour
 {
     #region Events
     public delegate void StartTouch(Vector2 position, float time);
@@ -19,7 +20,7 @@ public class InputManager : Singleton<InputManager>
     private UiManager uiManager;
     private GameManager gameManager;
     
-    private new void Awake()
+    private void Awake()
     {
         playerControls = new PlayerControls();
         mainCamera = Camera.main;
@@ -65,18 +66,13 @@ public class InputManager : Singleton<InputManager>
 #if UNITY_EDITOR
         Debug.Log("Back button pressed");
 #endif
-        if (gameManager.isPlaying)
+        if(uiManager.GameOverPanel.activeSelf)
         {
-            if (uiManager.PausePanel.activeSelf)
-            {
-                uiManager.HidePausePanel();
-            }
-            else
-            {
-                uiManager.ShowPausePanel();
-            }
+            return;
         }
-        else
+        
+        
+        if (uiManager.GameMenuPanel.activeSelf)
         {
             if (uiManager.QuitPanel.activeSelf)
             {
@@ -86,6 +82,23 @@ public class InputManager : Singleton<InputManager>
             {
                 uiManager.ShowQuitPanel();
             }
+            return; 
+        }
+    
+        if (uiManager.GamePanel.activeSelf)
+        {
+            if (uiManager.PausePanel.activeSelf)
+            {
+                uiManager.HidePausePanel();
+            }
+            else if (!uiManager.QuitPanel.activeSelf) 
+            {
+                uiManager.ShowPausePanel();
+            }
+        }
+        else if (uiManager.QuitPanel.activeSelf)
+        {
+            uiManager.HideQuitPanel();
         }
     }
 

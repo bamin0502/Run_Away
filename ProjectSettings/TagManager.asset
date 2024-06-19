@@ -24,6 +24,9 @@ TagManager:
   - Tutorial
   - Fever
   - FollowCam
+  - Sound
+  - Data
+  - AdMob
   layers:
   - Default
   - TransparentFX
