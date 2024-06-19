@@ -70,45 +70,6 @@
                     "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "UI",
-            "id": "11e2d483-c4de-4c03-a601-b8d869ace182",
-            "actions": [
-                {
-                    "name": "Back",
-                    "type": "Button",
-                    "id": "f6a9dcb0-ab32-42b0-87de-b1ece7d4bf60",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "6a4773cf-26ac-4cee-a278-ffa62985667b",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Back",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f9ac4c3c-2963-4121-adef-80e9658ef1c0",
-                    "path": "*/<Android>/back",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mobile",
-                    "action": "Back",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
         }
     ],
     "controlSchemes": [

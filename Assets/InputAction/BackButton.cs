@@ -44,7 +44,18 @@ public partial class @BackButton: IInputActionCollection2, IDisposable
                     ""path"": ""*/<Android>/back"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Mobile"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ed0a84eb-a641-4932-8b01-77d0516dfa36"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
                     ""action"": ""Back"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -54,9 +65,26 @@ public partial class @BackButton: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": [
         {
-            ""name"": ""New control scheme"",
-            ""bindingGroup"": ""New control scheme"",
-            ""devices"": []
+            ""name"": ""Mobile"",
+            ""bindingGroup"": ""Mobile"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Touchscreen>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""PC"",
+            ""bindingGroup"": ""PC"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
         }
     ]
 }");
@@ -166,13 +194,22 @@ public partial class @BackButton: IInputActionCollection2, IDisposable
         }
     }
     public BackActions @Back => new BackActions(this);
-    private int m_NewcontrolschemeSchemeIndex = -1;
-    public InputControlScheme NewcontrolschemeScheme
+    private int m_MobileSchemeIndex = -1;
+    public InputControlScheme MobileScheme
     {
         get
         {
-            if (m_NewcontrolschemeSchemeIndex == -1) m_NewcontrolschemeSchemeIndex = asset.FindControlSchemeIndex("New control scheme");
-            return asset.controlSchemes[m_NewcontrolschemeSchemeIndex];
+            if (m_MobileSchemeIndex == -1) m_MobileSchemeIndex = asset.FindControlSchemeIndex("Mobile");
+            return asset.controlSchemes[m_MobileSchemeIndex];
+        }
+    }
+    private int m_PCSchemeIndex = -1;
+    public InputControlScheme PCScheme
+    {
+        get
+        {
+            if (m_PCSchemeIndex == -1) m_PCSchemeIndex = asset.FindControlSchemeIndex("PC");
+            return asset.controlSchemes[m_PCSchemeIndex];
         }
     }
     public interface IBackActions

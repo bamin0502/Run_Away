@@ -9,8 +9,11 @@ using Google.Play.Common;
 public class IntroUI : MonoBehaviour
 {
     public Button startButton;
-
     private AppUpdateManager appUpdateManager;
+    
+    [SerializeField] public GameObject QuitPanel;
+    [SerializeField] public Button quitButton;
+    [SerializeField] public Button BackButton;
 
     private void Awake()
     {
@@ -22,15 +25,11 @@ public class IntroUI : MonoBehaviour
 #if UNITY_EDITOR
         StartCoroutine(LoadNextSceneAsync());
 #endif
-        
         //startButton.gameObject.SetActive(false);
+        quitButton.onClick.AddListener(Application.Quit);
+        BackButton.onClick.AddListener(() => QuitPanel.SetActive(false));
     }
-
-    private void Update()
-    {
-        
-    }
-
+    
     IEnumerator CheckForUpdate()
     {
         appUpdateManager = new AppUpdateManager();

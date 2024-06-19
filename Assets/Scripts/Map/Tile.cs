@@ -15,8 +15,8 @@ public class Tile : MonoBehaviour
     [Header("Speed Settings")]
     public float moveSpeedIncreaseDistance = 200f;
     public float moveSpeedMultiplier = 1.01f;
-    public float initialMoveSpeed = 5f;
-    public float maxMoveSpeed = 15f;
+    public float initialMoveSpeed = 10f;
+    public float maxMoveSpeed = 30f;
     public float speedIncreaseDistanceIncrement = 50f;
 
     [Header("Coin Settings")]

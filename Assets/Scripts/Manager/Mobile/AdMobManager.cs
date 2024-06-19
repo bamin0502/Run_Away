@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using GoogleMobileAds;
 
+
 public class AdMobManager : MonoBehaviour
 {
     private BannerView _bannerView;
@@ -33,7 +34,7 @@ public class AdMobManager : MonoBehaviour
 
     private void RequestRewarded()
     {
-        string adUnitId = "ca-app-pub-3940256099942544/5224354917";
+        string adUnitId = "ca-app-pub-2503303900066645/3866682417";
 
         if (_rewardedAd != null)
         {
@@ -67,7 +68,7 @@ public class AdMobManager : MonoBehaviour
 
     private void RequestInterstitial()
     {
-        string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+        string adUnitId = "ca-app-pub-2503303900066645/2326709345";
 
         if (interstitial != null)
         {
