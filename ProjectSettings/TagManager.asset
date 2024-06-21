@@ -27,6 +27,7 @@ TagManager:
   - Sound
   - Data
   - AdMob
+  - Intro
   layers:
   - Default
   - TransparentFX

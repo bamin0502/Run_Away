@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-1)]
 public class InputManager : MonoBehaviour
@@ -11,8 +10,6 @@ public class InputManager : MonoBehaviour
     public delegate void EndTouch(Vector2 position, float time);
     public event EndTouch OnEndTouch;
     
-    public delegate void BackButtonPressed();
-    public event BackButtonPressed OnBackButtonPressed;
     #endregion
     
     private PlayerControls playerControls;
@@ -42,7 +39,6 @@ public class InputManager : MonoBehaviour
         playerControls.Touch.PrimaryContact.started += StartTouchPrimary;
         playerControls.Touch.PrimaryContact.canceled += EndTouchPrimary;
         
-        playerControls.UI.Back.started += OnBackAction;
     }
     
     private void EndTouchPrimary(InputAction.CallbackContext context)
@@ -60,46 +56,5 @@ public class InputManager : MonoBehaviour
         return Utils.ScreenToWorld(mainCamera,playerControls.Touch.PrimaryPosition.ReadValue<Vector2>());
     }
     
-    private void OnBackAction(InputAction.CallbackContext context)
-    {
-        OnBackButtonPressed?.Invoke();
-#if UNITY_EDITOR
-        Debug.Log("Back button pressed");
-#endif
-        if(uiManager.GameOverPanel.activeSelf)
-        {
-            return;
-        }
-        
-        
-        if (uiManager.GameMenuPanel.activeSelf)
-        {
-            if (uiManager.QuitPanel.activeSelf)
-            {
-                uiManager.HideQuitPanel();
-            }
-            else
-            {
-                uiManager.ShowQuitPanel();
-            }
-            return; 
-        }
-    
-        if (uiManager.GamePanel.activeSelf)
-        {
-            if (uiManager.PausePanel.activeSelf)
-            {
-                uiManager.HidePausePanel();
-            }
-            else if (!uiManager.QuitPanel.activeSelf) 
-            {
-                uiManager.ShowPausePanel();
-            }
-        }
-        else if (uiManager.QuitPanel.activeSelf)
-        {
-            uiManager.HideQuitPanel();
-        }
-    }
 
 }

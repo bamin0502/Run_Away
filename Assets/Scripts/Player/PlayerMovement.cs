@@ -193,8 +193,27 @@ public class PlayerMovement : MonoBehaviour
             // 플레이어를 즉시 땅으로 이동
             rb.position = new Vector3(rb.position.x, 0, rb.position.z);
             rb.velocity = Vector3.zero; // 상승 움직임을 즉시 멈추기 위해 속도 초기화
-            isGrounded = true;
-            isJumping = false;
+
+            // WalkBy 판정 추가
+            if (Physics.Raycast(rb.position, Vector3.down, out RaycastHit hit, 1.5f))
+            {
+                if (hit.collider.CompareTag("WalkBy") || hit.collider.CompareTag("Obstacle"))
+                {
+                    rb.position = new Vector3(rb.position.x, hit.point.y, rb.position.z);
+                    isGrounded = true;
+                    isJumping = false;
+                }
+                else
+                {
+                    isGrounded = true;
+                    isJumping = false;
+                }
+            }
+            else
+            {
+                isGrounded = true;
+                isJumping = false;
+            }
         }
 
         // 슬라이드 실행
@@ -249,8 +268,10 @@ public class PlayerMovement : MonoBehaviour
         Vector3 direction = targetPos - transform.position;
         if (Physics.Raycast(transform.position, direction, out var hit, direction.magnitude))
         {
-            if (hit.collider.CompareTag("Obstacle"))
+            if (hit.collider.CompareTag("Obstacle") || hit.collider.CompareTag("Wall"))
             {
+                // 장애물에 부딪히면 이동을 멈춤
+                targetPosition = lastPosition;
                 return true;
             }
         }
