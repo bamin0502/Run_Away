@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Google.Play.AppUpdate;
 using Google.Play.Common;
+using TMPro;
 
 public class IntroUI : MonoBehaviour
 {
@@ -14,10 +15,12 @@ public class IntroUI : MonoBehaviour
     [SerializeField] public GameObject QuitPanel;
     [SerializeField] public Button quitButton;
     [SerializeField] public Button BackButton;
+    [SerializeField] public TextMeshProUGUI VersionText;
 
     private void Awake()
     {
         StartCoroutine(CheckForUpdate());
+        VersionText.text = "Version."+Application.version;
     }
 
     private void Start()
